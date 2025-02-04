@@ -1,0 +1,760 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище ServiceCenterTMCModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Clients">
+          <Key>
+            <PropertyRef Name="IDClient" />
+          </Key>
+          <Property Name="IDClient" Type="int" Nullable="false" />
+          <Property Name="Surname" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Patronymic" Type="nvarchar(max)" />
+          <Property Name="Telephone" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="Type" Type="bit" Nullable="false" />
+          <Property Name="CompanyName" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="DeviseTypes">
+          <Key>
+            <PropertyRef Name="IDtype" />
+          </Key>
+          <Property Name="IDtype" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Employees">
+          <Key>
+            <PropertyRef Name="IDEmployee" />
+          </Key>
+          <Property Name="IDEmployee" Type="int" Nullable="false" />
+          <Property Name="Surname" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Patronymic" Type="nvarchar(max)" />
+          <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="INN" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Telephone" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="Login" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RepairParts">
+          <Key>
+            <PropertyRef Name="IDpart" />
+          </Key>
+          <Property Name="IDpart" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Count" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RepairTeam">
+          <Key>
+            <PropertyRef Name="RequestID" />
+          </Key>
+          <Property Name="RequestID" Type="int" Nullable="false" />
+          <Property Name="MasterID" Type="int" Nullable="false" />
+          <Property Name="CompletionDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Request_RepairParts">
+          <Key>
+            <PropertyRef Name="RequestID" />
+            <PropertyRef Name="RepairPartID" />
+          </Key>
+          <Property Name="RequestID" Type="int" Nullable="false" />
+          <Property Name="RepairPartID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Requests">
+          <Key>
+            <PropertyRef Name="IDrequest" />
+          </Key>
+          <Property Name="IDrequest" Type="int" Nullable="false" />
+          <Property Name="ClientID" Type="int" Nullable="false" />
+          <Property Name="StatusID" Type="int" Nullable="false" />
+          <Property Name="Reason" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="DeviceType" Type="int" Nullable="false" />
+          <Property Name="Cost" Type="int" Nullable="false" />
+          <Property Name="ReceiverID" Type="int" Nullable="false" />
+          <Property Name="IMEI/SN" Type="nvarchar(max)" />
+          <Property Name="Model" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Requests_Services">
+          <Key>
+            <PropertyRef Name="RequestID" />
+            <PropertyRef Name="ServiceID" />
+          </Key>
+          <Property Name="RequestID" Type="int" Nullable="false" />
+          <Property Name="ServiceID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="IDRole" />
+          </Key>
+          <Property Name="IDRole" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Services">
+          <Key>
+            <PropertyRef Name="IDservice" />
+          </Key>
+          <Property Name="IDservice" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cost" Type="int" Nullable="false" />
+          <Property Name="Warranty" Type="int" Nullable="false" />
+          <Property Name="DeviceTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="IDstatus" />
+          </Key>
+          <Property Name="IDstatus" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_Employees_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="IDRole" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepairTeam_Employees">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
+          <End Role="RepairTeam" Type="Self.RepairTeam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="IDEmployee" />
+            </Principal>
+            <Dependent Role="RepairTeam">
+              <PropertyRef Name="MasterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepairTeam_Requests">
+          <End Role="Requests" Type="Self.Requests" Multiplicity="1" />
+          <End Role="RepairTeam" Type="Self.RepairTeam" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Requests">
+              <PropertyRef Name="IDrequest" />
+            </Principal>
+            <Dependent Role="RepairTeam">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Request_RepairParts_RepairParts">
+          <End Role="RepairParts" Type="Self.RepairParts" Multiplicity="1" />
+          <End Role="Request_RepairParts" Type="Self.Request_RepairParts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairParts">
+              <PropertyRef Name="IDpart" />
+            </Principal>
+            <Dependent Role="Request_RepairParts">
+              <PropertyRef Name="RepairPartID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Request_RepairParts_Requests">
+          <End Role="Requests" Type="Self.Requests" Multiplicity="1" />
+          <End Role="Request_RepairParts" Type="Self.Request_RepairParts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Requests">
+              <PropertyRef Name="IDrequest" />
+            </Principal>
+            <Dependent Role="Request_RepairParts">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests_Clients">
+          <End Role="Clients" Type="Self.Clients" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clients">
+              <PropertyRef Name="IDClient" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests_DeviseTypes">
+          <End Role="DeviseTypes" Type="Self.DeviseTypes" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeviseTypes">
+              <PropertyRef Name="IDtype" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="DeviceType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests_Employees1">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="IDEmployee" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="ReceiverID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests_Services_Requests">
+          <End Role="Requests" Type="Self.Requests" Multiplicity="1" />
+          <End Role="Requests_Services" Type="Self.Requests_Services" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Requests">
+              <PropertyRef Name="IDrequest" />
+            </Principal>
+            <Dependent Role="Requests_Services">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests_Services_Services">
+          <End Role="Services" Type="Self.Services" Multiplicity="1" />
+          <End Role="Requests_Services" Type="Self.Requests_Services" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Services">
+              <PropertyRef Name="IDservice" />
+            </Principal>
+            <Dependent Role="Requests_Services">
+              <PropertyRef Name="ServiceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="IDstatus" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Services_DeviseTypes">
+          <End Role="DeviseTypes" Type="Self.DeviseTypes" Multiplicity="1" />
+          <End Role="Services" Type="Self.Services" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeviseTypes">
+              <PropertyRef Name="IDtype" />
+            </Principal>
+            <Dependent Role="Services">
+              <PropertyRef Name="DeviceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище ServiceCenterTMCModelContainer">
+          <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DeviseTypes" EntityType="Self.DeviseTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RepairParts" EntityType="Self.RepairParts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RepairTeam" EntityType="Self.RepairTeam" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Request_RepairParts" EntityType="Self.Request_RepairParts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Requests" EntityType="Self.Requests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Requests_Services" EntityType="Self.Requests_Services" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Services" EntityType="Self.Services" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Employees_Roles" Association="Self.FK_Employees_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepairTeam_Employees" Association="Self.FK_RepairTeam_Employees">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="RepairTeam" EntitySet="RepairTeam" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepairTeam_Requests" Association="Self.FK_RepairTeam_Requests">
+            <End Role="Requests" EntitySet="Requests" />
+            <End Role="RepairTeam" EntitySet="RepairTeam" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Request_RepairParts_RepairParts" Association="Self.FK_Request_RepairParts_RepairParts">
+            <End Role="RepairParts" EntitySet="RepairParts" />
+            <End Role="Request_RepairParts" EntitySet="Request_RepairParts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Request_RepairParts_Requests" Association="Self.FK_Request_RepairParts_Requests">
+            <End Role="Requests" EntitySet="Requests" />
+            <End Role="Request_RepairParts" EntitySet="Request_RepairParts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests_Clients" Association="Self.FK_Requests_Clients">
+            <End Role="Clients" EntitySet="Clients" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests_DeviseTypes" Association="Self.FK_Requests_DeviseTypes">
+            <End Role="DeviseTypes" EntitySet="DeviseTypes" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests_Employees1" Association="Self.FK_Requests_Employees1">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests_Services_Requests" Association="Self.FK_Requests_Services_Requests">
+            <End Role="Requests" EntitySet="Requests" />
+            <End Role="Requests_Services" EntitySet="Requests_Services" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests_Services_Services" Association="Self.FK_Requests_Services_Services">
+            <End Role="Services" EntitySet="Services" />
+            <End Role="Requests_Services" EntitySet="Requests_Services" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests_Status" Association="Self.FK_Requests_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Services_DeviseTypes" Association="Self.FK_Services_DeviseTypes">
+            <End Role="DeviseTypes" EntitySet="DeviseTypes" />
+            <End Role="Services" EntitySet="Services" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ServiceCenterTMCModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Clients">
+          <Key>
+            <PropertyRef Name="IDClient" />
+          </Key>
+          <Property Name="IDClient" Type="Int32" Nullable="false" />
+          <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Patronymic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Telephone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Type" Type="Boolean" Nullable="false" />
+          <Property Name="CompanyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Clients" FromRole="Clients" ToRole="Requests" />
+        </EntityType>
+        <EntityType Name="DeviseTypes">
+          <Key>
+            <PropertyRef Name="IDtype" />
+          </Key>
+          <Property Name="IDtype" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_DeviseTypes" FromRole="DeviseTypes" ToRole="Requests" />
+          <NavigationProperty Name="Services" Relationship="Self.FK_Services_DeviseTypes" FromRole="DeviseTypes" ToRole="Services" />
+        </EntityType>
+        <EntityType Name="Employees">
+          <Key>
+            <PropertyRef Name="IDEmployee" />
+          </Key>
+          <Property Name="IDEmployee" Type="Int32" Nullable="false" />
+          <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Patronymic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <Property Name="INN" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Telephone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Login" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Roles" Relationship="Self.FK_Employees_Roles" FromRole="Employees" ToRole="Roles" />
+          <NavigationProperty Name="RepairTeam" Relationship="Self.FK_RepairTeam_Employees" FromRole="Employees" ToRole="RepairTeam" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Employees1" FromRole="Employees" ToRole="Requests" />
+        </EntityType>
+        <EntityType Name="RepairParts">
+          <Key>
+            <PropertyRef Name="IDpart" />
+          </Key>
+          <Property Name="IDpart" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Requests" Relationship="Self.Request_RepairParts" FromRole="RepairParts" ToRole="Requests" />
+        </EntityType>
+        <EntityType Name="RepairTeam">
+          <Key>
+            <PropertyRef Name="RequestID" />
+          </Key>
+          <Property Name="RequestID" Type="Int32" Nullable="false" />
+          <Property Name="MasterID" Type="Int32" Nullable="false" />
+          <Property Name="CompletionDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_RepairTeam_Employees" FromRole="RepairTeam" ToRole="Employees" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_RepairTeam_Requests" FromRole="RepairTeam" ToRole="Requests" />
+        </EntityType>
+        <EntityType Name="Requests">
+          <Key>
+            <PropertyRef Name="IDrequest" />
+          </Key>
+          <Property Name="IDrequest" Type="Int32" Nullable="false" />
+          <Property Name="ClientID" Type="Int32" Nullable="false" />
+          <Property Name="StatusID" Type="Int32" Nullable="false" />
+          <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="DeviceType" Type="Int32" Nullable="false" />
+          <Property Name="Cost" Type="Int32" Nullable="false" />
+          <Property Name="ReceiverID" Type="Int32" Nullable="false" />
+          <Property Name="IMEI_SN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Model" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Clients" Relationship="Self.FK_Requests_Clients" FromRole="Requests" ToRole="Clients" />
+          <NavigationProperty Name="DeviseTypes" Relationship="Self.FK_Requests_DeviseTypes" FromRole="Requests" ToRole="DeviseTypes" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_Requests_Employees1" FromRole="Requests" ToRole="Employees" />
+          <NavigationProperty Name="RepairTeam" Relationship="Self.FK_RepairTeam_Requests" FromRole="Requests" ToRole="RepairTeam" />
+          <NavigationProperty Name="Status" Relationship="Self.FK_Requests_Status" FromRole="Requests" ToRole="Status" />
+          <NavigationProperty Name="RepairParts" Relationship="Self.Request_RepairParts" FromRole="Requests" ToRole="RepairParts" />
+          <NavigationProperty Name="Services" Relationship="Self.Requests_Services" FromRole="Requests" ToRole="Services" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="IDRole" />
+          </Key>
+          <Property Name="IDRole" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_Employees_Roles" FromRole="Roles" ToRole="Employees" />
+        </EntityType>
+        <EntityType Name="Services">
+          <Key>
+            <PropertyRef Name="IDservice" />
+          </Key>
+          <Property Name="IDservice" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cost" Type="Int32" Nullable="false" />
+          <Property Name="Warranty" Type="Int32" Nullable="false" />
+          <Property Name="DeviceTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DeviseTypes" Relationship="Self.FK_Services_DeviseTypes" FromRole="Services" ToRole="DeviseTypes" />
+          <NavigationProperty Name="Requests" Relationship="Self.Requests_Services" FromRole="Services" ToRole="Requests" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="IDstatus" />
+          </Key>
+          <Property Name="IDstatus" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Status" FromRole="Status" ToRole="Requests" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_Requests_Clients">
+          <End Role="Clients" Type="Self.Clients" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clients">
+              <PropertyRef Name="IDClient" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="ClientID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests_DeviseTypes">
+          <End Role="DeviseTypes" Type="Self.DeviseTypes" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeviseTypes">
+              <PropertyRef Name="IDtype" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="DeviceType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Services_DeviseTypes">
+          <End Role="DeviseTypes" Type="Self.DeviseTypes" Multiplicity="1" />
+          <End Role="Services" Type="Self.Services" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DeviseTypes">
+              <PropertyRef Name="IDtype" />
+            </Principal>
+            <Dependent Role="Services">
+              <PropertyRef Name="DeviceTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employees_Roles">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="IDRole" />
+            </Principal>
+            <Dependent Role="Employees">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepairTeam_Employees">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
+          <End Role="RepairTeam" Type="Self.RepairTeam" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="IDEmployee" />
+            </Principal>
+            <Dependent Role="RepairTeam">
+              <PropertyRef Name="MasterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests_Employees1">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="IDEmployee" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="ReceiverID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RepairTeam_Requests">
+          <End Role="Requests" Type="Self.Requests" Multiplicity="1" />
+          <End Role="RepairTeam" Type="Self.RepairTeam" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Requests">
+              <PropertyRef Name="IDrequest" />
+            </Principal>
+            <Dependent Role="RepairTeam">
+              <PropertyRef Name="RequestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Requests_Status">
+          <End Role="Status" Type="Self.Status" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="IDstatus" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Request_RepairParts">
+          <End Role="RepairParts" Type="Self.RepairParts" Multiplicity="*" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+        </Association>
+        <Association Name="Requests_Services">
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <End Role="Services" Type="Self.Services" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="ServiceCenterTMCEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clients" EntityType="Self.Clients" />
+          <EntitySet Name="DeviseTypes" EntityType="Self.DeviseTypes" />
+          <EntitySet Name="Employees" EntityType="Self.Employees" />
+          <EntitySet Name="RepairParts" EntityType="Self.RepairParts" />
+          <EntitySet Name="RepairTeam" EntityType="Self.RepairTeam" />
+          <EntitySet Name="Requests" EntityType="Self.Requests" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" />
+          <EntitySet Name="Services" EntityType="Self.Services" />
+          <EntitySet Name="Status" EntityType="Self.Status" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <AssociationSet Name="FK_Requests_Clients" Association="Self.FK_Requests_Clients">
+            <End Role="Clients" EntitySet="Clients" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests_DeviseTypes" Association="Self.FK_Requests_DeviseTypes">
+            <End Role="DeviseTypes" EntitySet="DeviseTypes" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Services_DeviseTypes" Association="Self.FK_Services_DeviseTypes">
+            <End Role="DeviseTypes" EntitySet="DeviseTypes" />
+            <End Role="Services" EntitySet="Services" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employees_Roles" Association="Self.FK_Employees_Roles">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="Employees" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepairTeam_Employees" Association="Self.FK_RepairTeam_Employees">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="RepairTeam" EntitySet="RepairTeam" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests_Employees1" Association="Self.FK_Requests_Employees1">
+            <End Role="Employees" EntitySet="Employees" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RepairTeam_Requests" Association="Self.FK_RepairTeam_Requests">
+            <End Role="Requests" EntitySet="Requests" />
+            <End Role="RepairTeam" EntitySet="RepairTeam" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests_Status" Association="Self.FK_Requests_Status">
+            <End Role="Status" EntitySet="Status" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="Request_RepairParts" Association="Self.Request_RepairParts">
+            <End Role="RepairParts" EntitySet="RepairParts" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="Requests_Services" Association="Self.Requests_Services">
+            <End Role="Requests" EntitySet="Requests" />
+            <End Role="Services" EntitySet="Services" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище ServiceCenterTMCModelContainer" CdmEntityContainer="ServiceCenterTMCEntities">
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.Clients">
+              <MappingFragment StoreEntitySet="Clients">
+                <ScalarProperty Name="IDClient" ColumnName="IDClient" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DeviseTypes">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.DeviseTypes">
+              <MappingFragment StoreEntitySet="DeviseTypes">
+                <ScalarProperty Name="IDtype" ColumnName="IDtype" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.Employees">
+              <MappingFragment StoreEntitySet="Employees">
+                <ScalarProperty Name="IDEmployee" ColumnName="IDEmployee" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="INN" ColumnName="INN" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RepairParts">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.RepairParts">
+              <MappingFragment StoreEntitySet="RepairParts">
+                <ScalarProperty Name="IDpart" ColumnName="IDpart" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RepairTeam">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.RepairTeam">
+              <MappingFragment StoreEntitySet="RepairTeam">
+                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
+                <ScalarProperty Name="MasterID" ColumnName="MasterID" />
+                <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Requests">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.Requests">
+              <MappingFragment StoreEntitySet="Requests">
+                <ScalarProperty Name="IDrequest" ColumnName="IDrequest" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="DeviceType" ColumnName="DeviceType" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="ReceiverID" ColumnName="ReceiverID" />
+                <ScalarProperty Name="IMEI_SN" ColumnName="IMEI/SN" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.Roles">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="IDRole" ColumnName="IDRole" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Services">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.Services">
+              <MappingFragment StoreEntitySet="Services">
+                <ScalarProperty Name="IDservice" ColumnName="IDservice" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="Warranty" ColumnName="Warranty" />
+                <ScalarProperty Name="DeviceTypeId" ColumnName="DeviceTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.Status">
+              <MappingFragment StoreEntitySet="Status">
+                <ScalarProperty Name="IDstatus" ColumnName="IDstatus" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Request_RepairParts" TypeName="ServiceCenterTMCModel.Request_RepairParts" StoreEntitySet="Request_RepairParts">
+            <EndProperty Name="RepairParts">
+              <ScalarProperty Name="IDpart" ColumnName="RepairPartID" />
+            </EndProperty>
+            <EndProperty Name="Requests">
+              <ScalarProperty Name="IDrequest" ColumnName="RequestID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Requests_Services" TypeName="ServiceCenterTMCModel.Requests_Services" StoreEntitySet="Requests_Services">
+            <EndProperty Name="Requests">
+              <ScalarProperty Name="IDrequest" ColumnName="RequestID" />
+            </EndProperty>
+            <EndProperty Name="Services">
+              <ScalarProperty Name="IDservice" ColumnName="ServiceID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

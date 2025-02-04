@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5ccd11c06a5f499091cf8c3b4dd91b6a" Name="Diagram1">
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.Clients" Width="1.5" PointX="0.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.DeviseTypes" Width="1.5" PointX="0.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.Employees" Width="1.5" PointX="0.75" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.RepairParts" Width="1.5" PointX="0.75" PointY="19.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.RepairTeam" Width="1.5" PointX="5.25" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.Requests" Width="1.5" PointX="3" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.Roles" Width="1.5" PointX="1.5" PointY="16.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.Services" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.Status" Width="1.5" PointX="0.75" PointY="22.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.sysdiagrams" Width="1.5" PointX="5.75" PointY="7" IsExpanded="true" />
+        <AssociationConnector Association="ServiceCenterTMCModel.FK_Requests_Clients" ManuallyRouted="false" />
+        <AssociationConnector Association="ServiceCenterTMCModel.FK_Requests_DeviseTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="ServiceCenterTMCModel.FK_Services_DeviseTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="ServiceCenterTMCModel.FK_Employees_Roles" ManuallyRouted="false" />
+        <AssociationConnector Association="ServiceCenterTMCModel.FK_RepairTeam_Employees" ManuallyRouted="false" />
+        <AssociationConnector Association="ServiceCenterTMCModel.FK_Requests_Employees1" ManuallyRouted="false" />
+        <AssociationConnector Association="ServiceCenterTMCModel.FK_RepairTeam_Requests" ManuallyRouted="false" />
+        <AssociationConnector Association="ServiceCenterTMCModel.FK_Requests_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="ServiceCenterTMCModel.Request_RepairParts" ManuallyRouted="false" />
+        <AssociationConnector Association="ServiceCenterTMCModel.Requests_Services" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
