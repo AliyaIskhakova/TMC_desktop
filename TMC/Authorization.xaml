@@ -4,14 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMC.ViewModel"
+        WindowStartupLocation="CenterScreen"
         x:Name="auth"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="900">
     <Window.Resources>
         <Style TargetType="TextBlock" x:Key="t1">
             <Setter Property="FontFamily" Value="Inter"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontSize" Value="30"/>
             <Setter Property="FontWeight" Value="Regular"/>
             <Setter Property="Margin" Value="0,0,0,5"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -19,13 +20,13 @@
         <Style TargetType="TextBlock" x:Key="t2">
             <Setter Property="FontFamily" Value="Inter"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontSize" Value="30"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
         <Style TargetType="Label">
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontFamily" Value="Inter"/>
         </Style>
     </Window.Resources>
@@ -43,10 +44,10 @@
             <TextBlock Text="Сервисный центр" Style="{StaticResource t1}"/>
             <TextBlock Text="ТехноМедиаСоюз" Style="{StaticResource t2}" />
             <Label Content="Логин"/>
-            <TextBox x:Name="loginBox" Style="{StaticResource authTxtBox}"  />
+            <TextBox x:Name="loginBox" Style="{StaticResource InfoTxtBox}"/>
             <Label Content="Пароль"/>
-            <PasswordBox x:Name="passwordBox"/>
-            <Button Margin="0 7" Style="{StaticResource mainBtn}" Command="{Binding AuthorizationCommand}" CommandParameter="{Binding ElementName=auth}">Войти</Button>
+            <PasswordBox x:Name="passwordBox" Style="{StaticResource PasswordBoxStyle}"/>
+            <Button Margin="0 7" Style="{StaticResource MainBtn}" FontSize="15" Command="{Binding AuthorizationCommand}" CommandParameter="{Binding ElementName=auth}">Войти</Button>
         </StackPanel>
 
 

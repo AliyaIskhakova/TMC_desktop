@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TMC.Model;
+using TMC.ViewModel;
 
 namespace TMC
 {
@@ -63,9 +64,25 @@ namespace TMC
             }
         }
 
-        private void SearchEmployee_TextChanged(object sender, TextChangedEventArgs e)
+
+        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var selectedItem = (sender as DataGrid).SelectedItem;
+            var viewModel = new ClientsViewModel();
+            viewModel.EditClientCommand.Execute(selectedItem);
+
+        }
+
+        private void ClientsDG_Selected(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void ClientsDG_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedItem = (sender as DataGrid).SelectedItem;
+            var viewModel = new ClientsViewModel();
+            viewModel.EditClientCommand.Execute(selectedItem);
         }
     }
 }

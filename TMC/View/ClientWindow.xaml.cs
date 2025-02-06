@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TMC.Model;
 
 namespace TMC.View
 {
@@ -19,9 +20,34 @@ namespace TMC.View
     /// </summary>
     public partial class ClientWindow : Window
     {
-        public ClientWindow()
+        public Clients Clients { get; private set; }
+        public ClientWindow( Clients client)
         {
             InitializeComponent();
+            Clients = client;
+            DataContext = Clients;
+            if(Clients.Type==true) ur.IsChecked = true;
+            else fiz.IsChecked = true;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            CompanyTxt.Visibility = Visibility.Visible;
+        }
+
+        private void RadioButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CompanyTxt.Visibility = Visibility.Collapsed;
+        }
+
+        void Accept_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
         }
     }
 }

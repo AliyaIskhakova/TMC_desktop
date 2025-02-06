@@ -4,9 +4,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMC.View"
+        xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"      
+        Background="#E4E9FF"
+                WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="EmployeeWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        WindowStyle="None"
+        Title="EmployeeWindow" Height="400" Width="450">
+    <DockPanel >
+        <Border DockPanel.Dock="Top">
+            <DockPanel >
+                <Label Content="Сотрудник" Margin="30 15 30 10" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                
+                <Button HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Margin="10" Command="SystemCommands.CloseWindowCommand">
+                    <Image Source="/Image/close.png" />
+                </Button>
+            </DockPanel>
+        </Border>
+        <StackPanel>
+            <Border Padding="30 0">
+                <StackPanel>
+                    <TextBox Text="{Binding Surname}" ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox Text="{Binding Name}" ui:TextBoxHelper.Watermark="Имя"  Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox Text="{Binding Patronymic}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}" />
+                    <TextBox Text="{Binding Telephone}" ui:TextBoxHelper.Watermark="Телефон"  Style="{StaticResource InfoTxtBox}"/>
+                    <ComboBox SelectedIndex="{Binding Role}" ui:ControlsHelper.CornerRadius="5" Background="White" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5">
+                        <ComboBoxItem IsSelected="True" Content="Администратор"/>
+                        <ComboBoxItem Content="Инженер-приёмщик"/>
+                        <ComboBoxItem Content="Мастер"/>
+                        <ComboBoxItem Content="Администратор"/>
+                    </ComboBox>
+                    <TextBox Text="{Binding Login}" ui:TextBoxHelper.Watermark="Логин" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox Text="{Binding Password}" ui:TextBoxHelper.Watermark="Пароль" Style="{StaticResource InfoTxtBox}" />
+                </StackPanel>
+            </Border>
+            <Button Style="{StaticResource MainBtn}" Content="Сохранить" Margin="30 5" />
+            <Button Content="Отменить" Style="{StaticResource CancelBtn}"  />
+        </StackPanel>
+    </DockPanel>
 </Window>

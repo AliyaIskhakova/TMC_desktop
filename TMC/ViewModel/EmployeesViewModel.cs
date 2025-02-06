@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using TMC.Model;
+using TMC.View;
 
 namespace TMC.ViewModel
 {
@@ -15,7 +16,9 @@ namespace TMC.ViewModel
     {
         ObservableCollection<Employees> _employees;
          string _searchText;
-         ObservableCollection<Employees> _filteredEmployees;
+
+        RelayCommand? addCommand;
+        ObservableCollection<Employees> _filteredEmployees;
 
         public EmployeesViewModel()
         {
@@ -58,6 +61,24 @@ namespace TMC.ViewModel
                 var filtered = _employees.Where(e =>
         e.Surname.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()) || e.Name.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()) || e.Patronymic.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()));
                 EmployeesList = new ObservableCollection<Employees>(filtered);
+            }
+        }
+
+        public RelayCommand AddEmployeeCommand
+        {
+            get
+            {
+                return addCommand ??
+                  (addCommand = new RelayCommand((o) =>
+                  {
+                      EmployeeWindow employeeWindow = new EmployeeWindow();
+                      if (employeeWindow.ShowDialog() == true)
+                      {
+                          //User user = userWindow.User;
+                          //db.Users.Add(user);
+                          //db.SaveChanges();
+                      }
+                  }));
             }
         }
 

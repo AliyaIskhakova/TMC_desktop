@@ -4,22 +4,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMC.ViewModel"  
-xmlns:ui="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        
+        xmlns:l="clr-namespace:TMC.Model"
+        xmlns:ui="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="1000">
     <Window.Resources>
-                   
-            <Style TargetType="Button" x:Key="MenuBtn">
-                <Setter Property="Margin" Value="0 7 0 0"/>
-                <Setter Property="Background" Value="{x:Null}"/>
-                
+
+        <Style TargetType="Button" x:Key="MenuBtn">
+            <Setter Property="Margin" Value="0 7 0 0"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+
+        <Style TargetType="DataGrid" BasedOn="{StaticResource MahApps.Styles.DataGrid}" x:Key="MainDataGrid">
+                <Setter Property="ColumnWidth" Value="*"/>
+                <Setter Property="Margin" Value="20"/>
+                <Setter Property="SelectionMode" Value="Single"/>
+                <Setter Property="CanUserAddRows" Value="False"/>
+                <Setter Property="CanUserDeleteRows" Value="False"/>
+                <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+                <Setter Property="AutoGenerateColumns" Value="False"/>
+                <Setter Property="Background" Value="#EEF1FF"/>
             </Style>
+            
             <Style TargetType="Image" x:Key="MenuImg">
-                <Setter Property="Width" Value="30"/>
-                <Setter Property="Margin" Value="10 0"/>
-            </Style>
-        <Style TargetType="Button" x:Key="Filter">
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Margin" Value="10 0"/>
+        </Style>
+        <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="BorderBrush" Value="#EEF1FF"/>
+            <Setter Property="BorderThickness" Value=" 0 3"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+            <Style TargetType="Button" x:Key="Filter">
             <Style.Setters>
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="BorderThickness" Value="0 0 0 0"/>
@@ -37,6 +56,9 @@ xmlns:ui="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                     </EventTrigger.Actions>
                 </EventTrigger>
             </Style.Triggers>
+        </Style>
+        <Style TargetType="Button" BasedOn="{StaticResource MainBtn}">
+            <Setter Property="Margin" Value="0"/>
         </Style>
     </Window.Resources>
     <Grid>
@@ -127,12 +149,15 @@ xmlns:ui="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
            
         </DockPanel>
         <Grid x:Name="RequestsWindow" Grid.Column="1" Visibility="Collapsed">
+            <Grid.DataContext>
+                <local:RequestViewModel/>
+            </Grid.DataContext>
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Заявки</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                    <TextBox x:Name="SearchRequest" BorderThickness="1" Margin="20 0 10 0"  BorderBrush="Gray" MinWidth="200" ui:TextBoxHelper.Watermark="Поиск" ui:ControlsHelper.CornerRadius="10"></TextBox>
-                    <Button x:Name="FilterBtn" Style="{StaticResource mainBtn}" >Фильтр</Button>
-                    <Button x:Name="AddRequest" Style="{StaticResource mainBtn}">+ Добавить заявку</Button>
+                    <TextBox x:Name="SearchRequest" Style="{StaticResource SearchBox}"></TextBox>
+                    <Button x:Name="FilterBtn" Style="{StaticResource MainBtn}" >Фильтр</Button>
+                    <Button x:Name="AddRequest" Style="{StaticResource MainBtn}">+ Добавить заявку</Button>
                 </StackPanel>
                 <StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="20 0 ">
@@ -151,13 +176,17 @@ xmlns:ui="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
             </DockPanel>
         </Grid>
         <Grid x:Name="StoreWindow" Visibility="Collapsed" Grid.Column="1">
+            <Grid.DataContext>
+                <local:StoreViewModel/>
+            </Grid.DataContext>
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Склад ЗИП</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                    <TextBox x:Name="SearchParts" BorderThickness="1" Margin="20 0 10 0"  BorderBrush="Gray" MinWidth="200" ui:TextBoxHelper.Watermark="Поиск" ui:ControlsHelper.CornerRadius="10"></TextBox>
-                    <Button x:Name="AddReraipPart" Style="{StaticResource mainBtn}">+ Добавить </Button>
+                    <TextBox x:Name="SearchParts" Style="{StaticResource SearchBox}"></TextBox>
+                    <Button x:Name="AddReraipPart" Style="{StaticResource MainBtn}">+ Добавить </Button>
                 </StackPanel>
                 <StackPanel>
+                
                     <DataGrid x:Name="StoreDG" Margin="10,20,10,0" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID"/>
@@ -169,33 +198,43 @@ xmlns:ui="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                 </StackPanel>
             </DockPanel>
         </Grid>
-        <Grid x:Name="ClientsWindow" Visibility="Collapsed" Grid.Column="1">
+        <Grid x:Name="ClientsWindow"  Grid.Column="1">
+            <Grid.DataContext>
+                <local:ClientsViewModel/>
+            </Grid.DataContext>
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Клиенты</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                    <TextBox x:Name="SearchClient" BorderThickness="1" Margin="20 0 10 0"  BorderBrush="Gray" MinWidth="200" ui:TextBoxHelper.Watermark="Поиск" ui:ControlsHelper.CornerRadius="10"></TextBox>
-                    <Button x:Name="AddClient" Style="{StaticResource mainBtn}">+ Добавить</Button>
+                    <TextBox x:Name="SearchClient" Style="{StaticResource SearchBox}"  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <Button x:Name="AddClient"  Command="{Binding AddClientCommand}">+ Добавить</Button>
                 </StackPanel>
-                <StackPanel>
-                    <DataGrid x:Name="ClientsDG" Margin="10,20,10,0" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" >
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Имя"/>
-                            <DataGridTextColumn Header="Телефон"/>
-                            <DataGridTextColumn Header="Тип"/>
-                            <DataGridTextColumn Header="Почта"/>
-                            <DataGridTextColumn Header="Компания"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
+                <DataGrid x:Name="ClientsDG" SelectionChanged="ClientsDG_SelectionChanged" ItemsSource="{Binding ClientsList}" Style="{StaticResource MainDataGrid}">
+                    <DataGrid.Resources>
+                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                    </DataGrid.Resources>
+                    
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}" />
+                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}" />
+                        <DataGridTextColumn Header="Телефон" Binding="{Binding Telephone}"/>
+                        <DataGridTextColumn Header="Тип" Binding="{Binding Type}"/>
+                        <DataGridTextColumn Header="Почта" Binding="{Binding Email}"/>
+                        <DataGridTextColumn Header="Компания" Binding="{Binding CompanyName}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
         </Grid>
         <Grid x:Name="ServicesWindow" Visibility="Collapsed"  Grid.Column="1">
+            <Grid.DataContext>
+                <local:ServicesViewModel/>
+            </Grid.DataContext>
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Услуги</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                    <TextBox x:Name="SearchServices" BorderThickness="1" Margin="20 0 10 0"  BorderBrush="Gray" MinWidth="200" ui:TextBoxHelper.Watermark="Поиск" ui:ControlsHelper.CornerRadius="10"></TextBox>
-                    <Button x:Name="FilterServiceBtn" Style="{StaticResource mainBtn}" >Фильтр</Button>
-                    <Button x:Name="PrintPriceList" Style="{StaticResource mainBtn}">Печать</Button>
+                    <TextBox x:Name="SearchServices" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <Button x:Name="FilterServiceBtn" Style="{StaticResource MainBtn}" >Фильтр</Button>
+                    <Button x:Name="PrintPriceList" Style="{StaticResource MainBtn}">Печать</Button>
                 </StackPanel>
                 <StackPanel>
                     <DataGrid x:Name="ServicesDG" Margin="10,20,10,0" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" >
@@ -210,15 +249,15 @@ xmlns:ui="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                 </StackPanel>
             </DockPanel>
         </Grid>
-        <Grid x:Name="EmployeesWindow"  Grid.Column="1">
+        <Grid x:Name="EmployeesWindow" Visibility="Collapsed"  Grid.Column="1">
             <Grid.DataContext>
                 <local:EmployeesViewModel/>
             </Grid.DataContext>
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Сотрудники</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                    <TextBox x:Name="SearchEmployee" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"  BorderThickness="1" Margin="20 0 10 0"  BorderBrush="Gray" MinWidth="400"  ui:TextBoxHelper.Watermark="Поиск" ui:ControlsHelper.CornerRadius="10"></TextBox>
-                    <Button x:Name="AddEmployee" Visibility="Collapsed" Style="{StaticResource mainBtn}">+ Добавить</Button>
+                    <TextBox x:Name="SearchEmployee" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBox}" MinWidth="400" ></TextBox>
+                    <Button x:Name="AddEmployee" Visibility="Collapsed" Style="{StaticResource MainBtn}" Command="{Binding AddEmployeeCommand}">+ Добавить</Button>
                 </StackPanel>
                 <StackPanel>
                     <DataGrid x:Name="EmployeesDG" Margin="10,20,10,0" ItemsSource="{Binding EmployeesList}" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" AutoGenerateColumns="False" ColumnWidth="*" >

@@ -5,8 +5,103 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMC.View"
         mc:Ignorable="d"
-        Title="RequestWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        WindowStyle="None" 
+                WindowStartupLocation="CenterScreen"
+
+        xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"      
+        Background="#E4E9FF"
+        Title="RequestWindow" MinHeight="700" MinWidth="800"  >
+    <ScrollViewer>
+        <StackPanel>
+            <StackPanel  Orientation="Horizontal " Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center">
+                <Label Content="Заявка" Margin="30 15 30 10" VerticalContentAlignment="Center" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                <RadioButton Content="Гарантийный" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                <RadioButton Content="Выездной" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+            </StackPanel>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <DockPanel >
+                        <Label Content="Клиент" Margin="30 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                        <RadioButton Content="Физ.лицо" IsChecked="True" />
+                        <RadioButton Content="Юр.лицо" Checked="RadioButton_Checked_1" Unchecked="RadioButton_Unchecked_1"/>
+                    </DockPanel>
+
+                    <Border Padding="30 0">
+                        <StackPanel>
+                            <TextBox Text="{Binding Surname}" ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}" />
+                            <TextBox Text="{Binding Name}" ui:TextBoxHelper.Watermark="Имя" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding Patronymic}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding Telephone}" ui:TextBoxHelper.Watermark="Телефон" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding Email}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding Company}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}"/>
+                        </StackPanel>
+                    </Border>
+                    <Label Margin="30 0" Content="Исполнитель" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                    <Border Padding="30 0 ">
+                        <StackPanel>
+                            <ComboBox Background="White" Margin="0 5" ui:ControlsHelper.CornerRadius="5" BorderBrush="Gray" BorderThickness="1.5" >
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Surname}"/>
+                                            <TextBlock Text=" "/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                            <TextBlock Text=" "/>
+                                            <TextBlock Text="{Binding Telephone}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Border DockPanel.Dock="Top">
+                        <Label Content="Информация о заявке" Margin="0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                    </Border>
+                    <Border Padding="0 0 30 0">
+                        <StackPanel>
+                            <TextBox ui:TextBoxHelper.Watermark="Причина обращения" Style="{StaticResource InfoTxtBox}" />
+                            <TextBox ui:TextBoxHelper.Watermark="Дата обращения" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox ui:TextBoxHelper.Watermark="Вид устройства" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox ui:TextBoxHelper.Watermark="IMEI/SN" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox ui:TextBoxHelper.Watermark="Дата готовности" Style="{StaticResource InfoTxtBox}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Услуги" Margin="30 0 0 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                <Button Style="{StaticResource MainBtn}"  Content="Добавить услугу"/>
+            </StackPanel>
+            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedServices}" Margin="30 0" MinHeight="80" Background="White">
+                <DataGrid.Columns>
+
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Необходимые ЗИП" Margin="30 0 0 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                <Button Style="{StaticResource MainBtn}"  Content="Добавить ЗИП"/>
+            </StackPanel>
+            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedServices}" Margin="30 0" MinHeight="80" Background="White">
+                <DataGrid.Columns>
+
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource MainBtn}"  Content="Акт приёмки" Margin="30 10 10 10"/>
+                <Button Style="{StaticResource MainBtn}"  Content="Акт диагностики" Margin="10"/>
+                <Button Style="{StaticResource MainBtn}"  Content="Акт выполнения работ" Margin="10" IsEnabled="False"/>
+            </StackPanel>
+            <Button Style="{StaticResource MainBtn}" Content="Coхранить"/>
+
+        </StackPanel>
+    </ScrollViewer>
 </Window>

@@ -9,26 +9,27 @@
           <Key>
             <PropertyRef Name="IDClient" />
           </Key>
-          <Property Name="IDClient" Type="int" Nullable="false" />
+          <Property Name="IDClient" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Surname" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Patronymic" Type="nvarchar(max)" />
           <Property Name="Telephone" Type="nvarchar" MaxLength="11" Nullable="false" />
           <Property Name="Type" Type="bit" Nullable="false" />
           <Property Name="CompanyName" Type="nvarchar(max)" />
+          <Property Name="Email" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="DeviseTypes">
           <Key>
             <PropertyRef Name="IDtype" />
           </Key>
-          <Property Name="IDtype" Type="int" Nullable="false" />
+          <Property Name="IDtype" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Employees">
           <Key>
             <PropertyRef Name="IDEmployee" />
           </Key>
-          <Property Name="IDEmployee" Type="int" Nullable="false" />
+          <Property Name="IDEmployee" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Surname" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Patronymic" Type="nvarchar(max)" />
@@ -42,7 +43,7 @@
           <Key>
             <PropertyRef Name="IDpart" />
           </Key>
-          <Property Name="IDpart" Type="int" Nullable="false" />
+          <Property Name="IDpart" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Count" Type="int" Nullable="false" />
         </EntityType>
@@ -66,7 +67,7 @@
           <Key>
             <PropertyRef Name="IDrequest" />
           </Key>
-          <Property Name="IDrequest" Type="int" Nullable="false" />
+          <Property Name="IDrequest" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ClientID" Type="int" Nullable="false" />
           <Property Name="StatusID" Type="int" Nullable="false" />
           <Property Name="Reason" Type="nvarchar(max)" Nullable="false" />
@@ -89,14 +90,14 @@
           <Key>
             <PropertyRef Name="IDRole" />
           </Key>
-          <Property Name="IDRole" Type="int" Nullable="false" />
+          <Property Name="IDRole" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Services">
           <Key>
             <PropertyRef Name="IDservice" />
           </Key>
-          <Property Name="IDservice" Type="int" Nullable="false" />
+          <Property Name="IDservice" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Cost" Type="int" Nullable="false" />
           <Property Name="Warranty" Type="int" Nullable="false" />
@@ -334,20 +335,21 @@
           <Key>
             <PropertyRef Name="IDClient" />
           </Key>
-          <Property Name="IDClient" Type="Int32" Nullable="false" />
+          <Property Name="IDClient" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Patronymic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Telephone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Type" Type="Boolean" Nullable="false" />
           <Property Name="CompanyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Clients" FromRole="Clients" ToRole="Requests" />
         </EntityType>
         <EntityType Name="DeviseTypes">
           <Key>
             <PropertyRef Name="IDtype" />
           </Key>
-          <Property Name="IDtype" Type="Int32" Nullable="false" />
+          <Property Name="IDtype" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_DeviseTypes" FromRole="DeviseTypes" ToRole="Requests" />
           <NavigationProperty Name="Services" Relationship="Self.FK_Services_DeviseTypes" FromRole="DeviseTypes" ToRole="Services" />
@@ -356,7 +358,7 @@
           <Key>
             <PropertyRef Name="IDEmployee" />
           </Key>
-          <Property Name="IDEmployee" Type="Int32" Nullable="false" />
+          <Property Name="IDEmployee" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Patronymic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -373,7 +375,7 @@
           <Key>
             <PropertyRef Name="IDpart" />
           </Key>
-          <Property Name="IDpart" Type="Int32" Nullable="false" />
+          <Property Name="IDpart" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Count" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Requests" Relationship="Self.Request_RepairParts" FromRole="RepairParts" ToRole="Requests" />
@@ -392,7 +394,7 @@
           <Key>
             <PropertyRef Name="IDrequest" />
           </Key>
-          <Property Name="IDrequest" Type="Int32" Nullable="false" />
+          <Property Name="IDrequest" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ClientID" Type="Int32" Nullable="false" />
           <Property Name="StatusID" Type="Int32" Nullable="false" />
           <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
@@ -414,7 +416,7 @@
           <Key>
             <PropertyRef Name="IDRole" />
           </Key>
-          <Property Name="IDRole" Type="Int32" Nullable="false" />
+          <Property Name="IDRole" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Employees" Relationship="Self.FK_Employees_Roles" FromRole="Roles" ToRole="Employees" />
         </EntityType>
@@ -422,7 +424,7 @@
           <Key>
             <PropertyRef Name="IDservice" />
           </Key>
-          <Property Name="IDservice" Type="Int32" Nullable="false" />
+          <Property Name="IDservice" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Cost" Type="Int32" Nullable="false" />
           <Property Name="Warranty" Type="Int32" Nullable="false" />
@@ -620,6 +622,7 @@
                 <ScalarProperty Name="Telephone" ColumnName="Telephone" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -11,8 +11,10 @@ namespace TMC.Model
 {
     using System;
     using System.Collections.Generic;
-    
-    public partial class Clients
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+
+    public partial class Clients: INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Clients()
@@ -27,8 +29,81 @@ namespace TMC.Model
         public string Telephone { get; set; }
         public bool Type { get; set; }
         public string CompanyName { get; set; }
+        public string Email { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests> Requests { get; set; }
+
+        public string name
+        {
+            get { return Name; }
+            set
+            {
+                Name = value;
+                OnPropertyChanged("name");
+            }
+        }
+        public string surname
+        {
+            get { return Surname; }
+            set
+            {
+                Surname = value;
+                OnPropertyChanged("surname");
+            }
+        }
+        public string patronymic
+        {
+            get { return Patronymic; }
+            set
+            {
+                Patronymic = value;
+                OnPropertyChanged("patronymic");
+            }
+        }
+        public string telephone
+        {
+            get { return Telephone; }
+            set
+            {
+                Telephone = value;
+                OnPropertyChanged("telephone");
+            }
+        }
+        public string email
+        {
+            get { return Email; }
+            set
+            {
+                Email = value;
+                OnPropertyChanged("email");
+            }
+        }
+
+        public string companyname
+        {
+            get { return CompanyName; }
+            set
+            {
+                CompanyName = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool type
+        {
+            get { return Type; }
+            set
+            {
+                Type = value;
+                OnPropertyChanged("type");
+            }
+        }
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
     }
 }

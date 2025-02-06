@@ -3,93 +3,47 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TMC.View"
+        xmlns:local="clr-namespace:TMC.ViewModel"
         xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"
+        WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         Background="#E4E9FF"
         Name="window"
         mc:Ignorable="d"
-        Title="ClientWindow" MinHeight="400" MinWidth="450">
+        Title="ClientWindow" MaxHeight="400" MaxWidth="450" MinHeight="370" MinWidth="400" >
     <Window.Resources>
         <Style TargetType="RadioButton">
             <Setter Property="BorderBrush" Value="#2747BB"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Margin" Value="10 0"/>
-
         </Style>
-        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="ui:ControlsHelper.CornerRadius" Value="5"/>
-            <Setter Property="Margin" Value="30 5"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="BorderThickness" Value="1.5"/>
-        </Style>
-        <Style TargetType="Button" x:Key="CancelBtn" BasedOn="{StaticResource {x:Type Button}}">
-            <Style.Setters>
-                <Setter Property="Margin" Value="30 5"/>
-                <Setter Property="ui:ControlsHelper.CornerRadius" Value="5"/>
-                <Setter Property="Background" Value="#CFD9FF"/>
-                <Setter Property="FontFamily" Value="Inter"/>
-                <Setter Property="FontWeight" Value="Medium"/>
-                <Setter Property="BorderBrush" Value="#2747BB"/>
-                <Setter Property="BorderThickness" Value="1.5"/>
-                <Setter Property="Foreground" Value="#2747BB"/>
-            </Style.Setters>
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="MouseEnter">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" Duration="0:0:1" To="#889EEA" AutoReverse="False"  />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="MouseLeave">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" Duration="0:0:1" To="#CFD9FF" AutoReverse="False"  />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-            </Style.Triggers>
-        </Style>
-        <Style TargetType="Button" x:Key="SaveBtn" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Margin" Value="30 5"/>
-            <Setter Property="ui:ControlsHelper.CornerRadius" Value="5"/>
-            <Setter Property="Background" Value="#2747BB"/>
-            <Setter Property="FontFamily" Value="Inter"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="BorderBrush" Value="#2747BB"/>
-            <Setter Property="BorderThickness" Value="1.5"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
+        
     </Window.Resources>
-    <DockPanel >
+    <DockPanel>
         <Border DockPanel.Dock="Top">
             <DockPanel >
                 <Label Content="Клиент" Margin="30 15 30 10" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                <RadioButton Content="Физ.лицо"/>
-                <RadioButton Content="Юр.лицо"/>
-                <Button HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Margin="10" Command="SystemCommands.CloseWindowCommand" CommandParameter="{Binding ElementName=window}">
+                <RadioButton x:Name="fiz" Content="Физ.лицо" />
+                <RadioButton x:Name="ur" IsChecked="{Binding type}" Content="Юр.лицо" Checked="RadioButton_Checked" Unchecked="RadioButton_Unchecked"/>
+                <Button Click="Button_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Margin="10">
                     <Image Source="/Image/close.png" />
                 </Button>
             </DockPanel>
         </Border>
         <StackPanel>
-            <TextBox ui:TextBoxHelper.Watermark="Фамилия"/>
-            <TextBox ui:TextBoxHelper.Watermark="Имя" />
-            <TextBox ui:TextBoxHelper.Watermark="Отчество" />
-            <TextBox ui:TextBoxHelper.Watermark="Телефон" />
-            <TextBox ui:TextBoxHelper.Watermark="Почта" />
-            <TextBox x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" />
-            <Button Style="{StaticResource SaveBtn}" Content="Сохранить" Margin="30 5" />
+            <Border Padding="30 0">
+                <StackPanel>
+                    <TextBox Text="{Binding surname}" ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}" />
+                    <TextBox Text="{Binding name}" ui:TextBoxHelper.Watermark="Имя" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox Text="{Binding patronymic}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox Text="{Binding telephone}" ui:TextBoxHelper.Watermark="Телефон" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox Text="{Binding email}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox Text="{Binding companyname}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}"/>
+                </StackPanel>
+            </Border>
+            <Button Style="{StaticResource MainBtn}" Content="Сохранить" IsDefault="True" Click="Accept_Click" Margin="30 5" />
             <Button Content="Отменить" Style="{StaticResource CancelBtn}"  />
         </StackPanel>
-        
-
     </DockPanel>
 </Window>
