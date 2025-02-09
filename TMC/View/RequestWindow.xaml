@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TMC.View"
+        xmlns:local="clr-namespace:TMC.ViewModel"
         mc:Ignorable="d"
         WindowStyle="None" 
                 WindowStartupLocation="CenterScreen"
@@ -11,13 +11,18 @@
         xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"      
         Background="#E4E9FF"
         Title="RequestWindow" MinHeight="700" MinWidth="800"  >
-    <ScrollViewer>
+    <ScrollViewer VerticalScrollBarVisibility="Hidden">
         <StackPanel>
+            <DockPanel>
             <StackPanel  Orientation="Horizontal " Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center">
                 <Label Content="Заявка" Margin="30 15 30 10" VerticalContentAlignment="Center" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                 <RadioButton Content="Гарантийный" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                <RadioButton Content="Выездной" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-            </StackPanel>
+                    <RadioButton Content="Выездной" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                </StackPanel>
+                <Button x:Name="CloseBtn" Click="CloseBtn_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Margin="10">
+                    <Image Source="/Image/close.png" />
+                </Button>
+            </DockPanel>
 
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -25,29 +30,35 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <DockPanel >
+                    <StackPanel Orientation="Horizontal">
                         <Label Content="Клиент" Margin="30 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                        <RadioButton Content="Физ.лицо" IsChecked="True" />
-                        <RadioButton Content="Юр.лицо" Checked="RadioButton_Checked_1" Unchecked="RadioButton_Unchecked_1"/>
-                    </DockPanel>
+                        <RadioButton Content="Физ.лицо" IsChecked="True" Margin="0"/>
+                        <RadioButton Content="Юр.лицо" IsChecked="{Binding ClientType}" Checked="RadioButton_Checked_1" Unchecked="RadioButton_Unchecked_1"/>
+                        <Button >
+                            <Image Width="25" Source="/Image/clients.png" />
+                        </Button>
+                        <Button>
+                            <Image Width="25" Source="/Image/close.png" />
+                        </Button>
+                    </StackPanel>
 
                     <Border Padding="30 0">
                         <StackPanel>
-                            <TextBox Text="{Binding Surname}" ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}" />
-                            <TextBox Text="{Binding Name}" ui:TextBoxHelper.Watermark="Имя" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox Text="{Binding Patronymic}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox Text="{Binding Telephone}" ui:TextBoxHelper.Watermark="Телефон" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox Text="{Binding Email}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox Text="{Binding Company}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding ClientSurname}" ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}" />
+                            <TextBox Text="{Binding ClientName}" ui:TextBoxHelper.Watermark="Имя" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding ClientPatronymic}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding ClientTelephone}" ui:TextBoxHelper.Watermark="Телефон" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding ClientEmail}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding ClientCompanyNаme}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}"/>
                         </StackPanel>
                     </Border>
                     <Label Margin="30 0" Content="Исполнитель" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                     <Border Padding="30 0 ">
                         <StackPanel>
-                            <ComboBox Background="White" Margin="0 5" ui:ControlsHelper.CornerRadius="5" BorderBrush="Gray" BorderThickness="1.5" >
+                            <ComboBox Name="MastersBox" ui:TextBoxHelper.Watermark="Исполнитель" Background="White" Margin="0 5" ui:ControlsHelper.CornerRadius="5" BorderBrush="Gray" BorderThickness="1.5" ui:ControlsHelper.FocusBorderBrush="#FF2747BB" ui:ControlsHelper.FocusBorderThickness="1,1,1,1" ui:ControlsHelper.MouseOverBorderBrush="#FF2747BB" ui:ComboBoxHelper.CharacterCasing="Upper" >
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
+                                        <StackPanel Background="White" Orientation="Horizontal">
                                             <TextBlock Text="{Binding Surname}"/>
                                             <TextBlock Text=" "/>
                                             <TextBlock Text="{Binding Name}"/>
@@ -57,6 +68,7 @@
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
+                            <DatePicker  ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" IsEnabled="False" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности"  />
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -66,41 +78,65 @@
                     </Border>
                     <Border Padding="0 0 30 0">
                         <StackPanel>
-                            <TextBox ui:TextBoxHelper.Watermark="Причина обращения" Style="{StaticResource InfoTxtBox}" />
-                            <TextBox ui:TextBoxHelper.Watermark="Дата обращения" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox ui:TextBoxHelper.Watermark="Вид устройства" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox ui:TextBoxHelper.Watermark="IMEI/SN" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox ui:TextBoxHelper.Watermark="Дата готовности" Style="{StaticResource InfoTxtBox}"/>
+                            <ComboBox Name="StatusBox" Background="White" ui:TextBoxHelper.Watermark="Статус заявки" Margin="0 5" ui:ControlsHelper.CornerRadius="5" BorderBrush="Gray" BorderThickness="1.5" >
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBox Text="{Binding Reason}" ui:TextBoxHelper.Watermark="Причина обращения" Style="{StaticResource InfoTxtBox}" />
+                            <TextBox Text="{Binding  DetectedMulfunction}" ui:TextBoxHelper.Watermark="Выявленные неисправности" Style="{StaticResource InfoTxtBox}"/>
+                            <DatePicker SelectedDate="{Binding Date}" ui:ControlsHelper.CornerRadius="5" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White"  ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата обращения" ui:TextBoxHelper.Watermark="Дата обращения"  />
+                            <ComboBox Name="DeviceTypeBox" Background="White"  ui:TextBoxHelper.Watermark="Вид устройства" Margin="0 5" ui:ControlsHelper.CornerRadius="5" BorderBrush="Gray" BorderThickness="1.5" >
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBox Text="{Binding Model}" ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding IMEI_SN}" ui:TextBoxHelper.Watermark="IMEI/SN" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox  x:Name="Address" Visibility="Collapsed" ui:TextBoxHelper.Watermark="Адрес" Style="{StaticResource InfoTxtBox}"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
             </Grid>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Услуги" Margin="30 0 0 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                <Button Style="{StaticResource MainBtn}"  Content="Добавить услугу"/>
+            <StackPanel x:Name="RequestServices">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Услуги" Margin="30 0 0 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                    <Button Style="{StaticResource MainBtn}"  Content="Добавить"/>
+                    <Button Style="{StaticResource MainBtn}" Content="Удалить" Margin="0 5" />
+                </StackPanel>
+                <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedServices}" Margin="30 0" MinHeight="80" Background="White">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Название" />
+                        <DataGridTextColumn Header="Кол-во"/>
+                        <DataGridTextColumn Header="Цена за ед."/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
-            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedServices}" Margin="30 0" MinHeight="80" Background="White">
-                <DataGrid.Columns>
-
-                </DataGrid.Columns>
-            </DataGrid>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Необходимые ЗИП" Margin="30 0 0 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                <Button Style="{StaticResource MainBtn}"  Content="Добавить ЗИП"/>
+            <StackPanel x:Name="RequestRepairParts">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Необходимые ЗИП" Margin="30 0 0 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                    <Button Style="{StaticResource MainBtn}"  Content="Добавить"/>
+                    <Button Style="{StaticResource MainBtn}" Content="Удалить" Margin="0 5" />
+                </StackPanel>
+                <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedServices}" Margin="30 0" MinHeight="80" Background="White">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Название" />
+                        <DataGridTextColumn Header="Кол-во"/>
+                        <DataGridTextColumn Header="Цена за ед."/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
-            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedServices}" Margin="30 0" MinHeight="80" Background="White">
-                <DataGrid.Columns>
-
-                </DataGrid.Columns>
-            </DataGrid>
-            <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource MainBtn}"  Content="Акт приёмки" Margin="30 10 10 10"/>
+            <StackPanel x:Name="PrintBtns" Orientation="Horizontal">
+                <Button Style="{StaticResource MainBtn}"  Content="Акт приёмки" Margin="30 10 0 10"/>
                 <Button Style="{StaticResource MainBtn}"  Content="Акт диагностики" Margin="10"/>
-                <Button Style="{StaticResource MainBtn}"  Content="Акт выполнения работ" Margin="10" IsEnabled="False"/>
+                <Button Style="{StaticResource MainBtn}"  Content="Акт выполнения работ" Margin="0 10" IsEnabled="False"/>
             </StackPanel>
-            <Button Style="{StaticResource MainBtn}" Content="Coхранить"/>
+            <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Coхранить"/>
 
         </StackPanel>
     </ScrollViewer>

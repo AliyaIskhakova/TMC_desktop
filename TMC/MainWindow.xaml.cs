@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -24,6 +25,11 @@ namespace TMC
         public MainWindow()
         {
             InitializeComponent();
+            RequestsWindow.DataContext = new RequestViewModel();
+            ClientsWindow.DataContext = new ClientsViewModel();
+            StoreWindow.DataContext = new StoreViewModel();
+            ServicesWindow.DataContext = new ServicesViewModel();
+            EmployeesWindow.DataContext = new EmployeesViewModel();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -72,17 +78,70 @@ namespace TMC
             viewModel.EditClientCommand.Execute(selectedItem);
 
         }
+        private void ClientsDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
 
-        private void ClientsDG_Selected(object sender, RoutedEventArgs e)
+            var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
+
+            if (row != null)
+            {
+                var selectedItem = (sender as DataGrid).SelectedItem;
+                var viewModel = new ClientsViewModel();
+                viewModel.EditClientCommand.Execute(selectedItem);
+            }
+            
+        }
+
+        private void ServicesDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
 
         }
 
-        private void ClientsDG_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EmployeesDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var selectedItem = (sender as DataGrid).SelectedItem;
-            var viewModel = new ClientsViewModel();
-            viewModel.EditClientCommand.Execute(selectedItem);
+
+        }
+
+        private void StoreDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void RequestDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
+
+            if (row != null)
+            {
+                var selectedItem = (sender as DataGrid).SelectedItem;
+                var viewModel = new RequestViewModel();
+                viewModel.EditRequestCommand.Execute(selectedItem);
+            }
+        }
+
+        private void ButtonFilter_Click(object sender, RoutedEventArgs e)
+        {
+            Button clickedButton = (Button)sender;
+            foreach (Button button in FilterBtnGroup.Children)
+            {
+                button.Foreground = Brushes.DarkGray;
+                button.BorderThickness = new Thickness(0);
+            }
+            var converter = new BrushConverter();
+            clickedButton.Foreground = (Brush)converter.ConvertFromString("#2747BB");
+            clickedButton.BorderThickness = new Thickness(0, 0, 0, 3);
+            clickedButton.BorderBrush = (Brush)converter.ConvertFromString("#2747BB");
+            clickedButton.FontWeight = FontWeights.Bold;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

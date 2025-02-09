@@ -98,7 +98,7 @@ namespace TMC.ViewModel
                   (editCommand = new RelayCommand((selectedItem) =>
                   {
                       // получаем выделенный объект
-                      Clients? client = selectedItem as Clients;
+                      Clients client = selectedItem as Clients;
                       if (client == null) return;
 
                       //Clients vm = new Clients

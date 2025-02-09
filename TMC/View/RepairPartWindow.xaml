@@ -33,7 +33,7 @@
                     <TextBox x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}" />
                 </StackPanel>
             </Border>
-            <Button Style="{StaticResource MainBtn}" Content="Сохранить" Margin="30 5" />
+            <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Сохранить" Margin="30 5" />
             <Button Content="Отменить" Style="{StaticResource CancelBtn}"  />
         </StackPanel>
 

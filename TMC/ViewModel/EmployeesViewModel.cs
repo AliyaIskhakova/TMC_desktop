@@ -71,7 +71,7 @@ namespace TMC.ViewModel
                 return addCommand ??
                   (addCommand = new RelayCommand((o) =>
                   {
-                      EmployeeWindow employeeWindow = new EmployeeWindow();
+                      EmployeeWindow employeeWindow = new EmployeeWindow(new Employees());
                       if (employeeWindow.ShowDialog() == true)
                       {
                           //User user = userWindow.User;

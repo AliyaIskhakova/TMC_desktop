@@ -37,7 +37,7 @@
                     <TextBox Text="{Binding Password}" ui:TextBoxHelper.Watermark="Пароль" Style="{StaticResource InfoTxtBox}" />
                 </StackPanel>
             </Border>
-            <Button Style="{StaticResource MainBtn}" Content="Сохранить" Margin="30 5" />
+            <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Сохранить" Margin="30 5" />
             <Button Content="Отменить" Style="{StaticResource CancelBtn}"  />
         </StackPanel>
     </DockPanel>

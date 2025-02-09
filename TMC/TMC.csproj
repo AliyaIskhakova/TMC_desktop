@@ -113,12 +113,10 @@
     <Compile Include="Model\RepairParts.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\RepairTeam.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\Requests.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\RequestView.cs" />
     <Compile Include="Model\Roles.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

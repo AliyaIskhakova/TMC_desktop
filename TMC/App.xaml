@@ -35,6 +35,7 @@
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="ui:ControlsHelper.CornerRadius" Value="5"/>
                 <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="FontSize" Value="14"/>
                 <Setter Property="BorderThickness" Value="1.5"/>
                 <Setter Property="Margin" Value="0 5"/>
             </Style>
@@ -46,6 +47,7 @@
                     <Setter Property="BorderThickness" Value="1.5"/>
                     <Setter Property="Margin" Value="20 0 10 0"/>
                     <Setter Property="MinWidth" Value="200"/>
+                    <Setter Property="FontSize" Value="14"/>
                     <Setter Property="ui:TextBoxHelper.Watermark" Value="Поиск"/>
                 </Style.Setters>
                 <Style.Triggers>

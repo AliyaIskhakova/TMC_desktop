@@ -11,14 +11,16 @@ namespace TMC.Model
 {
     using System;
     using System.Collections.Generic;
-    
-    public partial class Employees
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+
+    public partial class Employees: INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Employees()
         {
-            this.RepairTeam = new HashSet<RepairTeam>();
             this.Requests = new HashSet<Requests>();
+            this.Requests1 = new HashSet<Requests>();
         }
     
         public int IDEmployee { get; set; }
@@ -26,15 +28,76 @@ namespace TMC.Model
         public string Name { get; set; }
         public string Patronymic { get; set; }
         public int RoleID { get; set; }
-        public string INN { get; set; }
         public string Telephone { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
     
         public virtual Roles Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RepairTeam> RepairTeam { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests> Requests { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Requests> Requests1 { get; set; }
+
+        public string name
+        {
+            get { return Name; }
+            set
+            {
+                Name = value;
+                OnPropertyChanged("name");
+            }
+        }
+        public string surname
+        {
+            get { return Surname; }
+            set
+            {
+                Surname = value;
+                OnPropertyChanged("surname");
+            }
+        }
+        public string patronymic
+        {
+            get { return Patronymic; }
+            set
+            {
+                Patronymic = value;
+                OnPropertyChanged("patronymic");
+            }
+        }
+        public string telephone
+        {
+            get { return Telephone; }
+            set
+            {
+                Telephone = value;
+                OnPropertyChanged("telephone");
+            }
+        }
+        public string login
+        {
+            get { return Login; }
+            set
+            {
+                Login = value;
+                OnPropertyChanged("login");
+            }
+        }
+        public string password
+        {
+            get { return password; }
+            set
+            {
+                Password = value;
+                OnPropertyChanged("password");
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
     }
 }

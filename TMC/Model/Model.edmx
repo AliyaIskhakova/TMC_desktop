@@ -34,7 +34,6 @@
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Patronymic" Type="nvarchar(max)" />
           <Property Name="RoleID" Type="int" Nullable="false" />
-          <Property Name="INN" Type="nvarchar" MaxLength="10" Nullable="false" />
           <Property Name="Telephone" Type="nvarchar" MaxLength="11" Nullable="false" />
           <Property Name="Login" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
@@ -46,14 +45,6 @@
           <Property Name="IDpart" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Count" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="RepairTeam">
-          <Key>
-            <PropertyRef Name="RequestID" />
-          </Key>
-          <Property Name="RequestID" Type="int" Nullable="false" />
-          <Property Name="MasterID" Type="int" Nullable="false" />
-          <Property Name="CompletionDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Request_RepairParts">
           <Key>
@@ -74,9 +65,13 @@
           <Property Name="Date" Type="datetime" />
           <Property Name="DeviceType" Type="int" Nullable="false" />
           <Property Name="Cost" Type="int" Nullable="false" />
-          <Property Name="ReceiverID" Type="int" Nullable="false" />
+          <Property Name="ReceiverID" Type="int" />
           <Property Name="IMEI/SN" Type="nvarchar(max)" />
           <Property Name="Model" Type="nvarchar(max)" />
+          <Property Name="CompletionDate" Type="datetime" />
+          <Property Name="MasterID" Type="int" />
+          <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="DetectedMulfunction" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Requests_Services">
           <Key>
@@ -132,30 +127,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RepairTeam_Employees">
-          <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
-          <End Role="RepairTeam" Type="Self.RepairTeam" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Employees">
-              <PropertyRef Name="IDEmployee" />
-            </Principal>
-            <Dependent Role="RepairTeam">
-              <PropertyRef Name="MasterID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RepairTeam_Requests">
-          <End Role="Requests" Type="Self.Requests" Multiplicity="1" />
-          <End Role="RepairTeam" Type="Self.RepairTeam" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Requests">
-              <PropertyRef Name="IDrequest" />
-            </Principal>
-            <Dependent Role="RepairTeam">
-              <PropertyRef Name="RequestID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Request_RepairParts_RepairParts">
           <End Role="RepairParts" Type="Self.RepairParts" Multiplicity="1" />
           <End Role="Request_RepairParts" Type="Self.Request_RepairParts" Multiplicity="*" />
@@ -204,8 +175,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Requests_Employees">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employees">
+              <PropertyRef Name="IDEmployee" />
+            </Principal>
+            <Dependent Role="Requests">
+              <PropertyRef Name="MasterID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Requests_Employees1">
-          <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
           <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Employees">
@@ -269,7 +252,6 @@
           <EntitySet Name="DeviseTypes" EntityType="Self.DeviseTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RepairParts" EntityType="Self.RepairParts" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="RepairTeam" EntityType="Self.RepairTeam" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Request_RepairParts" EntityType="Self.Request_RepairParts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Requests" EntityType="Self.Requests" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Requests_Services" EntityType="Self.Requests_Services" Schema="dbo" store:Type="Tables" />
@@ -280,14 +262,6 @@
           <AssociationSet Name="FK_Employees_Roles" Association="Self.FK_Employees_Roles">
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Employees" EntitySet="Employees" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RepairTeam_Employees" Association="Self.FK_RepairTeam_Employees">
-            <End Role="Employees" EntitySet="Employees" />
-            <End Role="RepairTeam" EntitySet="RepairTeam" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RepairTeam_Requests" Association="Self.FK_RepairTeam_Requests">
-            <End Role="Requests" EntitySet="Requests" />
-            <End Role="RepairTeam" EntitySet="RepairTeam" />
           </AssociationSet>
           <AssociationSet Name="FK_Request_RepairParts_RepairParts" Association="Self.FK_Request_RepairParts_RepairParts">
             <End Role="RepairParts" EntitySet="RepairParts" />
@@ -303,6 +277,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_Requests_DeviseTypes" Association="Self.FK_Requests_DeviseTypes">
             <End Role="DeviseTypes" EntitySet="DeviseTypes" />
+            <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Requests_Employees" Association="Self.FK_Requests_Employees">
+            <End Role="Employees" EntitySet="Employees" />
             <End Role="Requests" EntitySet="Requests" />
           </AssociationSet>
           <AssociationSet Name="FK_Requests_Employees1" Association="Self.FK_Requests_Employees1">
@@ -363,13 +341,12 @@
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Patronymic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="RoleID" Type="Int32" Nullable="false" />
-          <Property Name="INN" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Telephone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Login" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Roles" Relationship="Self.FK_Employees_Roles" FromRole="Employees" ToRole="Roles" />
-          <NavigationProperty Name="RepairTeam" Relationship="Self.FK_RepairTeam_Employees" FromRole="Employees" ToRole="RepairTeam" />
-          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Employees1" FromRole="Employees" ToRole="Requests" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Employees" FromRole="Employees" ToRole="Requests" />
+          <NavigationProperty Name="Requests1" Relationship="Self.FK_Requests_Employees1" FromRole="Employees" ToRole="Requests" />
         </EntityType>
         <EntityType Name="RepairParts">
           <Key>
@@ -379,16 +356,6 @@
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Count" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Requests" Relationship="Self.Request_RepairParts" FromRole="RepairParts" ToRole="Requests" />
-        </EntityType>
-        <EntityType Name="RepairTeam">
-          <Key>
-            <PropertyRef Name="RequestID" />
-          </Key>
-          <Property Name="RequestID" Type="Int32" Nullable="false" />
-          <Property Name="MasterID" Type="Int32" Nullable="false" />
-          <Property Name="CompletionDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Employees" Relationship="Self.FK_RepairTeam_Employees" FromRole="RepairTeam" ToRole="Employees" />
-          <NavigationProperty Name="Requests" Relationship="Self.FK_RepairTeam_Requests" FromRole="RepairTeam" ToRole="Requests" />
         </EntityType>
         <EntityType Name="Requests">
           <Key>
@@ -401,13 +368,17 @@
           <Property Name="Date" Type="DateTime" Precision="3" />
           <Property Name="DeviceType" Type="Int32" Nullable="false" />
           <Property Name="Cost" Type="Int32" Nullable="false" />
-          <Property Name="ReceiverID" Type="Int32" Nullable="false" />
+          <Property Name="ReceiverID" Type="Int32" />
           <Property Name="IMEI_SN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Model" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CompletionDate" Type="DateTime" Precision="3" />
+          <Property Name="MasterID" Type="Int32" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DetectedMulfunction" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Clients" Relationship="Self.FK_Requests_Clients" FromRole="Requests" ToRole="Clients" />
           <NavigationProperty Name="DeviseTypes" Relationship="Self.FK_Requests_DeviseTypes" FromRole="Requests" ToRole="DeviseTypes" />
-          <NavigationProperty Name="Employees" Relationship="Self.FK_Requests_Employees1" FromRole="Requests" ToRole="Employees" />
-          <NavigationProperty Name="RepairTeam" Relationship="Self.FK_RepairTeam_Requests" FromRole="Requests" ToRole="RepairTeam" />
+          <NavigationProperty Name="Employees" Relationship="Self.FK_Requests_Employees" FromRole="Requests" ToRole="Employees" />
+          <NavigationProperty Name="Employees1" Relationship="Self.FK_Requests_Employees1" FromRole="Requests" ToRole="Employees" />
           <NavigationProperty Name="Status" Relationship="Self.FK_Requests_Status" FromRole="Requests" ToRole="Status" />
           <NavigationProperty Name="RepairParts" Relationship="Self.Request_RepairParts" FromRole="Requests" ToRole="RepairParts" />
           <NavigationProperty Name="Services" Relationship="Self.Requests_Services" FromRole="Requests" ToRole="Services" />
@@ -498,20 +469,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RepairTeam_Employees">
-          <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
-          <End Role="RepairTeam" Type="Self.RepairTeam" Multiplicity="*" />
+        <Association Name="FK_Requests_Employees">
+          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Employees">
               <PropertyRef Name="IDEmployee" />
             </Principal>
-            <Dependent Role="RepairTeam">
+            <Dependent Role="Requests">
               <PropertyRef Name="MasterID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Requests_Employees1">
-          <End Role="Employees" Type="Self.Employees" Multiplicity="1" />
+          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
           <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Employees">
@@ -519,18 +490,6 @@
             </Principal>
             <Dependent Role="Requests">
               <PropertyRef Name="ReceiverID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RepairTeam_Requests">
-          <End Role="Requests" Type="Self.Requests" Multiplicity="1" />
-          <End Role="RepairTeam" Type="Self.RepairTeam" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="Requests">
-              <PropertyRef Name="IDrequest" />
-            </Principal>
-            <Dependent Role="RepairTeam">
-              <PropertyRef Name="RequestID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -559,7 +518,6 @@
           <EntitySet Name="DeviseTypes" EntityType="Self.DeviseTypes" />
           <EntitySet Name="Employees" EntityType="Self.Employees" />
           <EntitySet Name="RepairParts" EntityType="Self.RepairParts" />
-          <EntitySet Name="RepairTeam" EntityType="Self.RepairTeam" />
           <EntitySet Name="Requests" EntityType="Self.Requests" />
           <EntitySet Name="Roles" EntityType="Self.Roles" />
           <EntitySet Name="Services" EntityType="Self.Services" />
@@ -581,17 +539,13 @@
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Employees" EntitySet="Employees" />
           </AssociationSet>
-          <AssociationSet Name="FK_RepairTeam_Employees" Association="Self.FK_RepairTeam_Employees">
+          <AssociationSet Name="FK_Requests_Employees" Association="Self.FK_Requests_Employees">
             <End Role="Employees" EntitySet="Employees" />
-            <End Role="RepairTeam" EntitySet="RepairTeam" />
+            <End Role="Requests" EntitySet="Requests" />
           </AssociationSet>
           <AssociationSet Name="FK_Requests_Employees1" Association="Self.FK_Requests_Employees1">
             <End Role="Employees" EntitySet="Employees" />
             <End Role="Requests" EntitySet="Requests" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RepairTeam_Requests" Association="Self.FK_RepairTeam_Requests">
-            <End Role="Requests" EntitySet="Requests" />
-            <End Role="RepairTeam" EntitySet="RepairTeam" />
           </AssociationSet>
           <AssociationSet Name="FK_Requests_Status" Association="Self.FK_Requests_Status">
             <End Role="Status" EntitySet="Status" />
@@ -642,7 +596,6 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
                 <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-                <ScalarProperty Name="INN" ColumnName="INN" />
                 <ScalarProperty Name="Telephone" ColumnName="Telephone" />
                 <ScalarProperty Name="Login" ColumnName="Login" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
@@ -655,15 +608,6 @@
                 <ScalarProperty Name="IDpart" ColumnName="IDpart" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="RepairTeam">
-            <EntityTypeMapping TypeName="ServiceCenterTMCModel.RepairTeam">
-              <MappingFragment StoreEntitySet="RepairTeam">
-                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
-                <ScalarProperty Name="MasterID" ColumnName="MasterID" />
-                <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -680,6 +624,10 @@
                 <ScalarProperty Name="ReceiverID" ColumnName="ReceiverID" />
                 <ScalarProperty Name="IMEI_SN" ColumnName="IMEI/SN" />
                 <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
+                <ScalarProperty Name="MasterID" ColumnName="MasterID" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="DetectedMulfunction" ColumnName="DetectedMulfunction" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

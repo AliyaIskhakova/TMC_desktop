@@ -26,7 +26,8 @@
                 <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
                 <Setter Property="AutoGenerateColumns" Value="False"/>
                 <Setter Property="Background" Value="#EEF1FF"/>
-            </Style>
+                <Setter Property="IsReadOnly" Value="True"/>
+        </Style>
             
             <Style TargetType="Image" x:Key="MenuImg">
             <Setter Property="Width" Value="30"/>
@@ -41,24 +42,25 @@
             <Style TargetType="Button" x:Key="Filter">
             <Style.Setters>
                 <Setter Property="Background" Value="White"/>
-                <Setter Property="BorderThickness" Value="0 0 0 0"/>
+                <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="Padding" Value="20 0"/>
                 <Setter Property="Margin" Value="5 10"/>
+                <Setter Property="Foreground" Value="DarkGray"/>
+                <Setter Property="FontSize" Value="15"/>
             </Style.Setters>
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="Click">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" Duration="0:0:1" To="0 0 0 3" AutoReverse="False"  />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-            </Style.Triggers>
+        </Style>
+        <Style TargetType="Button" BasedOn="{StaticResource Filter}" x:Key="DefaultCheckFilter">
+            <Style.Setters>
+                <Setter Property="BorderThickness" Value="0 0 0 3"/>
+                <Setter Property="Foreground" Value="#2747BB"/>
+                <Setter Property="BorderBrush" Value="#2747BB"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style.Setters>
         </Style>
         <Style TargetType="Button" BasedOn="{StaticResource MainBtn}">
-            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Margin" Value="5 0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="MinWidth" Value="130"/>
         </Style>
     </Window.Resources>
     <Grid>
@@ -149,45 +151,65 @@
            
         </DockPanel>
         <Grid x:Name="RequestsWindow" Grid.Column="1" Visibility="Collapsed">
-            <Grid.DataContext>
-                <local:RequestViewModel/>
-            </Grid.DataContext>
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Заявки</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchRequest" Style="{StaticResource SearchBox}"></TextBox>
-                    <Button x:Name="FilterBtn" Style="{StaticResource MainBtn}" >Фильтр</Button>
-                    <Button x:Name="AddRequest" Style="{StaticResource MainBtn}">+ Добавить заявку</Button>
+                    <Button x:Name="FilterBtn" >Фильтр</Button>
+                    <Button x:Name="AddRequest" Command="{Binding AddRequestCommand}" >+ Добавить заявку</Button>
                 </StackPanel>
                 <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="20 0 ">
-                        <Button Style="{StaticResource Filter}"  Content="Все"/>
-                        <Button Style="{StaticResource Filter}" Content="Новые" />
-                        <Button Style="{StaticResource Filter}" Content="В работе" />
-                        <Button Style="{StaticResource Filter}" Content="Ожидание ЗИП" />
-                        <Button Style="{StaticResource Filter}" Content="Готовые" />
-                        <Button Style="{StaticResource Filter}" Content="Отменены" />
+                    <StackPanel x:Name="FilterBtnGroup" Orientation="Horizontal" Margin="20 0 ">
+                        <Button Click="ButtonFilter_Click" Style="{StaticResource DefaultCheckFilter}" Content="Все"/>
+                        <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Новые" />
+                        <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="В работе" />
+                        <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Ожидание ЗИП" />
+                        <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Готовые" />
+                        <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Отменены" />
                     </StackPanel>
-                    <DataGrid x:Name="RequestDG" Margin="10,20,10,0"
-                  AutoGenerateColumns="True" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" >
+                    <DataGrid x:Name="RequestDG" MouseDoubleClick="RequestDG_MouseDoubleClick" ColumnWidth="Auto" ItemsSource="{Binding RequestsList}" Margin="10,20,10,0"
+                   Style="{StaticResource MainDataGrid}" >
+                        <DataGrid.Resources>
+                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                        </DataGrid.Resources>
 
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="№" Binding="{Binding IDRequest}"/>
+                            <DataGridTextColumn Header="Клиент" Binding="{Binding Client}"/>
+                            <DataGridTemplateColumn Header="Статус">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Border Padding="5 2" CornerRadius="5" Background="{Binding StatusColor}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
+                                                <TextBlock Text="{Binding StatusName}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Исполнитель" Binding="{Binding Employee}"/>
+                            <DataGridTextColumn Header="Проблема" Binding="{Binding Reason}"/>
+                            <DataGridTextColumn Header="Дата обращения" Binding="{Binding Date}"/>
+                            <DataGridTextColumn Header="Дата завершения" Binding="{Binding CompletionDate}"/>
+                        </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>
             </DockPanel>
         </Grid>
         <Grid x:Name="StoreWindow" Visibility="Collapsed" Grid.Column="1">
-            <Grid.DataContext>
-                <local:StoreViewModel/>
-            </Grid.DataContext>
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Склад ЗИП</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchParts" Style="{StaticResource SearchBox}"></TextBox>
-                    <Button x:Name="AddReraipPart" Style="{StaticResource MainBtn}">+ Добавить </Button>
+                    <Button x:Name="AddReraipPart" >+ Добавить </Button>
                 </StackPanel>
                 <StackPanel>
                 
-                    <DataGrid x:Name="StoreDG" Margin="10,20,10,0" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" >
+                    <DataGrid x:Name="StoreDG" MouseDoubleClick="StoreDG_MouseDoubleClick" Margin="10,20,10,0" Style="{StaticResource MainDataGrid}" >
+                        <DataGrid.Resources>
+                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                        </DataGrid.Resources>
+
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID"/>
                             <DataGridTextColumn Header="Название"/>
@@ -199,20 +221,17 @@
             </DockPanel>
         </Grid>
         <Grid x:Name="ClientsWindow"  Grid.Column="1">
-            <Grid.DataContext>
-                <local:ClientsViewModel/>
-            </Grid.DataContext>
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Клиенты</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchClient" Style="{StaticResource SearchBox}"  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Button x:Name="AddClient"  Command="{Binding AddClientCommand}">+ Добавить</Button>
                 </StackPanel>
-                <DataGrid x:Name="ClientsDG" SelectionChanged="ClientsDG_SelectionChanged" ItemsSource="{Binding ClientsList}" Style="{StaticResource MainDataGrid}">
+                <DataGrid x:Name="ClientsDG"  MouseDoubleClick="ClientsDG_MouseDoubleClick"  ItemsSource="{Binding ClientsList}" Style="{StaticResource MainDataGrid}">
                     <DataGrid.Resources>
                         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                     </DataGrid.Resources>
-                    
+
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}" />
                         <DataGridTextColumn Header="Имя" Binding="{Binding Name}" />
@@ -226,18 +245,20 @@
             </DockPanel>
         </Grid>
         <Grid x:Name="ServicesWindow" Visibility="Collapsed"  Grid.Column="1">
-            <Grid.DataContext>
-                <local:ServicesViewModel/>
-            </Grid.DataContext>
+
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Услуги</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchServices" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                    <Button x:Name="FilterServiceBtn" Style="{StaticResource MainBtn}" >Фильтр</Button>
-                    <Button x:Name="PrintPriceList" Style="{StaticResource MainBtn}">Печать</Button>
+                    <Button x:Name="FilterServiceBtn" >Фильтр</Button>
+                    <Button x:Name="PrintPriceList" >Печать</Button>
                 </StackPanel>
                 <StackPanel>
-                    <DataGrid x:Name="ServicesDG" Margin="10,20,10,0" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" >
+                    <DataGrid x:Name="ServicesDG" MouseDoubleClick="ServicesDG_MouseDoubleClick" Margin="10,20,10,0" Style="{StaticResource MainDataGrid}" >
+                        <DataGrid.Resources>
+                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                        </DataGrid.Resources>
+
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название"/>
                             <DataGridTextColumn Header="Тип"/>
@@ -250,17 +271,18 @@
             </DockPanel>
         </Grid>
         <Grid x:Name="EmployeesWindow" Visibility="Collapsed"  Grid.Column="1">
-            <Grid.DataContext>
-                <local:EmployeesViewModel/>
-            </Grid.DataContext>
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Сотрудники</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchEmployee" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBox}" MinWidth="400" ></TextBox>
-                    <Button x:Name="AddEmployee" Visibility="Collapsed" Style="{StaticResource MainBtn}" Command="{Binding AddEmployeeCommand}">+ Добавить</Button>
+                    <Button x:Name="AddEmployee" Visibility="Collapsed" Command="{Binding AddEmployeeCommand}">+ Добавить</Button>
                 </StackPanel>
                 <StackPanel>
-                    <DataGrid x:Name="EmployeesDG" Margin="10,20,10,0" ItemsSource="{Binding EmployeesList}" Style="{StaticResource MahApps.Styles.DataGrid.Azure}" AutoGenerateColumns="False" ColumnWidth="*" >
+                    <DataGrid x:Name="EmployeesDG" MouseDoubleClick="EmployeesDG_MouseDoubleClick" Margin="10,20,10,0" ItemsSource="{Binding EmployeesList}" Style="{StaticResource MainDataGrid}">
+                        <DataGrid.Resources>
+                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                        </DataGrid.Resources>
+
                         <DataGrid.Columns >
                             <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}"/>
                             <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>

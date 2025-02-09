@@ -1,0 +1,332 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TMC.Model
+{
+    using System;
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+
+    public class RequestView : INotifyPropertyChanged
+    {
+        private int _idRequest;
+        private int? _employeeID;
+        private string _employeeSurname;
+        private string _employeeName;
+        private string _employeePatronymic;
+        private string _employeeTelephone;
+        private int _statusID;
+        private string _statusName;
+        private string _statusColor;
+        private int? _clientID;
+        private string _clientSurname;
+        private string _clientName;
+        private string _clientPatronymic;
+        private string _clientTelephone;
+        private string _clientEmail;
+        private bool _clientType;
+        private string _clientCompanyName;
+        private DateTime? _completionDate;
+        private string _reason;
+        private DateTime _date;
+        private int _deviceID;
+        private string _deviceTypeName;
+        private decimal _cost;
+        private string _imeiSN;
+        private string _model;
+        private string _notes;
+        private string _detectedMulfunction;
+
+        public int IDRequest
+        {
+            get { return _idRequest; }
+            set
+            {
+                _idRequest = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int? EmployeeID
+        {
+            get { return _employeeID; }
+            set
+            {
+                _employeeID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string EmployeeSurname
+        {
+            get { return _employeeSurname; }
+            set
+            {
+                _employeeSurname = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Employee));
+            }
+        }
+
+        public string EmployeeName
+        {
+            get { return _employeeName; }
+            set
+            {
+                _employeeName = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Employee));
+            }
+        }
+
+        public string EmployeePatronymic
+        {
+            get { return _employeePatronymic; }
+            set
+            {
+                _employeePatronymic = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Employee));
+            }
+        }
+
+        public string EmployeeTelephone
+        {
+            get { return _employeeTelephone; }
+            set
+            {
+                _employeeTelephone = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Employee));
+            }
+        }
+
+        public string Employee => $"{EmployeeSurname} {EmployeeName} {EmployeePatronymic} \n {EmployeeTelephone}";
+
+        public int StatusID
+        {
+            get { return _statusID; }
+            set
+            {
+                _statusID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string StatusName
+        {
+            get { return _statusName; }
+            set
+            {
+                _statusName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string StatusColor
+        {
+            get { return _statusColor; }
+            set
+            {
+                _statusColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int? ClientID
+        {
+            get { return _clientID; }
+            set
+            {
+                _clientID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ClientSurname
+        {
+            get { return _clientSurname; }
+            set
+            {
+                _clientSurname = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Client));
+            }
+        }
+
+        public string ClientName
+        {
+            get { return _clientName; }
+            set
+            {
+                _clientName = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Client));
+            }
+        }
+
+        public string ClientPatronymic
+        {
+            get { return _clientPatronymic; }
+            set
+            {
+                _clientPatronymic = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Client));
+            }
+        }
+
+        public string ClientTelephone
+        {
+            get { return _clientTelephone; }
+            set
+            {
+                _clientTelephone = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Client));
+            }
+        }
+
+        public string ClientEmail
+        {
+            get { return _clientEmail; }
+            set
+            {
+                _clientEmail = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ClientType
+        {
+            get { return _clientType; }
+            set
+            {
+                _clientType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ClientCompanyName
+        {
+            get { return _clientCompanyName; }
+            set
+            {
+                _clientCompanyName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Client => $"{ClientSurname} {ClientName} {ClientPatronymic} \n {ClientTelephone}";
+
+        public DateTime? CompletionDate
+        {
+            get { return _completionDate; }
+            set
+            {
+                _completionDate = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Reason
+        {
+            get { return _reason; }
+            set
+            {
+                _reason = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DateTime Date
+        {
+            get { return _date; }
+            set
+            {
+                _date = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int DeviceID
+        {
+            get { return _deviceID; }
+            set
+            {
+                _deviceID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string DeviceTypeName
+        {
+            get { return _deviceTypeName; }
+            set
+            {
+                _deviceTypeName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public decimal Cost
+        {
+            get { return _cost; }
+            set
+            {
+                _cost = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string IMEI_SN
+        {
+            get { return _imeiSN; }
+            set
+            {
+                _imeiSN = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Model
+        {
+            get { return _model; }
+            set
+            {
+                _model = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Notes
+        {
+            get { return _notes; }
+            set
+            {
+                _notes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string DetectedMulfunction
+        {
+            get { return _detectedMulfunction; }
+            set
+            {
+                _detectedMulfunction = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}

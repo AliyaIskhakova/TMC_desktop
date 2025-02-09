@@ -14,7 +14,7 @@ namespace TMC.Model
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    public partial class Clients: INotifyPropertyChanged
+    public partial class Clients:INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Clients()
@@ -104,6 +104,5 @@ namespace TMC.Model
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-
     }
 }

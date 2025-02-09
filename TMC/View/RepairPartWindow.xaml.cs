@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TMC.Model;
 
 namespace TMC.View
 {
@@ -19,9 +20,17 @@ namespace TMC.View
     /// </summary>
     public partial class RepairPartWindow : Window
     {
-        public RepairPartWindow()
+        public RepairParts RepairParts { get; private set; }
+
+        public RepairPartWindow(RepairParts repairParts)
         {
             InitializeComponent();
+            RepairParts = repairParts;
+            DataContext = repairParts;
+        }
+        void Accept_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
         }
     }
 }

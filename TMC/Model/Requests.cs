@@ -28,14 +28,18 @@ namespace TMC.Model
         public Nullable<System.DateTime> Date { get; set; }
         public int DeviceType { get; set; }
         public int Cost { get; set; }
-        public int ReceiverID { get; set; }
+        public Nullable<int> ReceiverID { get; set; }
         public string IMEI_SN { get; set; }
         public string Model { get; set; }
+        public Nullable<System.DateTime> CompletionDate { get; set; }
+        public Nullable<int> MasterID { get; set; }
+        public string Notes { get; set; }
+        public string DetectedMulfunction { get; set; }
     
         public virtual Clients Clients { get; set; }
         public virtual DeviseTypes DeviseTypes { get; set; }
         public virtual Employees Employees { get; set; }
-        public virtual RepairTeam RepairTeam { get; set; }
+        public virtual Employees Employees1 { get; set; }
         public virtual Status Status { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<RepairParts> RepairParts { get; set; }
