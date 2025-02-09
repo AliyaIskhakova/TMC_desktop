@@ -13,8 +13,9 @@ namespace TMC.Model
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
+    using System.Text.RegularExpressions;
 
-    public partial class Clients:INotifyPropertyChanged
+    public partial class Clients:INotifyPropertyChanged, IDataErrorInfo
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Clients()
@@ -98,6 +99,41 @@ namespace TMC.Model
                 OnPropertyChanged("type");
             }
         }
+        
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = String.Empty;
+                switch (columnName)
+                {
+                    
+                    case nameof(surname):
+                        if (string.IsNullOrWhiteSpace(surname))
+                            error = "Поле не может быть пустым";
+                        break;
+                    case nameof(name):
+                        if (string.IsNullOrWhiteSpace(name))
+                            error = "Поле не может быть пустым";
+                        break;
+                    
+                    case nameof(email):
+                        if (!Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                            error = "Неверный формат почты";
+                        break;
+                }
+                return error;
+            }
+        }
+        public bool HasValidationErrors()
+        {
+            return !string.IsNullOrEmpty(this[nameof(name)]) || !string.IsNullOrEmpty(this[nameof(email)]);
+        }
+        public string Error
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {

@@ -47,7 +47,8 @@ namespace TMC.View
 
         void Accept_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
+            if (Clients.HasValidationErrors()) MessageBox.Show("Проверьте ввведенные данные"); 
+            else DialogResult = true;
         }
     }
 }

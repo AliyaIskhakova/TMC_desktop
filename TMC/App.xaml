@@ -38,11 +38,20 @@
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="BorderThickness" Value="1.5"/>
                 <Setter Property="Margin" Value="0 5"/>
+                <Style.Triggers>
+                    <Trigger Property="Validation.HasError" Value="True">
+                        <Setter Property="Foreground" Value="Red" />
+                        <Setter Property="BorderBrush" Value="Red"/>
+                        <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                    </Trigger>
+                </Style.Triggers>
             </Style>
             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}" x:Key="SearchBox">
                 <Style.Setters>
                     <Setter Property="Background" Value="White"/>
                     <Setter Property="ui:ControlsHelper.CornerRadius" Value="10"/>
+                    <Setter Property="ui:ControlsHelper.MouseOverBorderBrush" Value="#FF2747BB"  />
+                    <Setter Property="ui:ControlsHelper.FocusBorderBrush" Value="#FF2747BB"/>
                     <Setter Property="BorderBrush" Value="Gray"/>
                     <Setter Property="BorderThickness" Value="1.5"/>
                     <Setter Property="Margin" Value="20 0 10 0"/>

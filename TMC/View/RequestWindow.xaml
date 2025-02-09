@@ -10,7 +10,7 @@
 
         xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"      
         Background="#E4E9FF"
-        Title="RequestWindow" MinHeight="700" MinWidth="800"  >
+        Title="RequestWindow" MinHeight="740" MinWidth="500"  >
     <ScrollViewer VerticalScrollBarVisibility="Hidden">
         <StackPanel>
             <DockPanel>
@@ -44,7 +44,7 @@
 
                     <Border Padding="30 0">
                         <StackPanel>
-                            <TextBox Text="{Binding ClientSurname}" ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}" />
+                            <TextBox Text="{Binding ClientSurname}"  ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}" />
                             <TextBox Text="{Binding ClientName}" ui:TextBoxHelper.Watermark="Имя" Style="{StaticResource InfoTxtBox}"/>
                             <TextBox Text="{Binding ClientPatronymic}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
                             <TextBox Text="{Binding ClientTelephone}" ui:TextBoxHelper.Watermark="Телефон" Style="{StaticResource InfoTxtBox}"/>
@@ -68,7 +68,7 @@
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                            <DatePicker  ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" IsEnabled="False" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности"  />
+                            <DatePicker SelectedDate="{Binding ComplitionDate}"   ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности" AutomationProperties.HelpText="ccc"  />
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -91,13 +91,15 @@
                             <ComboBox Name="DeviceTypeBox" Background="White"  ui:TextBoxHelper.Watermark="Вид устройства" Margin="0 5" ui:ControlsHelper.CornerRadius="5" BorderBrush="Gray" BorderThickness="1.5" >
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock Background="White" Text="{Binding Name}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                             <TextBox Text="{Binding Model}" ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}"/>
                             <TextBox Text="{Binding IMEI_SN}" ui:TextBoxHelper.Watermark="IMEI/SN" Style="{StaticResource InfoTxtBox}"/>
                             <TextBox Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox Text="{Binding Notes}" ui:TextBoxHelper.Watermark="Заметки" Style="{StaticResource InfoTxtBox}"/>
+
                             <TextBox  x:Name="Address" Visibility="Collapsed" ui:TextBoxHelper.Watermark="Адрес" Style="{StaticResource InfoTxtBox}"/>
                         </StackPanel>
                     </Border>

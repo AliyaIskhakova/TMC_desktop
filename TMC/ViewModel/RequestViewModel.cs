@@ -63,6 +63,9 @@ namespace TMC.ViewModel
                              ClientName = c.Name,
                              ClientPatronymic = c.Patronymic,
                              ClientTelephone = c.Telephone,
+                             ClientType = c.Type,
+                             ClientCompanyName = c.CompanyName,
+                             ClientEmail = c.Email,
                              CompletionDate = r.CompletionDate,
                              Reason = r.Reason,
                              Date = (DateTime)r.Date,
@@ -118,10 +121,36 @@ namespace TMC.ViewModel
                   (addCommand = new RelayCommand((o) =>
                   {
                       RequestWindow requestWindow = new RequestWindow(new RequestView());
+                      requestWindow.MastersBox.ItemsSource = MastersList;
+                      requestWindow.StatusBox.ItemsSource = context.Status.ToList();
+                      requestWindow.DeviceTypeBox.ItemsSource = context.DeviseTypes.ToList();
+
                       if (requestWindow.ShowDialog() == true)
                       {
-                          Requests requests = requestWindow.Requests;
-                          context.Requests.Add(requests);
+                          //Clients client = context.Clients.Find(request.ClientID);
+                          Clients client = new Clients();
+                          Requests newRequest = new Requests();
+                          RequestView request = requestWindow.RequestView;
+                          client.Surname = request.ClientSurname;
+                          client.Name = request.ClientName;
+                          client.Patronymic = request.ClientPatronymic;
+                          client.CompanyName = request.ClientCompanyName;
+                          client.Type = request.ClientType;
+                          client.Telephone = request.ClientTelephone;
+                          client.Email = request.ClientEmail;
+                          context.Clients.Add(client);
+                          var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
+                          newRequest.StatusID = selectedStatus.IDstatus;
+                          newRequest.Reason = request.Reason;
+                          newRequest.DetectedMulfunction = request.DetectedMulfunction;
+                          newRequest.DeviceType = (requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes).IDtype;
+                          newRequest.Model = request.Model;
+                          newRequest.Date = DateTime.Now;
+                          newRequest.IMEI_SN = request.IMEI_SN;
+                          newRequest.Notes = request.Notes;
+                          newRequest.Cost = (int)request.Cost;
+                          newRequest.CompletionDate = request.CompletionDate;
+                          context.Requests.Add(newRequest);
                           context.SaveChanges();
                       }
                   }));
@@ -152,8 +181,25 @@ namespace TMC.ViewModel
                       //requestWindow.MastersBox.SelectedItem = _mastersList.First(m=>m.IDEmployee==request.EmployeeID);
                       if (requestWindow.ShowDialog() == true)
                       {
+                          Clients client = context.Clients.Find(request.ClientID);
+                          client.Surname = request.ClientSurname;
+                          client.Name = request.ClientName;
+                          client.Patronymic = request.ClientPatronymic;
+                          client.CompanyName = request.ClientCompanyName;
+                          client.Type = request.ClientType;
+                          client.Telephone = request.ClientTelephone;
+                          client.Email = request.ClientEmail;
+                          context.Clients.AddOrUpdate(client);
+                          var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
+                          selectedRequest.StatusID = selectedStatus.IDstatus;
                           selectedRequest.Reason = request.Reason;
+                          selectedRequest.DetectedMulfunction = request.DetectedMulfunction;
+                          selectedRequest.DeviceType = (requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes).IDtype;
+                          selectedRequest.Model = request.Model;
+                          selectedRequest.IMEI_SN = request.IMEI_SN;
+                          selectedRequest.Notes = request.Notes;
                           selectedRequest.Cost = (int)request.Cost;
+                          selectedRequest.CompletionDate = request.CompletionDate;
                           context.Requests.AddOrUpdate(selectedRequest);
                           context.SaveChanges();
                           //request.Name = userWindow.User.Name;

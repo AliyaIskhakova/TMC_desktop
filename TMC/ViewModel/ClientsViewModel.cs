@@ -80,11 +80,13 @@ namespace TMC.ViewModel
                       ClientWindow clientWindow = new ClientWindow(new Clients());
                       if (clientWindow.ShowDialog() == true)
                       {
-                          Clients client = clientWindow.Clients;
-                          context.Clients.Add(client);
-                          context.SaveChanges();
-                          _clients = new ObservableCollection<Clients>(context.Clients.ToList());
-                          ClientsList = new ObservableCollection<Clients>(_clients);
+                           Clients client = clientWindow.Clients;
+                          MessageBox.Show(client.telephone);
+                           context.Clients.Add(client);
+                           context.SaveChanges();
+                           _clients = new ObservableCollection<Clients>(context.Clients.ToList());
+                           ClientsList = new ObservableCollection<Clients>(_clients);
+                          
                       }
                   }));
             }
