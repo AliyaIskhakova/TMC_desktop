@@ -15,7 +15,7 @@ namespace TMC.Model
     using System.Runtime.CompilerServices;
     using System.Text.RegularExpressions;
 
-    public partial class Clients:INotifyPropertyChanged, IDataErrorInfo
+    public partial class Clients: INotifyPropertyChanged, IDataErrorInfo
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Clients()
@@ -34,7 +34,6 @@ namespace TMC.Model
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests> Requests { get; set; }
-
         public string name
         {
             get { return Name; }
@@ -99,7 +98,7 @@ namespace TMC.Model
                 OnPropertyChanged("type");
             }
         }
-        
+
         public string this[string columnName]
         {
             get
@@ -107,7 +106,7 @@ namespace TMC.Model
                 string error = String.Empty;
                 switch (columnName)
                 {
-                    
+
                     case nameof(surname):
                         if (string.IsNullOrWhiteSpace(surname))
                             error = "Поле не может быть пустым";
@@ -116,10 +115,31 @@ namespace TMC.Model
                         if (string.IsNullOrWhiteSpace(name))
                             error = "Поле не может быть пустым";
                         break;
-                    
+                    case nameof(telephone):
+                        if (string.IsNullOrWhiteSpace(telephone))
+                            error = "Поле не может быть пустым";
+                        else if (!Regex.IsMatch(telephone, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
+                            error = "неверный формат номера телефона";
+                        break;
                     case nameof(email):
-                        if (!Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-                            error = "Неверный формат почты";
+
+                        if (!string.IsNullOrWhiteSpace(email))
+                        {
+                            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                            {
+                                error = "Неверный формат почты";
+                            }
+                        }
+                        break;
+                    case nameof(companyname):
+
+                        if (type)
+                        {
+                            if (string.IsNullOrWhiteSpace(companyname))
+                            {
+                                error = "Поле не может быть пустым для юр.лиц";
+                            }
+                        }
                         break;
                 }
                 return error;
@@ -127,7 +147,9 @@ namespace TMC.Model
         }
         public bool HasValidationErrors()
         {
-            return !string.IsNullOrEmpty(this[nameof(name)]) || !string.IsNullOrEmpty(this[nameof(email)]);
+            return !string.IsNullOrEmpty(this[nameof(surname)]) || !string.IsNullOrEmpty(this[nameof(name)]) 
+                || !string.IsNullOrEmpty(this[nameof(telephone)]) || !string.IsNullOrEmpty(this[nameof(email)])
+                || !string.IsNullOrEmpty(this[nameof(companyname)]);
         }
         public string Error
         {

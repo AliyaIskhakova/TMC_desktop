@@ -13,7 +13,7 @@
           <Property Name="Surname" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Patronymic" Type="nvarchar(max)" />
-          <Property Name="Telephone" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="Telephone" Type="nvarchar" MaxLength="17" Nullable="false" />
           <Property Name="Type" Type="bit" Nullable="false" />
           <Property Name="CompanyName" Type="nvarchar(max)" />
           <Property Name="Email" Type="nvarchar(max)" />
@@ -317,7 +317,7 @@
           <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Patronymic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Telephone" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Telephone" Type="String" MaxLength="17" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Type" Type="Boolean" Nullable="false" />
           <Property Name="CompanyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />

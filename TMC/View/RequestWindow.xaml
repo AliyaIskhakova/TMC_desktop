@@ -108,14 +108,14 @@
             <StackPanel x:Name="RequestServices">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Услуги" Margin="30 0 0 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                    <Button Style="{StaticResource MainBtn}"  Content="Добавить"/>
+                    <Button Style="{StaticResource MainBtn}" Command="{Binding AddServicesCommand}" Content="Добавить"/>
                     <Button Style="{StaticResource MainBtn}" Content="Удалить" Margin="0 5" />
                 </StackPanel>
                 <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedServices}" Margin="30 0" MinHeight="80" Background="White">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Название" />
-                        <DataGridTextColumn Header="Кол-во"/>
-                        <DataGridTextColumn Header="Цена за ед."/>
+                        <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Кол-во" Binding="{Binding Count}"/>
+                        <DataGridTextColumn Header="Цена за ед." Binding="{Binding Cost}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

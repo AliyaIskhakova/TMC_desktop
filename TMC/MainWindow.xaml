@@ -17,28 +17,13 @@
             <Setter Property="FontSize" Value="15"/>
         </Style>
 
-        <Style TargetType="DataGrid" BasedOn="{StaticResource MahApps.Styles.DataGrid}" x:Key="MainDataGrid">
-                <Setter Property="ColumnWidth" Value="*"/>
-                <Setter Property="Margin" Value="20"/>
-                <Setter Property="SelectionMode" Value="Single"/>
-                <Setter Property="CanUserAddRows" Value="False"/>
-                <Setter Property="CanUserDeleteRows" Value="False"/>
-                <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
-                <Setter Property="AutoGenerateColumns" Value="False"/>
-                <Setter Property="Background" Value="#EEF1FF"/>
-                <Setter Property="IsReadOnly" Value="True"/>
-        </Style>
+        
             
             <Style TargetType="Image" x:Key="MenuImg">
             <Setter Property="Width" Value="30"/>
             <Setter Property="Margin" Value="10 0"/>
         </Style>
-        <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="BorderBrush" Value="#EEF1FF"/>
-            <Setter Property="BorderThickness" Value=" 0 3"/>
-            <Setter Property="Padding" Value="5"/>
-        </Style>
+        
             <Style TargetType="Button" x:Key="Filter">
             <Style.Setters>
                 <Setter Property="Background" Value="White"/>

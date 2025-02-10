@@ -148,9 +148,13 @@
     <Compile Include="ViewModel\ClientsViewModel.cs" />
     <Compile Include="ViewModel\EmployeesViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="ViewModel\RequestDetailViewModel.cs" />
     <Compile Include="ViewModel\RequestViewModel.cs" />
     <Compile Include="ViewModel\ServicesViewModel.cs" />
     <Compile Include="ViewModel\StoreViewModel.cs" />
+    <Compile Include="View\AddServicesWindow.xaml.cs">
+      <DependentUpon>AddServicesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
@@ -176,6 +180,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddServicesWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -249,7 +257,6 @@
   <ItemGroup>
     <Resource Include="Image\close.png" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Model\Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

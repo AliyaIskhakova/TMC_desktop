@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Linq;
 using TMC.Model;
 using TMC.View;
 
@@ -20,6 +21,7 @@ namespace TMC.ViewModel
         RelayCommand? addCommand;
         RelayCommand? relayCommand;
         RelayCommand? editCommand;
+        //RelayCommand addServicesCommand;
         ObservableCollection<Employees> _mastersList;
         Employees SelectedMaster;
         private ObservableCollection<RequestView> _requests;
@@ -32,6 +34,7 @@ namespace TMC.ViewModel
                 OnPropertyChanged();
             }
         }
+        
 
         public RequestViewModel()
         {
@@ -150,6 +153,7 @@ namespace TMC.ViewModel
                           newRequest.Notes = request.Notes;
                           newRequest.Cost = (int)request.Cost;
                           newRequest.CompletionDate = request.CompletionDate;
+                          //newRequest.Services = _selectedServices;
                           context.Requests.Add(newRequest);
                           context.SaveChanges();
                       }
@@ -168,8 +172,6 @@ namespace TMC.ViewModel
                       RequestView request = selectedItem as RequestView;
                       Requests selectedRequest = context.Requests.Find(request.IDRequest);
                       if (request == null) return;
-                      //SelectedMaster = _mastersList.First(m => m.IDEmployee == request.EmployeeID);
-
                       RequestWindow requestWindow = new RequestWindow(request);
                       requestWindow.MastersBox.ItemsSource = MastersList;
                       requestWindow.MastersBox.SelectedItem = context.Employees.Find(request.EmployeeID);
@@ -177,41 +179,57 @@ namespace TMC.ViewModel
                       requestWindow.StatusBox.SelectedItem = context.Status.Find(request.StatusID);
                       requestWindow.DeviceTypeBox.ItemsSource = context.DeviseTypes.ToList();
                       requestWindow.DeviceTypeBox.SelectedItem = context.DeviseTypes.Find(request.DeviceID);
-
-                      //requestWindow.MastersBox.SelectedItem = _mastersList.First(m=>m.IDEmployee==request.EmployeeID);
-                      if (requestWindow.ShowDialog() == true)
-                      {
-                          Clients client = context.Clients.Find(request.ClientID);
-                          client.Surname = request.ClientSurname;
-                          client.Name = request.ClientName;
-                          client.Patronymic = request.ClientPatronymic;
-                          client.CompanyName = request.ClientCompanyName;
-                          client.Type = request.ClientType;
-                          client.Telephone = request.ClientTelephone;
-                          client.Email = request.ClientEmail;
-                          context.Clients.AddOrUpdate(client);
-                          var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
-                          selectedRequest.StatusID = selectedStatus.IDstatus;
-                          selectedRequest.Reason = request.Reason;
-                          selectedRequest.DetectedMulfunction = request.DetectedMulfunction;
-                          selectedRequest.DeviceType = (requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes).IDtype;
-                          selectedRequest.Model = request.Model;
-                          selectedRequest.IMEI_SN = request.IMEI_SN;
-                          selectedRequest.Notes = request.Notes;
-                          selectedRequest.Cost = (int)request.Cost;
-                          selectedRequest.CompletionDate = request.CompletionDate;
-                          context.Requests.AddOrUpdate(selectedRequest);
-                          context.SaveChanges();
-                          //request.Name = userWindow.User.Name;
-                          //user.Age = userWindow.User.Age;
-                          //db.Entry(user).State = EntityState.Modified;
-                          //db.SaveChanges();
-                      }
+                      //if (requestWindow.ShowDialog() == true)
+                      //{
+                      //    Clients client = context.Clients.Find(request.ClientID);
+                      //    client.Surname = request.ClientSurname;
+                      //    client.Name = request.ClientName;
+                      //    client.Patronymic = request.ClientPatronymic;
+                      //    client.CompanyName = request.ClientCompanyName;
+                      //    client.Type = request.ClientType;
+                      //    client.Telephone = request.ClientTelephone;
+                      //    client.Email = request.ClientEmail;
+                      //    context.Clients.AddOrUpdate(client);
+                      //    var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
+                      //    selectedRequest.StatusID = selectedStatus.IDstatus;
+                      //    selectedRequest.Reason = request.Reason;
+                      //    selectedRequest.DetectedMulfunction = request.DetectedMulfunction;
+                      //    selectedRequest.DeviceType = (requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes).IDtype;
+                      //    selectedRequest.Model = request.Model;
+                      //    selectedRequest.IMEI_SN = request.IMEI_SN;
+                      //    selectedRequest.Notes = request.Notes;
+                      //    selectedRequest.Cost = (int)request.Cost;
+                      //    selectedRequest.CompletionDate = request.CompletionDate;
+                          
+                      //    //selectedRequest.Services = _selectedServices;
+                      //    context.Requests.AddOrUpdate(selectedRequest);
+                      //    context.SaveChanges();
+                      //}
                   }));
             }
         }
-
-
+        //public RelayCommand AddServicesCommand
+        //{get
+        //    {
+        //        return addServicesCommand ??
+        //          (addServicesCommand = new RelayCommand((o) =>
+        //          {
+        //              AddServicesWindow servicesWindow = new AddServicesWindow();
+        //              var vm = servicesWindow.DataContext as ServicesViewModel;
+        //              if (vm != null)
+        //              {
+        //                  vm.SelectedServices = new ObservableCollection<Services>();
+        //                  if (servicesWindow.ShowDialog() == true)
+        //                  {
+        //                      _request.Services = vm.SelectedServices.ToList();
+        //                     // context.Requests.AddOrUpdate(_request);
+        //                      OnPropertyChanged(nameof(_request));
+        //                  }
+        //              }
+        //          }));
+        //    }
+            
+        //}
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -81,7 +81,8 @@ namespace TMC.ViewModel
                       if (clientWindow.ShowDialog() == true)
                       {
                            Clients client = clientWindow.Clients;
-                          MessageBox.Show(client.telephone);
+                          MessageBox.Show(client.telephone + client.type);
+                          //client.Telephone = "avae";
                            context.Clients.Add(client);
                            context.SaveChanges();
                            _clients = new ObservableCollection<Clients>(context.Clients.ToList());

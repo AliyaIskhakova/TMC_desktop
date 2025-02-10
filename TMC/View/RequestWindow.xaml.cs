@@ -30,6 +30,7 @@ namespace TMC.View
             RequestView = requestView;
             DataContext = requestView;
             MastersBox.DataContext = new RequestViewModel();
+            RequestDetails.DataContext = new RequestDetailViewModel(RequestView);
         }
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
