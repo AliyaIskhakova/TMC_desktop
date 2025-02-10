@@ -17,14 +17,15 @@ namespace TMC.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RepairParts()
         {
-            this.Requests = new HashSet<Requests>();
+            this.Request_RepairParts = new HashSet<Request_RepairParts>();
         }
     
         public int IDpart { get; set; }
         public string Name { get; set; }
         public int Count { get; set; }
+        public double Cost { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Requests> Requests { get; set; }
+        public virtual ICollection<Request_RepairParts> Request_RepairParts { get; set; }
     }
 }

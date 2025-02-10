@@ -29,7 +29,9 @@ namespace TMC.Model
         public virtual DbSet<DeviseTypes> DeviseTypes { get; set; }
         public virtual DbSet<Employees> Employees { get; set; }
         public virtual DbSet<RepairParts> RepairParts { get; set; }
+        public virtual DbSet<Request_RepairParts> Request_RepairParts { get; set; }
         public virtual DbSet<Requests> Requests { get; set; }
+        public virtual DbSet<Requests_Services> Requests_Services { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<Services> Services { get; set; }
         public virtual DbSet<Status> Status { get; set; }

@@ -24,13 +24,15 @@ namespace TMC.View
     {
         public Requests Requests { get; private set; }
         public RequestView RequestView { get; private set; }
-        public RequestWindow(RequestView requestView)
+        public RequestWindow(Requests request, RequestViewModel vm)
         {
             InitializeComponent();
-            RequestView = requestView;
-            DataContext = requestView;
-            MastersBox.DataContext = new RequestViewModel();
-            RequestDetails.DataContext = new RequestDetailViewModel(RequestView);
+            Requests = request;
+            DataContext = Requests;
+            RequestServices.DataContext = vm; 
+            SaveBtn.DataContext = vm;
+            PrintBtns.DataContext = vm;
+            //RequestDetails.DataContext = new RequestDetailViewModel(RequestView);
         }
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {

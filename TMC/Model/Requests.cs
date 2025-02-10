@@ -17,8 +17,8 @@ namespace TMC.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Requests()
         {
-            this.RepairParts = new HashSet<RepairParts>();
-            this.Services = new HashSet<Services>();
+            this.Request_RepairParts = new HashSet<Request_RepairParts>();
+            this.Requests_Services = new HashSet<Requests_Services>();
         }
     
         public int IDrequest { get; set; }
@@ -26,7 +26,7 @@ namespace TMC.Model
         public int StatusID { get; set; }
         public string Reason { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
-        public int DeviceType { get; set; }
+        public Nullable<int> DeviceType { get; set; }
         public int Cost { get; set; }
         public Nullable<int> ReceiverID { get; set; }
         public string IMEI_SN { get; set; }
@@ -35,15 +35,17 @@ namespace TMC.Model
         public Nullable<int> MasterID { get; set; }
         public string Notes { get; set; }
         public string DetectedMulfunction { get; set; }
+        public string Appearance { get; set; }
+        public string Address { get; set; }
     
         public virtual Clients Clients { get; set; }
         public virtual DeviseTypes DeviseTypes { get; set; }
         public virtual Employees Employees { get; set; }
         public virtual Employees Employees1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Request_RepairParts> Request_RepairParts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Requests_Services> Requests_Services { get; set; }
         public virtual Status Status { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<RepairParts> RepairParts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Services> Services { get; set; }
     }
 }

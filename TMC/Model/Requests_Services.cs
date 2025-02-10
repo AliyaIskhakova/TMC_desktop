@@ -12,18 +12,13 @@ namespace TMC.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class DeviseTypes
+    public partial class Requests_Services
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DeviseTypes()
-        {
-            this.Requests = new HashSet<Requests>();
-        }
+        public int RequestID { get; set; }
+        public int ServiceID { get; set; }
+        public Nullable<int> Count { get; set; }
     
-        public int IDtype { get; set; }
-        public string Name { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Requests> Requests { get; set; }
+        public virtual Requests Requests { get; set; }
+        public virtual Services Services { get; set; }
     }
 }

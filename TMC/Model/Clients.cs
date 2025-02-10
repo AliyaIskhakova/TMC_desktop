@@ -34,6 +34,7 @@ namespace TMC.Model
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests> Requests { get; set; }
+
         public string name
         {
             get { return Name; }
@@ -147,7 +148,7 @@ namespace TMC.Model
         }
         public bool HasValidationErrors()
         {
-            return !string.IsNullOrEmpty(this[nameof(surname)]) || !string.IsNullOrEmpty(this[nameof(name)]) 
+            return !string.IsNullOrEmpty(this[nameof(surname)]) || !string.IsNullOrEmpty(this[nameof(name)])
                 || !string.IsNullOrEmpty(this[nameof(telephone)]) || !string.IsNullOrEmpty(this[nameof(email)])
                 || !string.IsNullOrEmpty(this[nameof(companyname)]);
         }
