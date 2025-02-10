@@ -8,9 +8,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" /> 
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <!-- Theme setting -->
-                
+
                 <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
 
@@ -24,7 +24,7 @@
                 <Setter Property="FontSize" Value="14"/>
             </Style>
             <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
-               
+
                 <Setter Property="FontSize" Value="14"/>
             </Style>
             <Style TargetType="Label" x:Key="WindowTitle">
@@ -43,7 +43,7 @@
                 <Setter Property="BorderThickness" Value="1.5"/>
                 <Setter Property="Foreground" Value="White"/>
             </Style>
-            
+
             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}" x:Key="InfoTxtBox">
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="ui:ControlsHelper.CornerRadius" Value="5"/>
@@ -78,7 +78,7 @@
                         <Setter Property="BorderBrush" Value="Gray"/>
                     </Trigger>
                 </Style.Triggers>
-                
+
             </Style>
 
             <Style TargetType="PasswordBox" BasedOn="{StaticResource {x:Type PasswordBox}}" x:Key="PasswordBoxStyle" >
@@ -88,7 +88,7 @@
                 <Setter Property="BorderThickness" Value="1.5"/>
                 <Setter Property="Margin" Value="0 5"/>
             </Style>
-            
+
             <Style TargetType="Button" x:Key="CancelBtn" BasedOn="{StaticResource {x:Type Button}}">
                 <Style.Setters>
                     <Setter Property="Margin" Value="30 5"/>

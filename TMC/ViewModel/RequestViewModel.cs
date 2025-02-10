@@ -1,33 +1,25 @@
 ﻿using iText.Kernel.Pdf;
-using iText.Layout;
-using iText.Layout.Element;
-using iText.Layout.Properties;
+using PdfSharpCore.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Net;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Linq;
+using System.Windows.Documents;
+using System.Windows.Xps.Packaging;
 using TMC.Model;
 using TMC.View;
-using Word = Microsoft.Office.Interop.Word;
-
-using System.Windows.Documents;
-using Paragraph = iText.Layout.Element.Paragraph;
-using Table = iText.Layout.Element.Table;
-using System.IO;
-using System.Diagnostics;
-using System.Xml;
-using iText.IO.Font.Constants;
-using System.Windows.Media;
+using Microsoft.Office.Interop.Word;
+using Application = Microsoft.Office.Interop.Word.Application;
+using System.Runtime.Remoting.Messaging;
+using Table = Microsoft.Office.Interop.Word.Table;
+using Paragraph = Microsoft.Office.Interop.Word.Paragraph;
 
 namespace TMC.ViewModel
 {
@@ -281,49 +273,111 @@ namespace TMC.ViewModel
                   {
                       RequestWindow requestWindow = o as RequestWindow;
                       var request = requestWindow.Requests;
-                      request.DeviceType = (requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes).IDtype;
+                      var device = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
                       var client = requestWindow.ClientInfo.DataContext as Clients;
-                      PdfDocument document = new PdfDocument();
 
-                      // Создаем страницу
-                      PdfPage page = document.AddPage();
+                      Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
+                      Microsoft.Office.Interop.Word.Document wordDoc = wordApp.Documents.Add();
+                      
+                      // Добавление описания
+                      Paragraph descriptionParagraph1 = wordDoc.Content.Paragraphs.Add();
+                      descriptionParagraph1.Range.Text = "Сервисный центр ТехноМедиаСоюз\n" +
+                                                       "ИП \"Сулейманов М.Р.\", г. Арск ул. Школьная 17, http://www.vk.com/servistmsouz, тел.\n" +
+                                                       "8(443) 248-92-60. Время работы с 9.00 до 18.00 (понедельник-пятница), без перерывов\n\n";
+                      descriptionParagraph1.Range.Font.Size = 12;
+                      descriptionParagraph1.Range.Font.Bold = 1;
+                      descriptionParagraph1.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                      descriptionParagraph1.Range.InsertParagraphAfter();
 
-                      // Создаем объект XGraphics для рисования
-                      XGraphics gfx = XGraphics.FromPdfPage(page);
-
-                      // Настраиваем шрифт и цвет
-                      XFont font = new XFont("Arial", 12, XFontStyle.Regular);
-                      XBrush brush = XBrushes.Black;
-
-                      // Добавляем текст
-                      gfx.DrawString("Это текст в PDF-документе.", font, brush, new XPoint(50, 50));
-                      gfx.DrawString("Ещё один абзац.", font, brush, new XPoint(50, 100));
+                      // Добавление заголовка
+                      Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
+                      titleParagraph.Range.Text = $"Акт о приеме на ремонт №{request.IDrequest}\n";
+                      titleParagraph.Range.Font.Size = 16;
+                      titleParagraph.Range.Font.Bold = 1;
+                      titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                      
+                      titleParagraph.Range.InsertParagraphAfter();
 
 
-                      // Сохраняем PDF-файл
-                      string filePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "MyDocument.pdf");
-                      document.Save(filePath);
 
-                      // Открываем PDF-файл с помощью стандартного средства просмотра PDF
-                      Process.Start(filePath);
+                      // Создание таблицы с 5 строками и 2 колонками
+                      Table table = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 5, 2);
+                      table.Borders.Enable = 1;
+                      table.Range.Bold = 0;
+                      table.Range.Font.Size = 14;
+                      table.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                      table.Cell(1, 1).Range.Text = "Клиент";
+                      table.Cell(2, 1).Range.Text = "Оборудование";
+                      table.Cell(3, 1).Range.Text = "Серийный номер";
+                      table.Cell(4, 1).Range.Text = "Проблема со слов клиента";
+                      table.Cell(5, 1).Range.Text = "Примечание";
 
-                      MessageBox.Show("PDF-файл создан и открыт!");
+                      //Заполнение таблицы данными
+                       table.Cell(1, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
+                      table.Cell(2, 2).Range.Text = $"{device.Name} {request.Model}";
+                      table.Cell(3, 2).Range.Text = $"{request.IMEI_SN}";
+                      table.Cell(4, 2).Range.Text = $"{request.Reason}";
+                      table.Cell(5, 2).Range.Text = $"{request.Notes}";
+
+                      table.Rows[1].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      table.Rows[1].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      table.Rows[2].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      table.Rows[2].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      table.Rows[3].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      table.Rows[3].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      table.Rows[4].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      table.Rows[4].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      table.Rows[5].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      table.Rows[5].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      //table.Rows[6].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      //table.Rows[6].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      // Добавление дополнительного описания
+                      Paragraph descriptionParagraph = wordDoc.Content.Paragraphs.Add();
+                      descriptionParagraph.Range.Text = "Клиент согласен, что все неисправности и внутренние повреждения, которые могут быть обнаружены в оборудовании при техническом обслуживании, " +
+                      "возникли до приема оборудования по данной квитанции. В случае утери акта о приеме оборудования на ремонт выдача аппарата производится при предъявлении паспорта лица сдававшего аппарат " +
+                      "и письменного заявления. Внимание: Срок ремонта аппарата 21 день, максимальный срок при отсутствии запчастей на складе поставщика может быть увеличен до 45 дней. Заказчик согласен на " +
+                      "обработку персональных данных, а также несет ответственность за достоверность предоставленной информации. С комплектацией, описанием неисправностей и повреждений, условиями хранения и " +
+                      "обслуживания оборудования ознакомлен и согласен.";
+                      descriptionParagraph.Range.Font.Size = 9;
+                      descriptionParagraph.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                      descriptionParagraph.Range.Font.Bold = 0;
+                      descriptionParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
+                      descriptionParagraph.Range.InsertParagraphAfter();
+
+                      // Создание таблицы для подписей
+                      Table signatureTable = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 2, 2);
+                      signatureTable.Borders.Enable = 0;
+                      signatureTable.Range.Font.Size = 12;
+
+                      // Заполнение таблицы подписей
+                      signatureTable.Cell(1, 1).Range.Text = $"Оборудование в ремонт сдал: {client.surname} {client.name[0]}. {client.patronymic[0]}.";
+                      signatureTable.Cell(1, 2).Range.Text = "_____________________";
+                      signatureTable.Cell(2, 1).Range.Text = $"Оборудование в ремонт принял: инженер приемщик {request.MasterID}";
+                      signatureTable.Cell(2, 2).Range.Text = "_____________________";
+
+                      // Выравнивание текста в таблице подписей
+                      signatureTable.Rows[1].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      signatureTable.Rows[1].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
+                      signatureTable.Rows[2].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                      signatureTable.Rows[2].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
+
+                      // Отображение документа
+                      wordApp.Visible = true;
+
+                      // Сохранение документа во временный файл в формате XPS
+                      string tempFilePath = Path.GetTempFileName() + ".xps";
+                      //wordDoc.SaveAs2(tempFilePath, WdSaveFormat.wdFormatXPS);
+
+                      // Предварительный просмотр документа
+                      wordDoc.PrintPreview();
+
+                      // Ожидание завершения предварительного просмотра
+                      //Console.WriteLine("Пожалуйста, закройте окно предварительного просмотра для продолжения...");
+                      
+                      //// Закрытие документа и завершение работы с Word
+                      //wordDoc.Close(SaveChanges: false);
+                      //wordApp.Quit();
                   }));
-            }
-        }
-        private static void PrintDocument(string filePath)
-        {
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = filePath,
-                Verb = "print",
-                CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden
-            };
-
-            using (Process process = Process.Start(startInfo))
-            {
-                process.WaitForInputIdle();  // Дождаться, пока процесс станет неактивным
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
