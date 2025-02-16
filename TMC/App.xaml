@@ -44,6 +44,9 @@
                 <Setter Property="Foreground" Value="White"/>
             </Style>
 
+            
+            
+
             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}" x:Key="InfoTxtBox">
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="ui:ControlsHelper.CornerRadius" Value="5"/>
@@ -51,11 +54,22 @@
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="BorderThickness" Value="1.5"/>
                 <Setter Property="Margin" Value="0 5"/>
+                <Setter Property="Validation.ErrorTemplate">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <!-- Пустой шаблон, чтобы не отображать встроенные ошибки -->
+                            <AdornedElementPlaceholder />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
                 <Style.Triggers>
                     <Trigger Property="Validation.HasError" Value="True">
                         <Setter Property="Foreground" Value="Red" />
                         <Setter Property="BorderBrush" Value="Red"/>
-                        <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                        <!--<Setter Property="ToolTip.Placement" Value="Bottom"/>
+                        <Setter Property="ToolTip.Foreground" Value="Red"/>-->
+                        <!--<Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>-->
+                        
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -89,40 +103,6 @@
                 <Setter Property="Margin" Value="0 5"/>
             </Style>
 
-            <Style TargetType="Button" x:Key="CancelBtn" BasedOn="{StaticResource {x:Type Button}}">
-                <Style.Setters>
-                    <Setter Property="Margin" Value="30 5"/>
-                    <Setter Property="ui:ControlsHelper.CornerRadius" Value="5"/>
-                    <Setter Property="Background" Value="#CFD9FF"/>
-                    <Setter Property="FontFamily" Value="Inter"/>
-                    <Setter Property="FontWeight" Value="Medium"/>
-                    <Setter Property="BorderBrush" Value="#2747BB"/>
-                    <Setter Property="BorderThickness" Value="1.5"/>
-                    <Setter Property="Foreground" Value="#2747BB"/>
-                </Style.Setters>
-                <Style.Triggers>
-                    <EventTrigger RoutedEvent="MouseEnter">
-                        <EventTrigger.Actions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" To="#889EEA" AutoReverse="False"  />
-                                    <ColorAnimation Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" To="White" AutoReverse="False"  />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
-                    </EventTrigger>
-                    <EventTrigger RoutedEvent="MouseLeave">
-                        <EventTrigger.Actions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" To="#CFD9FF" AutoReverse="False"  />
-                                    <ColorAnimation Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" To="#2747BB" AutoReverse="False"  />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
-                    </EventTrigger>
-                </Style.Triggers>
-            </Style>
             <Style TargetType="RadioButton">
                 <Setter Property="BorderBrush" Value="#2747BB"/>
                 <Setter Property="BorderThickness" Value="2"/>
@@ -130,8 +110,14 @@
                 <Setter Property="Margin" Value="10 0"/>
 
             </Style>
+            <Style TargetType="ui:MetroHeader" >
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Margin" Value="5 0"/>
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="Foreground" Value="#1A2E76"/>
+            </Style>
             <Style TargetType="DataGrid" BasedOn="{StaticResource MahApps.Styles.DataGrid}" x:Key="MainDataGrid">
-                <Setter Property="ColumnWidth" Value="*"/>
+                <Setter Property="ColumnWidth" Value="Auto"/>
                 <Setter Property="Margin" Value="20"/>
                 <Setter Property="SelectionMode" Value="Single"/>
                 <Setter Property="CanUserAddRows" Value="False"/>
@@ -140,12 +126,15 @@
                 <Setter Property="AutoGenerateColumns" Value="False"/>
                 <Setter Property="Background" Value="#EEF1FF"/>
                 <Setter Property="IsReadOnly" Value="True"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Width" Value="Auto"/>
             </Style>
             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                 <Setter Property="FontSize" Value="15"/>
+                <Setter Property="Width" Value="Auto"/>
+                <!--<Setter Property="Background" Value="#EEF1FF"/>-->
                 <Setter Property="BorderBrush" Value="#EEF1FF"/>
-                <Setter Property="BorderThickness" Value=" 0 3"/>
-                <Setter Property="Padding" Value="5"/>
+                <Setter Property="BorderThickness" Value=" 0 2"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

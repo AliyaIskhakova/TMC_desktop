@@ -26,18 +26,18 @@ namespace TMC.Model
         private string _clientName;
         private string _clientPatronymic;
         private string _clientTelephone;
-        private string _clientEmail;
-        private bool _clientType;
-        private string _clientCompanyName;
-        private DateTime? _completionDate;
+        //private string _clientEmail;
+        //private bool _clientType;
+        //private string _clientCompanyName;
+        private string _completionDate;
         private string _reason;
-        private DateTime _date;
+        private string _date;
         private int _deviceID;
-        private string _deviceTypeName;
+        //private string _deviceTypeName;
         private decimal _cost;
-        private string _imeiSN;
-        private string _model;
-        private string _notes;
+        //private string _imeiSN;
+        //private string _model;
+        //private string _notes;
         private string _detectedMulfunction;
 
         public int IDRequest
@@ -190,41 +190,41 @@ namespace TMC.Model
             }
         }
 
-        public string ClientEmail
-        {
-            get { return _clientEmail; }
-            set
-            {
-                _clientEmail = value;
-                OnPropertyChanged();
-            }
-        }
+        //public string ClientEmail
+        //{
+        //    get { return _clientEmail; }
+        //    set
+        //    {
+        //        _clientEmail = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
-        public bool ClientType
-        {
-            get { return _clientType; }
-            set
-            {
-                _clientType = value;
-                OnPropertyChanged();
-            }
-        }
+        //public bool ClientType
+        //{
+        //    get { return _clientType; }
+        //    set
+        //    {
+        //        _clientType = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
-        public string ClientCompanyName
-        {
-            get { return _clientCompanyName; }
-            set
-            {
-                _clientCompanyName = value;
-                OnPropertyChanged();
-            }
-        }
+        //public string ClientCompanyName
+        //{
+        //    get { return _clientCompanyName; }
+        //    set
+        //    {
+        //        _clientCompanyName = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
         public string Client => $"{ClientSurname} {ClientName} {ClientPatronymic} \n {ClientTelephone}";
 
-        public DateTime? CompletionDate
+        public string CompletionDate
         {
-            get { return _completionDate; }
+            get { return _completionDate ; }
             set
             {
                 _completionDate = value;
@@ -242,7 +242,7 @@ namespace TMC.Model
             }
         }
 
-        public DateTime Date
+        public string Date
         {
             get { return _date; }
             set
@@ -262,15 +262,15 @@ namespace TMC.Model
             }
         }
 
-        public string DeviceTypeName
-        {
-            get { return _deviceTypeName; }
-            set
-            {
-                _deviceTypeName = value;
-                OnPropertyChanged();
-            }
-        }
+        //public string DeviceTypeName
+        //{
+        //    get { return _deviceTypeName; }
+        //    set
+        //    {
+        //        _deviceTypeName = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
         public decimal Cost
         {
@@ -282,35 +282,35 @@ namespace TMC.Model
             }
         }
 
-        public string IMEI_SN
-        {
-            get { return _imeiSN; }
-            set
-            {
-                _imeiSN = value;
-                OnPropertyChanged();
-            }
-        }
+        //public string IMEI_SN
+        //{
+        //    get { return _imeiSN; }
+        //    set
+        //    {
+        //        _imeiSN = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
-        public string Model
-        {
-            get { return _model; }
-            set
-            {
-                _model = value;
-                OnPropertyChanged();
-            }
-        }
+        //public string Model
+        //{
+        //    get { return _model; }
+        //    set
+        //    {
+        //        _model = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
-        public string Notes
-        {
-            get { return _notes; }
-            set
-            {
-                _notes = value;
-                OnPropertyChanged();
-            }
-        }
+        //public string Notes
+        //{
+        //    get { return _notes; }
+        //    set
+        //    {
+        //        _notes = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
         public string DetectedMulfunction
         {

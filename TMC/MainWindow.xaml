@@ -8,18 +8,47 @@
         xmlns:ui="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="1000">
+        Title="MainWindow" MinHeight="550" MinWidth="1050">
     <Window.Resources>
 
-        <Style TargetType="Button" x:Key="MenuBtn">
-            <Setter Property="Margin" Value="0 7 0 0"/>
-            <Setter Property="Background" Value="{x:Null}"/>
+        <Style TargetType="Button" x:Key="MenuBtn" BasedOn="{StaticResource {x:Type Button}}">
+           <Setter Property="Margin" Value="0 5 0 0"/>
             <Setter Property="FontSize" Value="15"/>
-        </Style>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="#CFD9FF"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <!--<Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#B4C3FF"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#B4C3FF"/>
+                </Trigger>
+            </Style.Triggers>-->
+            <!--<Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" To="#B4C3FF" AutoReverse="True" Duration="0:0:0"    />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" To="#B4C3FF" AutoReverse="True" Duration="0:0:0"    />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>-->
 
+        </Style>
         
-            
-            <Style TargetType="Image" x:Key="MenuImg">
+         <Style TargetType="Image" x:Key="MenuImg">
             <Setter Property="Width" Value="30"/>
             <Setter Property="Margin" Value="10 0"/>
         </Style>
@@ -47,104 +76,130 @@
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="MinWidth" Value="130"/>
         </Style>
+        <Style TargetType="Border" x:Key="BtnBorder">
+            <!--<Setter Property="Background" Value="{TemplateBinding Background}"/>-->
+            <Setter Property="Padding" Value="0 5"/>
+            <Setter Property="CornerRadius" Value="10 0 0 10"/>
+            <Style.Triggers>
+                <!--<Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#B4C3FF"/>
+                </Trigger>-->
+                
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.15*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DockPanel Background="#CFD9FF"  >
+        <DockPanel Background="#CFD9FF">
             <Ellipse DockPanel.Dock="Top" Width="100" Height="100" Margin="0 15">
                 <Ellipse.Fill>
                     <ImageBrush ImageSource="/Image/Y_MSHrGBV5U.jpg" Stretch="UniformToFill"/>
                 </Ellipse.Fill>
             </Ellipse>
 
-            <Button x:Uid="0" DockPanel.Dock="Bottom" Click="Button_Click" Style="{StaticResource MenuBtn}">
+            <Button x:Uid="0"  DockPanel.Dock="Bottom" Click="Button_Click" Style="{StaticResource MenuBtn}">
                 <Button.Template>
                     <ControlTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Image/exit.png" Style="{StaticResource MenuImg}" />
-                            <Label>Выйти</Label>
-                        </StackPanel>
+                        <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}">
+
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Image/exit.png" Style="{StaticResource MenuImg}" />
+                                <Label>Выйти</Label>
+                            </StackPanel>
+                        </Border>
                     </ControlTemplate>
                 </Button.Template>
             </Button>
 
-            <StackPanel DockPanel.Dock="Top">
-                <Button x:Name="RequestBtn" x:Uid="1" Click="Button_Click" Style="{StaticResource MenuBtn}">
+            <StackPanel x:Name="MenuPanel"  DockPanel.Dock="Top">
+                <Button x:Name="RequestBtn" Background="#B4C3FF"  x:Uid="1" Click="Button_Click" Style="{StaticResource MenuBtn}">
                     <Button.Template>
                         <ControlTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/Image/request.png" Style="{StaticResource MenuImg}" />
-                                <Label>Заявки</Label>
-                            </StackPanel>
+                            <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}" >
+                                <StackPanel Orientation="Horizontal"  >
+                                    <Image Source="/Image/request.png" Style="{StaticResource MenuImg}" />
+                                    <Label>Заявки</Label>
+                                </StackPanel>
+                            </Border>
+ 
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
                 <Button x:Name="StoreBtn" x:Uid="2" Click="Button_Click"  Style="{StaticResource MenuBtn}">
                     <Button.Template>
                         <ControlTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image  Source="/Image/Store.png" Style="{StaticResource MenuImg}" />
+                            <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}">
+                                <StackPanel Orientation="Horizontal">
+                                <Image  Source="/Image/Store.png" Width="27" Margin="11 0" Style="{StaticResource MenuImg}" />
                                 <Label>Склад ЗИП</Label>
-                            </StackPanel>
+                                </StackPanel>
+                            </Border>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
                 <Button x:Name="ClientsBtn" Uid="3" Click="Button_Click" Style="{StaticResource MenuBtn}">
                     <Button.Template>
                         <ControlTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/Image/Clients.png" Style="{StaticResource MenuImg}"/>
-                                <Label>Клиенты</Label>
-                            </StackPanel>
+                            <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}">
+                                <StackPanel Orientation="Horizontal" >
+                                    <Image Source="/Image/Clients.png" Style="{StaticResource MenuImg}"/>
+                                    <Label>Клиенты</Label>
+                                </StackPanel>
+                            </Border>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
                 <Button x:Name="ServicesBtn" x:Uid="4" Click="Button_Click" Style="{StaticResource MenuBtn}">
                     <Button.Template>
                         <ControlTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/Image/repair.png" Style="{StaticResource MenuImg}"/>
-                                <Label>Услуги</Label>
-                            </StackPanel>
+                            <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}">
+                                <StackPanel Orientation="Horizontal" >
+                                    <Image Source="/Image/repair.png" Style="{StaticResource MenuImg}"/>
+                                    <Label>Услуги</Label>
+                                </StackPanel>
+                            </Border>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
                 <Button x:Name="EmployeesBtn" x:Uid="5" Click="Button_Click" Style="{StaticResource MenuBtn}">
                     <Button.Template>
                         <ControlTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/Image/employee.png" Style="{StaticResource MenuImg}" />
-                                <Label>Сотрудники</Label>
-                            </StackPanel>
+                            <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}">
+                                <StackPanel Orientation="Horizontal" >
+                                    <Image Source="/Image/employee.png" Style="{StaticResource MenuImg}" />
+                                    <Label>Сотрудники</Label>
+                                </StackPanel>
+                            </Border>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
                 <Button x:Name="ResultsBtn" x:Uid="6" Click="Button_Click" Style="{StaticResource MenuBtn}">
                     <Button.Template>
                         <ControlTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/Image/employee.png" Style="{StaticResource MenuImg}" />
-                                <Label>Отчёты</Label>
-                            </StackPanel>
+                            <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}">
+                                <StackPanel Orientation="Horizontal" >
+                                    <Image Source="/Image/employee.png" Style="{StaticResource MenuImg}" />
+                                    <Label>Отчёты</Label>
+                                </StackPanel>
+                            </Border>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
             </StackPanel>
            
         </DockPanel>
-        <Grid x:Name="RequestsWindow" Grid.Column="1" Visibility="Collapsed">
+        <Grid x:Name="RequestsWindow"  Grid.Column="1" >
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Заявки</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchRequest" Style="{StaticResource SearchBox}"></TextBox>
-                    <Button x:Name="FilterBtn" >Фильтр</Button>
+                    <!--<Button x:Name="FilterBtn" >Фильтр</Button>-->
                     <Button x:Name="AddRequest" Command="{Binding AddRequestCommand}" >+ Добавить заявку</Button>
                 </StackPanel>
-                <StackPanel>
-                    <StackPanel x:Name="FilterBtnGroup" Orientation="Horizontal" Margin="20 0 ">
+                <StackPanel DockPanel.Dock="Top" x:Name="FilterBtnGroup" Orientation="Horizontal" Margin="20 0 ">
                         <Button Click="ButtonFilter_Click" Style="{StaticResource DefaultCheckFilter}" Content="Все"/>
                         <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Новые" />
                         <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="В работе" />
@@ -152,66 +207,84 @@
                         <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Готовые" />
                         <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Отменены" />
                     </StackPanel>
-                    <DataGrid x:Name="RequestDG" MouseDoubleClick="RequestDG_MouseDoubleClick" ColumnWidth="Auto" ItemsSource="{Binding RequestsList}" Margin="10,20,10,0"
+                <DataGrid x:Name="RequestDG" MouseDoubleClick="RequestDG_MouseDoubleClick" ColumnWidth="Auto" ItemsSource="{Binding RequestsList}" 
                    Style="{StaticResource MainDataGrid}" >
-                        <DataGrid.Resources>
-                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                        </DataGrid.Resources>
+                    <DataGrid.Resources>
+                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                    </DataGrid.Resources>
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="№" Binding="{Binding IDRequest}"/>
-                            <DataGridTextColumn Header="Клиент" Binding="{Binding Client}"/>
-                            <DataGridTemplateColumn Header="Статус">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Border Padding="5 2" CornerRadius="5" Background="{Binding StatusColor}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
-                                                <TextBlock Text="{Binding StatusName}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                            </Border>
-                                        </Grid>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Исполнитель" Binding="{Binding Employee}"/>
-                            <DataGridTextColumn Header="Проблема" Binding="{Binding Reason}"/>
-                            <DataGridTextColumn Header="Дата обращения" Binding="{Binding Date}"/>
-                            <DataGridTextColumn Header="Дата завершения" Binding="{Binding CompletionDate}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="№" Binding="{Binding IDRequest}"/>
+                        <DataGridTextColumn Header="Клиент" Binding="{Binding Client}"/>
+                        <DataGridTemplateColumn Header="Статус">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Border Padding="5 2" CornerRadius="7" MinWidth="100"  Background="{Binding StatusColor}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5">
+                                            <TextBlock Text="{Binding StatusName}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Исполнитель" Binding="{Binding Employee}"/>
+                        <DataGridTextColumn Header="Проблема" Binding="{Binding Reason}"/>
+                        <DataGridTextColumn Header="Дата обращения" Binding="{Binding Date}"/>
+                        <DataGridTextColumn Header="Дата завершения" Binding="{Binding CompletionDate}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
         </Grid>
         <Grid x:Name="StoreWindow" Visibility="Collapsed" Grid.Column="1">
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Склад ЗИП</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                    <TextBox x:Name="SearchParts" Style="{StaticResource SearchBox}"></TextBox>
-                    <Button x:Name="AddReraipPart" >+ Добавить </Button>
+                    <TextBox x:Name="SearchParts" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <Button x:Name="AddReraipPart" Command="{Binding AddRepairPartCommand}" >+ Добавить</Button>
                 </StackPanel>
-                <StackPanel>
-                
-                    <DataGrid x:Name="StoreDG" MouseDoubleClick="StoreDG_MouseDoubleClick" Margin="10,20,10,0" Style="{StaticResource MainDataGrid}" >
+                <DataGrid x:Name="StoreDG" MouseDoubleClick="StoreDG_MouseDoubleClick" ItemsSource="{Binding RepairPartsList}" Style="{StaticResource MainDataGrid}" >
                         <DataGrid.Resources>
                             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                         </DataGrid.Resources>
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID"/>
-                            <DataGridTextColumn Header="Название"/>
-                            <DataGridTextColumn Header="Количество"/>
-                            <DataGridTextColumn Header="Цена"/>
+                            <DataGridTextColumn Header="ID" Binding="{Binding IDpart}"/>
+                            <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="Количество" Binding="{Binding Count}"/>
+                            <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                </StackPanel>
             </DockPanel>
         </Grid>
-        <Grid x:Name="ClientsWindow"  Grid.Column="1">
+        <Grid x:Name="ClientsWindow" Visibility="Collapsed"  Grid.Column="1">
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Клиенты</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchClient" Style="{StaticResource SearchBox}"  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Button x:Name="AddClient"  Command="{Binding AddClientCommand}">+ Добавить</Button>
+                    <ComboBox ItemsSource="{Binding ClientsList}" x:Name="CB"
+          TextBoxBase.TextChanged="CB_TextChanged"
+          IsTextSearchEnabled="False" IsEditable="True"
+          VerticalAlignment="Top">
+                        <ComboBox.Resources>
+                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                        </ComboBox.Resources>
+                        <ComboBox.ItemTemplate  >
+                            <DataTemplate>
+                                <Grid>
+                                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                        <TextBlock Text="{Binding surname}"/>
+                                        <TextBlock Text=" "/>
+                                        <TextBlock Text="{Binding name}"/>
+                                        <TextBlock Text=" "/>
+                                        <TextBlock Text="{Binding telephone}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
+                
                 <DataGrid x:Name="ClientsDG"  MouseDoubleClick="ClientsDG_MouseDoubleClick"  ItemsSource="{Binding ClientsList}" Style="{StaticResource MainDataGrid}">
                     <DataGrid.Resources>
                         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
@@ -229,30 +302,26 @@
                 </DataGrid>
             </DockPanel>
         </Grid>
-        <Grid x:Name="ServicesWindow" Visibility="Collapsed"  Grid.Column="1">
+        <Grid x:Name="ServicesWindow" Visibility="Collapsed" Grid.Column="1">
 
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Услуги</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchServices" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Button x:Name="FilterServiceBtn" >Фильтр</Button>
-                    <Button x:Name="PrintPriceList" >Печать</Button>
+                    <Button x:Name="PrintPriceList" Command="{Binding PrintPriceListCommand}" >Печать</Button>
                 </StackPanel>
-                <StackPanel>
-                    <DataGrid x:Name="ServicesDG" MouseDoubleClick="ServicesDG_MouseDoubleClick" Margin="10,20,10,0" Style="{StaticResource MainDataGrid}" >
-                        <DataGrid.Resources>
-                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                        </DataGrid.Resources>
+                <DataGrid x:Name="ServicesDG" ItemsSource="{Binding ServicesList}" MouseDoubleClick="ServicesDG_MouseDoubleClick" Style="{StaticResource MainDataGrid}" >
+                    <DataGrid.Resources>
+                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                    </DataGrid.Resources>
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Название"/>
-                            <DataGridTextColumn Header="Тип"/>
-                            <DataGridTextColumn Header="Тип"/>
-                            <DataGridTextColumn Header="Почта"/>
-                            <DataGridTextColumn Header="Компания"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="№" Binding="{Binding IDservice}"/>
+                        <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
         </Grid>
         <Grid x:Name="EmployeesWindow" Visibility="Collapsed"  Grid.Column="1">
@@ -262,8 +331,7 @@
                     <TextBox x:Name="SearchEmployee" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBox}" MinWidth="400" ></TextBox>
                     <Button x:Name="AddEmployee" Visibility="Collapsed" Command="{Binding AddEmployeeCommand}">+ Добавить</Button>
                 </StackPanel>
-                <StackPanel>
-                    <DataGrid x:Name="EmployeesDG" MouseDoubleClick="EmployeesDG_MouseDoubleClick" Margin="10,20,10,0" ItemsSource="{Binding EmployeesList}" Style="{StaticResource MainDataGrid}">
+                <DataGrid x:Name="EmployeesDG" MouseDoubleClick="EmployeesDG_MouseDoubleClick" ItemsSource="{Binding EmployeesList}" Style="{StaticResource MainDataGrid}">
                         <DataGrid.Resources>
                             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                         </DataGrid.Resources>
@@ -275,8 +343,7 @@
                             <DataGridTextColumn Header="Телефон" Binding="{Binding Telephone}"/>
                             <DataGridTextColumn Header="Должность" Binding="{Binding Role}"/>
                         </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
+                </DataGrid>
             </DockPanel>
         </Grid>
         <Grid x:Name="ResultsWindow" Visibility="Collapsed"  Grid.Column="1">

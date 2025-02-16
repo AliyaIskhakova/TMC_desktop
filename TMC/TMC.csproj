@@ -264,10 +264,12 @@
     <Compile Include="ViewModel\ClientsViewModel.cs" />
     <Compile Include="ViewModel\EmployeesViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
-    <Compile Include="ViewModel\RequestDetailViewModel.cs" />
     <Compile Include="ViewModel\RequestViewModel.cs" />
     <Compile Include="ViewModel\ServicesViewModel.cs" />
     <Compile Include="ViewModel\StoreViewModel.cs" />
+    <Compile Include="View\AddPartsWindow.xaml.cs">
+      <DependentUpon>AddPartsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AddServicesWindow.xaml.cs">
       <DependentUpon>AddServicesWindow.xaml</DependentUpon>
     </Compile>
@@ -296,6 +298,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddPartsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

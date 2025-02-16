@@ -11,13 +11,13 @@
     Background="#E4E9FF"
     Name="window"
     mc:Ignorable="d"
-    Title="ClientWindow" MinHeight="400" MinWidth="450">
-      
+    Title="ClientWindow" MinHeight="300" MinWidth="450" MaxHeight="230" MaxWidth="450">
+    
     <DockPanel >
         <Border DockPanel.Dock="Top">
             <DockPanel >
                 <Label Content="ЗИП" Margin="30 15 30 10" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                <Button HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Margin="10" Command="SystemCommands.CloseWindowCommand">
+                <Button HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click" Width="30" Margin="10" Command="SystemCommands.CloseWindowCommand">
                     <Image Source="/Image/close.png" />
                 </Button>
             </DockPanel>
@@ -25,16 +25,15 @@
         <StackPanel>
             <Border Padding="30 0">
                 <StackPanel>
-                    <TextBox ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}"/>
-                    <TextBox ui:TextBoxHelper.Watermark="Имя" Style="{StaticResource InfoTxtBox}"/>
-                    <TextBox ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
-                    <TextBox ui:TextBoxHelper.Watermark="Телефон" Style="{StaticResource InfoTxtBox}"/>
-                    <TextBox ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
-                    <TextBox x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}" />
+                    <ui:MetroHeader Content="Наименование ЗИП"/>
+                    <TextBox Text="{Binding Name}" ui:TextBoxHelper.Watermark="Название" Style="{StaticResource InfoTxtBox}"/>
+                    <ui:MetroHeader Content="Количество ЗИП на складе"/>
+                    <TextBox Text="{Binding Count}" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
+                    <ui:MetroHeader Content="Цена за ед."/>
+                    <TextBox Text="{Binding Cost}"  ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
                 </StackPanel>
             </Border>
             <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Сохранить" Margin="30 5" />
-            <Button Content="Отменить" Style="{StaticResource CancelBtn}"  />
         </StackPanel>
 
 

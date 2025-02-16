@@ -32,27 +32,10 @@ namespace TMC.View
             RequestServices.DataContext = vm; 
             SaveBtn.DataContext = vm;
             PrintBtns.DataContext = vm;
+            RequestRepairParts.DataContext = vm;
             //RequestDetails.DataContext = new RequestDetailViewModel(RequestView);
         }
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void RadioButton_Unchecked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void RadioButton_Unchecked_1(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
-        {
-
-        }
+       
 
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -61,6 +44,22 @@ namespace TMC.View
         void Accept_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
+        }
+
+        private void StatusBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selected = sender as ComboBox;
+            string status = selected.SelectionBoxItemTemplate.ToString();
+            if (status == "Готов")
+            {
+                EndDocuument.IsEnabled = true;
+            }
+            else EndDocuument.IsEnabled = false;
+        }
+
+        private void MastersBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

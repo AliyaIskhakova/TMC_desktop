@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TMC.Model;
 using TMC.ViewModel;
+using Xceed.Wpf.Toolkit.Primitives;
 
 namespace TMC
 {
@@ -22,10 +24,12 @@ namespace TMC
     /// </summary>
     public partial class MainWindow : Window
     {
+        
+        RequestViewModel requestVM = new RequestViewModel();
         public MainWindow()
         {
             InitializeComponent();
-            RequestsWindow.DataContext = new RequestViewModel();
+            RequestsWindow.DataContext = requestVM;
             ClientsWindow.DataContext = new ClientsViewModel();
             StoreWindow.DataContext = new StoreViewModel();
             ServicesWindow.DataContext = new ServicesViewModel();
@@ -34,8 +38,14 @@ namespace TMC
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            int index = int.Parse(((Button)e.Source).Uid);
 
+            int index = int.Parse(((Button)e.Source).Uid);
+            Button clickedButton = (Button)e.Source;
+            foreach (Button button in MenuPanel.Children)
+            {
+                button.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#CFD9FF");
+            }
+            clickedButton.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#B4C3FF");
             RequestsWindow.Visibility = Visibility.Collapsed;
             StoreWindow.Visibility = Visibility.Collapsed;
             ClientsWindow.Visibility = Visibility.Collapsed;
@@ -114,8 +124,8 @@ namespace TMC
             if (row != null)
             {
                 var selectedItem = (sender as DataGrid).SelectedItem;
-                var viewModel = new RequestViewModel();
-                viewModel.EditRequestCommand.Execute(selectedItem);
+                //var viewModel = new RequestViewModel();
+                requestVM.EditRequestCommand.Execute(selectedItem);
             }
         }
 
@@ -126,12 +136,15 @@ namespace TMC
             {
                 button.Foreground = Brushes.DarkGray;
                 button.BorderThickness = new Thickness(0);
+                button.FontWeight = FontWeights.Normal;
             }
             var converter = new BrushConverter();
             clickedButton.Foreground = (Brush)converter.ConvertFromString("#2747BB");
             clickedButton.BorderThickness = new Thickness(0, 0, 0, 3);
             clickedButton.BorderBrush = (Brush)converter.ConvertFromString("#2747BB");
             clickedButton.FontWeight = FontWeights.Bold;
+            //var viewModel = new RequestViewModel();
+            requestVM.SelectRequestByStatus.Execute(clickedButton.Content);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -142,6 +155,25 @@ namespace TMC
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void CB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CB.IsDropDownOpen = true;
+            // убрать selection, если dropdown только открылся
+            var tb = (TextBox)e.OriginalSource;
+            tb.Select(tb.SelectionStart + tb.SelectionLength, 0);
+            CollectionView cv = (CollectionView)CollectionViewSource.GetDefaultView(CB.ItemsSource);
+            cv.Filter = s =>
+            {
+                var client = s as Clients;
+                if (client != null)
+                {
+                    string fullText = $"{client.surname} {client.name} {client.telephone}";
+                    return fullText.IndexOf(CB.Text, StringComparison.CurrentCultureIgnoreCase) >= 0;
+                }
+                return false;
+            };
         }
     }
 }
