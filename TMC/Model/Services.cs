@@ -23,7 +23,7 @@ namespace TMC.Model
         public int IDservice { get; set; }
         public string Name { get; set; }
         public double Cost { get; set; }
-        public int Warranty { get; set; }
+        public Nullable<int> Warranty { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests_Services> Requests_Services { get; set; }

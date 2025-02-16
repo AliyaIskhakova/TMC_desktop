@@ -34,7 +34,6 @@ namespace TMC.Model
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests> Requests { get; set; }
-
         public string name
         {
             get { return Name; }

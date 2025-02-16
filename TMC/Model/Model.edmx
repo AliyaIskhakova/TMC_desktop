@@ -66,7 +66,7 @@
           <Property Name="Reason" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Date" Type="datetime" />
           <Property Name="DeviceType" Type="int" />
-          <Property Name="Cost" Type="int" Nullable="false" />
+          <Property Name="Cost" Type="float" Nullable="false" />
           <Property Name="ReceiverID" Type="int" />
           <Property Name="IMEI/SN" Type="nvarchar(max)" />
           <Property Name="Model" Type="nvarchar(max)" />
@@ -100,7 +100,7 @@
           <Property Name="IDservice" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Cost" Type="float" Nullable="false" />
-          <Property Name="Warranty" Type="int" Nullable="false" />
+          <Property Name="Warranty" Type="int" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
@@ -144,7 +144,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Request_RepairParts_Requests">
-          <End Role="Requests" Type="Self.Requests" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Request_RepairParts" Type="Self.Request_RepairParts" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Requests">
@@ -156,7 +158,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Requests_Clients">
-          <End Role="Clients" Type="Self.Clients" Multiplicity="1" />
+          <End Role="Clients" Type="Self.Clients" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Clients">
@@ -204,7 +208,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Requests_Services_Requests">
-          <End Role="Requests" Type="Self.Requests" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Requests_Services" Type="Self.Requests_Services" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Requests">
@@ -366,7 +372,7 @@
           <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Date" Type="DateTime" Precision="3" />
           <Property Name="DeviceType" Type="Int32" />
-          <Property Name="Cost" Type="Int32" Nullable="false" />
+          <Property Name="Cost" Type="Double" Nullable="false" />
           <Property Name="ReceiverID" Type="Int32" />
           <Property Name="IMEI_SN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Model" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -410,7 +416,7 @@
           <Property Name="IDservice" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Cost" Type="Double" Nullable="false" />
-          <Property Name="Warranty" Type="Int32" Nullable="false" />
+          <Property Name="Warranty" Type="Int32" />
           <NavigationProperty Name="Requests_Services" Relationship="Self.FK_Requests_Services_Services" FromRole="Services" ToRole="Requests_Services" />
         </EntityType>
         <EntityType Name="Status">
@@ -432,7 +438,9 @@
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <Association Name="FK_Requests_Clients">
-          <End Role="Clients" Type="Self.Clients" Multiplicity="1" />
+          <End Role="Clients" Type="Self.Clients" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Clients">
@@ -504,7 +512,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Request_RepairParts_Requests">
-          <End Role="Requests" Type="Self.Requests" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Request_RepairParts" Type="Self.Request_RepairParts" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Requests">
@@ -516,7 +526,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Requests_Services_Requests">
-          <End Role="Requests" Type="Self.Requests" Multiplicity="1" />
+          <End Role="Requests" Type="Self.Requests" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Requests_Services" Type="Self.Requests_Services" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Requests">
