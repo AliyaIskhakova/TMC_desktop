@@ -38,7 +38,6 @@
                 </StackPanel>
             </Border>
             <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Сохранить" Margin="30 5" />
-            <Button Content="Отменить" Style="{StaticResource CancelBtn}"  />
         </StackPanel>
     </DockPanel>
 </Window>

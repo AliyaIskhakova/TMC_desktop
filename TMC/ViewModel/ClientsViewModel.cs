@@ -22,6 +22,8 @@ namespace TMC.ViewModel
         string _searchText;
         RelayCommand? addCommand;
         RelayCommand? editCommand;
+
+        Clients _selectedClient;
         ObservableCollection<Clients> _filteredClients;
 
         public ClientsViewModel()
@@ -54,6 +56,18 @@ namespace TMC.ViewModel
             }
         }
 
+        public Clients SelectedClient
+        {
+            get => _selectedClient;
+            set
+            {
+                if (_selectedClient != value)
+                {
+                    _selectedClient = value;
+                    OnPropertyChanged(nameof(SelectedClient));
+                }
+            }
+        }
         private void FilterPersons()
         {
             if (string.IsNullOrEmpty(_searchText))

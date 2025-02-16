@@ -34,24 +34,54 @@
 
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Клиент" Margin="30 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                            <RadioButton Content="Физ.лицо" IsChecked="True" Margin="0"/>
-                            <RadioButton Content="Юр.лицо" IsChecked="{Binding type}" />
+                            <StackPanel x:Name="Info" Orientation="Horizontal">
+                                <RadioButton Content="Физ.лицо" IsChecked="True" Margin="0"/>
+                                <RadioButton Content="Юр.лицо" IsChecked="{Binding type}" />
+                            </StackPanel>
                             <!--<Button >
                                 <Image Width="25" Source="/Image/clients.png" />
                             </Button>-->
-                            <Button>
+                            <Button x:Name="CancelBtn" Click="CancelBtn_Click">
                                 <Image Width="25" Source="/Image/close.png" />
                             </Button>
                         </StackPanel>
-                        
+                        <ComboBox Name="ClientComboBox" 
+      Style="{StaticResource MainComboBox}" 
+      ui:TextBoxHelper.Watermark="Поиск клиента" 
+      IsEditable="True"
+      IsTextSearchEnabled="True"
+      StaysOpenOnEdit="True"
+                                  Margin="30 5"
+Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSource="{Binding ClientsList}"
+      SelectionChanged="ClientComboBox_SelectionChanged"
+      >
+                            <ComboBox.Resources>
+                                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                            </ComboBox.Resources>
+                            <ComboBox.ItemTemplate  >
+                                <DataTemplate>
+                                    <Grid>
+                                        <StackPanel  Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                            <TextBlock Text="{Binding Surname}"/>
+                                            <TextBlock Text=" "/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                            <TextBlock Text=" "/>
+                                            <TextBlock Text="{Binding Telephone}"/>
+                                        </StackPanel>
+                                    </Grid>
+
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <Border Padding="30 0">
-                            <StackPanel >
-                                <TextBox Text="{Binding surname}"  ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}" />
-                                <TextBox Text="{Binding name}" ui:TextBoxHelper.Watermark="Имя" Style="{StaticResource InfoTxtBox}"/>
-                                <TextBox Text="{Binding patronymic}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
-                                <TextBox Text="{Binding telephone}" ui:TextBoxHelper.Watermark="Телефон" Style="{StaticResource InfoTxtBox}"/>
-                                <TextBox Text="{Binding email}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
-                                <TextBox Text="{Binding companyNаme}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}"/>
+                            <StackPanel x:Name="Info2">
+
+                                <TextBox Text="{Binding surname,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  ui:TextBoxHelper.Watermark="Фамилия*" Style="{StaticResource InfoTxtBox}" />
+                                <TextBox Text="{Binding name,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Имя*" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox Text="{Binding patronymic,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox Text="{Binding telephone,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox Text="{Binding email,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox Text="{Binding companynаme,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -77,7 +107,11 @@
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                            <DatePicker SelectedDate="{Binding CompletionDate}"   ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности" AutomationProperties.HelpText="ccc"  />
+                            <DatePicker SelectedDate="{Binding CompletionDate}"   ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности" >
+                                <DatePicker.Resources>
+                                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                                </DatePicker.Resources>
+                            </DatePicker>
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -87,7 +121,7 @@
                     </Border>
                     <Border Padding="0 0 30 0">
                         <StackPanel>
-                            <ComboBox Name="StatusBox" Style="{StaticResource MainComboBox}" ui:TextBoxHelper.Watermark="Статус заявки"  >
+                            <ComboBox Name="StatusBox" SelectedIndex="0" Style="{StaticResource MainComboBox}" ui:TextBoxHelper.Watermark="Статус заявки"  >
                                 <ComboBox.Resources>
                                     <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                                 </ComboBox.Resources>
@@ -97,9 +131,9 @@
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                            <TextBox Text="{Binding Reason}" ui:TextBoxHelper.Watermark="Причина обращения" Style="{StaticResource InfoTxtBox}" />
+                            <TextBox x:Name="RequestReason" Text="{Binding Reason}" ui:TextBoxHelper.Watermark="Причина обращения*" Style="{StaticResource InfoTxtBox}" />
                             <TextBox Text="{Binding  DetectedMulfunction}" ui:TextBoxHelper.Watermark="Выявленные неисправности" Style="{StaticResource InfoTxtBox}"/>
-                            <DatePicker SelectedDate="{Binding Date}" IsEnabled="False" ui:ControlsHelper.CornerRadius="5" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White"  ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата обращения" ui:TextBoxHelper.Watermark="Дата обращения"  />
+                            <DatePicker x:Name="RequestDate" Visibility="Collapsed" SelectedDate="{Binding Date}" IsEnabled="False" ui:ControlsHelper.CornerRadius="5" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White"  ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата обращения" ui:TextBoxHelper.Watermark="Дата обращения"  />
                             <ComboBox Name="DeviceTypeBox" ui:TextBoxHelper.Watermark="Вид устройства" Style="{StaticResource MainComboBox}" >
                                 <ComboBox.Resources>
                                     <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
@@ -112,7 +146,7 @@
                             </ComboBox>
                             <TextBox Text="{Binding Model}" ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}"/>
                             <TextBox Text="{Binding IMEI_SN}" ui:TextBoxHelper.Watermark="IMEI/SN" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
+                            <TextBox x:Name="RequestCost" Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
                             <TextBox Text="{Binding Notes}" ui:TextBoxHelper.Watermark="Заметки" Style="{StaticResource InfoTxtBox}"/>
 
                             <TextBox  x:Name="Address" Text="{Binding Address}" Visibility="Collapsed" ui:TextBoxHelper.Watermark="Адрес" Style="{StaticResource InfoTxtBox}"/>
@@ -128,10 +162,10 @@
                 <StackPanel x:Name="RequestServices" Margin="30 0">
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Услуги"  VerticalAlignment="Center" Margin="0" Style="{StaticResource WindowTitle}"/>
-                        <Button Style="{StaticResource MainBtn}" Command="{Binding AddServicesCommand}" Content="Добавить"/>
+                        <Button Style="{StaticResource MainBtn}" Command="{Binding AddServicesCommand}" CommandParameter="{Binding ElementName=window}" Content="Добавить"/>
                         <Button Style="{StaticResource MainBtn}" Content="Удалить" Margin="0 5" />
                     </StackPanel>
-                    <DataGrid x:Name="selectedServices" AutoGenerateColumns="False" MinHeight="80" MaxHeight="120" Background="White">
+                    <DataGrid x:Name="selectedServices" ItemsSource="{Binding SelectedServices}" AutoGenerateColumns="False" MinHeight="80" MaxHeight="120" Background="White">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
                             <DataGridTextColumn Header="Кол-во" Binding="{Binding Count}"/>
@@ -142,7 +176,7 @@
                 <StackPanel x:Name="RequestRepairParts" Grid.Column="1">
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Необходимые ЗИП" Margin="0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                        <Button Style="{StaticResource MainBtn}" Command="{Binding AddPartsCommand}"  Content="Добавить"/>
+                        <Button Style="{StaticResource MainBtn}" Command="{Binding AddPartsCommand}" CommandParameter="{Binding ElementName=window}"  Content="Добавить"/>
                         <Button Style="{StaticResource MainBtn}" Content="Удалить" Margin="0 5" />
                     </StackPanel>
                     <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedParts}" Margin="0 0 30 0"  MinHeight="80" MaxHeight="120" Background="White">

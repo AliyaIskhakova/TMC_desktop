@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMC.ViewModel"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         x:Name="addService"
         Background="#E4E9FF"
         Title="AddServicesWindow" Height="400" Width="600">
@@ -14,24 +15,22 @@
             <TextBox x:Name="SearchServices" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             <Button Style="{StaticResource MainBtn}" Command="{Binding AddSelectedServicesCommand}" CommandParameter="{Binding ElementName=addService}" >Добавить к заявке</Button>
         </StackPanel>
-        <StackPanel>
-            <DataGrid x:Name="ServicesDG"  SelectionMode="Extended" ItemsSource="{Binding ServicesList}" Margin="10,20,10,0" Style="{StaticResource MainDataGrid}" >
-                <DataGrid.Resources>
-                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                </DataGrid.Resources>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
-                    <DataGridTextColumn Header="Гарантия" Binding="{Binding Warranty}"/>
-                    <!--<DataGridTemplateColumn Header="Количество">
+        <DataGrid x:Name="ServicesDG"  SelectionMode="Extended" ItemsSource="{Binding ServicesList}" Margin="10,20,10,10" Style="{StaticResource MainDataGrid}" >
+            <DataGrid.Resources>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
+                <DataGridTextColumn Header="Гарантия" Binding="{Binding Warranty}"/>
+                <!--<DataGridTemplateColumn Header="Количество">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBox x:Name="Count">1</TextBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>-->
-                </DataGrid.Columns>
-            </DataGrid>
-        </StackPanel>
+            </DataGrid.Columns>
+        </DataGrid>
     </DockPanel>
 </Window>

@@ -15,24 +15,22 @@
             <TextBox x:Name="SearchServices" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             <Button Style="{StaticResource MainBtn}" Command="{Binding AddSelectedPartsCommand}" CommandParameter="{Binding ElementName=addParts}" >Добавить к заявке</Button>
         </StackPanel>
-        <StackPanel>
-            <DataGrid x:Name="RepairPartsDG"  SelectionMode="Extended" ItemsSource="{Binding RepairPartsList}" Margin="10,20,10,0" Style="{StaticResource MainDataGrid}" >
-                <DataGrid.Resources>
-                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                </DataGrid.Resources>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
-                    <DataGridTextColumn Header="Гарантия" Binding="{Binding Count}"/>
-                    <!--<DataGridTemplateColumn Header="Количество">
+        <DataGrid x:Name="RepairPartsDG"  SelectionMode="Extended" ItemsSource="{Binding RepairPartsList}" Margin="10,20,10,10" Style="{StaticResource MainDataGrid}" >
+            <DataGrid.Resources>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
+                <DataGridTextColumn Header="Гарантия" Binding="{Binding Count}"/>
+                <!--<DataGridTemplateColumn Header="Количество">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox x:Name="Count">1</TextBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>-->
-                </DataGrid.Columns>
-            </DataGrid>
-        </StackPanel>
+            </DataGrid.Columns>
+        </DataGrid>
     </DockPanel>
 </Window>

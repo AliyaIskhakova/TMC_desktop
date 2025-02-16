@@ -34,7 +34,7 @@ namespace TMC.Model
         private string _date;
         private int _deviceID;
         //private string _deviceTypeName;
-        private decimal _cost;
+        //private double _cost;
         //private string _imeiSN;
         //private string _model;
         //private string _notes;
@@ -272,15 +272,15 @@ namespace TMC.Model
         //    }
         //}
 
-        public decimal Cost
-        {
-            get { return _cost; }
-            set
-            {
-                _cost = value;
-                OnPropertyChanged();
-            }
-        }
+        //public double Cost
+        //{
+        //    get { return _cost; }
+        //    set
+        //    {
+        //        _cost = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
         //public string IMEI_SN
         //{

@@ -11,8 +11,10 @@ namespace TMC.Model
 {
     using System;
     using System.Collections.Generic;
-    
-    public partial class Requests
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+
+    public partial class Requests:INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Requests()
@@ -20,14 +22,22 @@ namespace TMC.Model
             this.Request_RepairParts = new HashSet<Request_RepairParts>();
             this.Requests_Services = new HashSet<Requests_Services>();
         }
-    
+
+        private int cost;
         public int IDrequest { get; set; }
         public int ClientID { get; set; }
         public int StatusID { get; set; }
         public string Reason { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
         public Nullable<int> DeviceType { get; set; }
-        public int Cost { get; set; }
+        public int Cost {
+            get { return cost; }
+            set
+            {
+                cost = value;
+                OnPropertyChanged();
+            }
+        }
         public Nullable<int> ReceiverID { get; set; }
         public string IMEI_SN { get; set; }
         public string Model { get; set; }
@@ -47,5 +57,12 @@ namespace TMC.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests_Services> Requests_Services { get; set; }
         public virtual Status Status { get; set; }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
     }
 }

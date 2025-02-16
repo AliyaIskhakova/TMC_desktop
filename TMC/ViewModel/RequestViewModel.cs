@@ -88,7 +88,7 @@ namespace TMC.ViewModel
                              Date = r.Date.ToString(),
                              DeviceID = dt.IDtype,
                              //DeviceTypeName = dt.Name,
-                             Cost = r.Cost,
+                             //Cost = r.Cost,
                              //IMEI_SN = r.IMEI_SN,
                              //Model = r.Model,
                          }).ToList();
@@ -181,17 +181,29 @@ namespace TMC.ViewModel
                       requestWindow.MastersBox.ItemsSource = MastersList;
                       requestWindow.StatusBox.ItemsSource = context.Status.ToList();
                       requestWindow.DeviceTypeBox.ItemsSource = context.DeviseTypes.ToList();
-                      requestWindow.ClientInfo.DataContext = new Clients();
+                      //requestWindow.ClientInfo.DataContext = new Clients();
                       
                       if (requestWindow.ShowDialog() == true)
                       {
-                          //Clients client = context.Clients.Find(request.ClientID);
-                          Clients client = requestWindow.ClientInfo.DataContext as Clients;
                           Requests newRequest = requestWindow.Requests;
-                          context.Clients.Add(client);
+                          Clients client = requestWindow.ClientInfo.DataContext as Clients;
+
+                          //Clients client = context.Clients.Find(request.ClientID);
+                          if (context.Clients.Any(x => x.IDClient == client.IDClient))
+                          {
+                              newRequest.ClientID = client.IDClient;
+                              MessageBox.Show("1");
+                          }
+                          else
+                          {
+                              context.Clients.Add(client);
+                              MessageBox.Show("Добавила нового");
+
+                          }
                           var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
                           newRequest.StatusID = selectedStatus.IDstatus;
-                          newRequest.DeviceType = (requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes).IDtype;
+                          var selectedDevice = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
+                          if(selectedDevice!=null) newRequest.DeviceType = selectedDevice.IDtype;
                           newRequest.Date = DateTime.Now;
                           newRequest.Cost = (int)requestWindow.Requests.Cost;
                           var selectedMaster = requestWindow.MastersBox.SelectedItem as Employees;
@@ -258,6 +270,7 @@ namespace TMC.ViewModel
                       Requests selectedRequest = context.Requests.Find(request.IDRequest);
 
                       RequestWindow requestWindow = new RequestWindow(selectedRequest, this);
+                      requestWindow.RequestDate.Visibility = Visibility.Visible;
                       requestWindow.ClientInfo.DataContext = context.Clients.Find(request.ClientID);
                       requestWindow.ClientInfo.IsEnabled = false;
                       requestWindow.MastersBox.ItemsSource = MastersList;
@@ -394,17 +407,21 @@ namespace TMC.ViewModel
                   {
                       AddServicesWindow servicesWindow = new AddServicesWindow();
                       var vm = servicesWindow.DataContext as ServicesViewModel;
-
+                      RequestWindow requestWindow = o as RequestWindow;
                       if (servicesWindow.ShowDialog() == true)
                       {
                           // Добавляем выбранные услуги к заявке
                           foreach (var service in vm.SelectedServices)
                           {
                               bool exists = SelectedServices.Any(rs => rs.IDservice == service.IDservice);
-                             if(!exists) SelectedServices.Add(service);
-
+                              if (!exists)
+                              {
+                                  SelectedServices.Add(service);
+                                  requestWindow.Requests.Cost = (int)(requestWindow.Requests.Cost + service.Cost);
+                              }
                           }
                       }
+
                   }));
             }
         }
@@ -429,13 +446,20 @@ namespace TMC.ViewModel
                   {
                       AddPartsWindow partsWindow = new AddPartsWindow();
                       var vm = partsWindow.DataContext as StoreViewModel;
+                      RequestWindow requestWindow = o as RequestWindow;
 
                       if (partsWindow.ShowDialog() == true)
                       {
+
                           // Добавляем выбранные услуги к заявке
                           foreach (var part in vm.SelectedParts)
                           {
-                              SelectedParts.Add(part);
+                              bool exists = SelectedParts.Any(rs => rs.IDpart == part.IDpart);
+                              if (!exists)
+                              {
+                                  SelectedParts.Add(part);
+                                  requestWindow.Requests.Cost = (int)(requestWindow.Requests.Cost + part.Cost);
+                              }
 
                           }
                       }
@@ -453,6 +477,7 @@ namespace TMC.ViewModel
                       var request = requestWindow.Requests;
                       var device = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
                       var client = requestWindow.ClientInfo.DataContext as Clients;
+                      MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
 
                       Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
                       Microsoft.Office.Interop.Word.Document wordDoc = wordApp.Documents.Add();

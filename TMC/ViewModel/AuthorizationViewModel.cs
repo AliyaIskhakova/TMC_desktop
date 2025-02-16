@@ -31,7 +31,6 @@ namespace TMC.ViewModel
                               Employees employee = context.Employees.Where(u => u.Login == wi.loginBox.Text && u.Password == wi.passwordBox.Password).FirstOrDefault();
                               if (employee != null)
                               {
-
                                   MainWindow mainWindow = new MainWindow();
                                   mainWindow.Show();
                                   wi.Close();
