@@ -176,7 +176,7 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <Button x:Name="ResultsBtn" x:Uid="6" Click="Button_Click" Style="{StaticResource MenuBtn}">
+                <Button x:Name="ResultsBtn" Visibility="Collapsed" x:Uid="6" Click="Button_Click" Style="{StaticResource MenuBtn}">
                     <Button.Template>
                         <ControlTemplate>
                             <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}">
@@ -262,27 +262,7 @@
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchClient" Style="{StaticResource SearchBox}"  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Button x:Name="AddClient"  Command="{Binding AddClientCommand}">+ Добавить</Button>
-                    <ComboBox ItemsSource="{Binding ClientsList}" x:Name="CB"
-          TextBoxBase.TextChanged="CB_TextChanged"
-          IsTextSearchEnabled="False" IsEditable="True"
-          VerticalAlignment="Top">
-                        <ComboBox.Resources>
-                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                        </ComboBox.Resources>
-                        <ComboBox.ItemTemplate  >
-                            <DataTemplate>
-                                <Grid>
-                                    <StackPanel  Orientation="Horizontal" HorizontalAlignment="Stretch">
-                                        <TextBlock Text="{Binding surname}"/>
-                                        <TextBlock Text=" "/>
-                                        <TextBlock Text="{Binding name}"/>
-                                        <TextBlock Text=" "/>
-                                        <TextBlock Text="{Binding telephone}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    
                 </StackPanel>
                 
                 <DataGrid x:Name="ClientsDG"  MouseDoubleClick="ClientsDG_MouseDoubleClick"  ItemsSource="{Binding ClientsList}" Style="{StaticResource MainDataGrid}">
@@ -341,7 +321,7 @@
                             <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
                             <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}"/>
                             <DataGridTextColumn Header="Телефон" Binding="{Binding Telephone}"/>
-                            <DataGridTextColumn Header="Должность" Binding="{Binding Role}"/>
+                            <!--<DataGridTextColumn Header="Должность" Binding="{Binding Role}"/>-->
                         </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

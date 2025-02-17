@@ -47,7 +47,10 @@ namespace TMC.View
         }
         void Accept_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() && int.TryParse(RequestCost.Text, out int cost)) DialogResult = true;
+            if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() && int.TryParse(RequestCost.Text, out int cost))
+            {
+                DialogResult = true;
+            }
             else MessageBox.Show("Проверьте введенные данные!");
         }
 

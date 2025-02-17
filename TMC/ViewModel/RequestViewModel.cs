@@ -34,7 +34,7 @@ namespace TMC.ViewModel
         RelayCommand? saveCommand;
         RelayCommand? selectRequestByStatus;
         RelayCommand addServicesCommand;
-
+        
         RelayCommand addPartsCommand;
         ObservableCollection<Employees> _mastersList;
         Employees SelectedMaster;
@@ -64,7 +64,7 @@ namespace TMC.ViewModel
                           join e in context.Employees on r.MasterID equals e.IDEmployee into employeeGroup
                           from e in employeeGroup.DefaultIfEmpty() // LEFT JOIN для Employees
                           join s in context.Status on r.StatusID equals s.IDstatus // INNER JOIN для Status
-                          join dt in context.DeviseTypes on r.DeviceType equals dt.IDtype // INNER JOIN для DeviseTypes
+                          /*join dt in context.DeviseTypes on r.DeviceType equals dt.IDtype*/ // INNER JOIN для DeviseTypes
                           select new RequestView
                           {
                               IDRequest = r.IDrequest,
@@ -86,7 +86,7 @@ namespace TMC.ViewModel
                               CompletionDate = r.CompletionDate.ToString(),
                              Reason = r.Reason,
                              Date = r.Date.ToString(),
-                             DeviceID = dt.IDtype,
+                             //DeviceID = dt.IDtype,
                              //DeviceTypeName = dt.Name,
                              //Cost = r.Cost,
                              //IMEI_SN = r.IMEI_SN,
@@ -192,23 +192,23 @@ namespace TMC.ViewModel
                           if (context.Clients.Any(x => x.IDClient == client.IDClient))
                           {
                               newRequest.ClientID = client.IDClient;
-                              MessageBox.Show("1");
                           }
                           else
                           {
                               context.Clients.Add(client);
-                              MessageBox.Show("Добавила нового");
 
                           }
                           var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
                           newRequest.StatusID = selectedStatus.IDstatus;
                           var selectedDevice = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
-                          if(selectedDevice!=null) newRequest.DeviceType = selectedDevice.IDtype;
+                          if (selectedDevice != null) { newRequest.DeviceType = selectedDevice.IDtype; }
                           newRequest.Date = DateTime.Now;
                           newRequest.Cost = (int)requestWindow.Requests.Cost;
                           var selectedMaster = requestWindow.MastersBox.SelectedItem as Employees;
                           if (selectedMaster != null) newRequest.MasterID = selectedMaster.IDEmployee;
                           context.Requests.Add(newRequest);
+                          MessageBox.Show("r");
+
                           context.SaveChanges();
                           foreach (var service in SelectedServices)
                           {
@@ -247,6 +247,7 @@ namespace TMC.ViewModel
                           context.SaveChanges();
                           SelectedServices.Clear();
                           SelectedParts.Clear();
+                          RequestsList.Clear();
                           LoadRequests();
 
                       }
@@ -278,7 +279,7 @@ namespace TMC.ViewModel
                       requestWindow.StatusBox.ItemsSource = context.Status.ToList();
                       requestWindow.StatusBox.SelectedItem = context.Status.Find(request.StatusID);
                       requestWindow.DeviceTypeBox.ItemsSource = context.DeviseTypes.ToList();
-                      requestWindow.DeviceTypeBox.SelectedItem = context.DeviseTypes.Find(request.DeviceID);
+                      requestWindow.DeviceTypeBox.SelectedItem = context.DeviseTypes.Find(selectedRequest.DeviceType);
                       List<Requests_Services> request_services = context.Requests_Services.Where(r=>r.RequestID == selectedRequest.IDrequest).ToList();
                       //requestWindow.Show();
                       foreach (var item in request_services)
@@ -299,7 +300,8 @@ namespace TMC.ViewModel
                       {
                           var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
                           selectedRequest.StatusID = selectedStatus.IDstatus;
-                          selectedRequest.DeviceType = (requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes).IDtype;
+                          var selectedDevice = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
+                          if (selectedDevice!=null) selectedRequest.DeviceType = selectedDevice.IDtype;
                           var selectedMaster = requestWindow.MastersBox.SelectedItem as Employees;
                           if (selectedMaster != null) selectedRequest.MasterID = selectedMaster.IDEmployee;
                           selectedRequest.Cost = (int)requestWindow.Requests.Cost;
@@ -347,46 +349,7 @@ namespace TMC.ViewModel
                   }));
             }
         }
-        //public RelayCommand SaveCommand
-        //{
-        //    get
-        //    {
-        //        return saveCommand ??
-        //          (saveCommand = new RelayCommand((o) =>
-        //          {
-        //              RequestWindow requestWindow = o as RequestWindow;
-        //              var selectedRequest = requestWindow.Requests;
-        //              var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
-        //              selectedRequest.StatusID = selectedStatus.IDstatus;
-        //              selectedRequest.DeviceType = (requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes).IDtype;
-        //              var selectedMaster = requestWindow.MastersBox.SelectedItem as Employees;
-        //              if (selectedMaster != null) selectedRequest.MasterID = selectedMaster.IDEmployee;
-        //              selectedRequest.Cost = (int)requestWindow.Requests.Cost;
-        //              context.Requests.AddOrUpdate(selectedRequest);
-        //              context.SaveChanges();
-        //              foreach (var service in SelectedServices)
-        //              {
-        //                  // Проверяем, существует ли уже такая запись
-        //                  bool exists = context.Requests_Services
-        //                      .Any(rs => rs.RequestID == selectedRequest.IDrequest && rs.ServiceID == service.IDservice);
-
-        //                  if (!exists)
-        //                  {
-        //                      Requests_Services requests_Services = new Requests_Services
-        //                      {
-        //                          RequestID = selectedRequest.IDrequest,
-        //                          ServiceID = service.IDservice,
-        //                          Count = 1 // Можно добавить логику для указания количества
-        //                      };
-        //                      context.Requests_Services.Add(requests_Services);
-        //                  }
-        //              }
-        //              context.SaveChanges();
-        //              LoadRequests();
-        //              requestWindow.Close();
-        //          }));
-        //    }
-        //}
+    
         private ObservableCollection<Services> _selectedServices = new ObservableCollection<Services>();
         public ObservableCollection<Services> SelectedServices
         {
@@ -423,6 +386,25 @@ namespace TMC.ViewModel
                       }
 
                   }));
+            }
+        }
+        public RelayCommand DeleteServicesCommand
+        {
+            get
+            {
+                return new RelayCommand((o) =>
+                  {
+                      
+                      RequestWindow requestWindow = o as RequestWindow;
+                      Services services = requestWindow.selectedServices.SelectedItem as Services;
+                      if (services != null)
+                      {
+                          SelectedServices.Remove(services);
+                          requestWindow.Requests.Cost = (int)(requestWindow.Requests.Cost - services.Cost);
+
+                      }
+                      else MessageBox.Show("Если хотите удалить услугу из заявки, выберите услугу для удаления", "Формирование заявки", MessageBoxButton.OK, MessageBoxImage.Information);
+                  });
             }
         }
 
@@ -464,6 +446,25 @@ namespace TMC.ViewModel
                           }
                       }
                   }));
+            }
+        }
+        public RelayCommand DeletePartsCommand
+        {
+            get
+            {
+                return new RelayCommand((o) =>
+                {
+
+                    RequestWindow requestWindow = o as RequestWindow;
+                    RepairParts parts = requestWindow.selectedParts.SelectedItem as RepairParts;
+                    if (parts != null)
+                    {
+                        SelectedParts.Remove(parts);
+                        requestWindow.Requests.Cost = (int)(requestWindow.Requests.Cost - parts.Cost);
+
+                    }
+                    else MessageBox.Show("Если хотите удалить ЗИП из заявки, выберите ЗИП для удаления", "Формирование заявки", MessageBoxButton.OK, MessageBoxImage.Information);
+                });
             }
         }
         public RelayCommand PrintRepairActCommand
@@ -597,6 +598,152 @@ namespace TMC.ViewModel
                       //wordDoc.Close(SaveChanges: false);
                       //wordApp.Quit();
                   }));
+            }
+        }
+        public RelayCommand PrintComplitedWorkActCommand
+        {
+            get
+            {
+                return  new RelayCommand((o) =>
+                  {
+                      RequestWindow requestWindow = o as RequestWindow;
+                      var request = requestWindow.Requests;
+                      var device = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
+                      var client = requestWindow.ClientInfo.DataContext as Clients;
+                      var status = requestWindow.StatusBox.SelectedItem as Status;
+                      if (status.Name == "Готов" || status.Name == "Завершен")
+                      {
+                          MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                          Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
+                          Microsoft.Office.Interop.Word.Document wordDoc = wordApp.Documents.Add();
+
+                          wordDoc.Content.ParagraphFormat.SpaceAfter = 0;
+                          wordDoc.Content.ParagraphFormat.SpaceBefore = 0;
+                          wordDoc.Content.Font.Name = "Times New Roman";
+                          wordDoc.Content.Font.Size = 12;
+                          // Добавление описания
+                          Paragraph name = wordDoc.Content.Paragraphs.Add();
+                          name.Range.Text = "Сервисный центр ТехноМедиаСоюз";
+                          name.Range.Font.Size = 12;
+                          name.Range.Font.Bold = 1;
+                          name.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                          name.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                          name.Format.SpaceAfter = 0;
+                          name.Range.InsertParagraphAfter();
+
+
+                          Paragraph descriptionParagraph1 = wordDoc.Content.Paragraphs.Add();
+                          descriptionParagraph1.Range.Text = "ИП \"Сулейманов М.Р.\", г. Арск ул. Школьная 17, http://www.vk.com/servistmsouz," +
+                                                           "тел. 8(443) 248-92-60. Время работы с 9.00 до 18.00 (понедельник-пятница), без перерывов ";
+                          descriptionParagraph1.Range.Font.Size = 12;
+                          descriptionParagraph1.Range.Font.Bold = 0;
+                          descriptionParagraph1.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                          descriptionParagraph1.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                          descriptionParagraph1.Format.SpaceAfter = 0;
+                          descriptionParagraph1.Range.InsertParagraphAfter();
+                          descriptionParagraph1.Range.InsertParagraphAfter();
+
+                          // Добавление заголовка
+                          Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
+                          titleParagraph.Range.Text = $"Акт о выполненных рвбот №{request.IDrequest} от {DateTime.Now.ToShortDateString()}";
+                          titleParagraph.Range.Font.Size = 13;
+                          titleParagraph.Range.Font.Bold = 1;
+                          titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                          titleParagraph.Range.InsertParagraphAfter();
+
+                          // Создание таблицы с 5 строками и 2 колонками
+                          Table table = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 8, 2);
+                          table.Borders.Enable = 1;
+                          table.Range.Bold = 0;
+                          table.Range.Font.Size = 12;
+                          table.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+
+                          // Настройка ширины столбцов
+                          table.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(5);
+                          table.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(12);
+
+                          // Заполнение таблицы данными
+                          table.Cell(1, 1).Range.Text = "Номер заказа";
+                          table.Cell(2, 1).Range.Text = "ФИО клиента";
+                          table.Cell(3, 1).Range.Text = "Телефон клиента";
+                          table.Cell(4, 1).Range.Text = "Устройство";
+                          table.Cell(5, 1).Range.Text = "Серийный номер";
+                          table.Cell(6, 1).Range.Text = "Дата приёма";
+                          table.Cell(7, 1).Range.Text = "Дата выдачи";
+                          table.Cell(8, 1).Range.Text = "Гарантия";
+
+                          table.Cell(1, 2).Range.Text = $"{request.IDrequest}";
+                          table.Cell(2, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
+                          table.Cell(3, 2).Range.Text = $"{client.telephone}";
+                          table.Cell(4, 2).Range.Text = $"{device.Name} {request.Model}";
+                          table.Cell(5, 2).Range.Text = $"{request.IMEI_SN}";
+                          table.Cell(6, 2).Range.Text = $"{request.Date}";
+                          table.Cell(7, 2).Range.Text = $"{DateTime.Now.ToShortDateString()}";
+                          table.Cell(8, 2).Range.Text = $"{request.Notes}";
+
+                          for (int i = 1; i <= 8; i++)
+                          {
+                              table.Cell(i, 1).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
+                              table.Cell(i, 1).Range.Font.Bold = 1; // Жирный шрифт
+                          }
+
+                          // Выравнивание текста во втором столбце по левому краю
+                          for (int i = 1; i <= 8; i++)
+                          {
+                              table.Cell(i, 2).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                          }
+                          Paragraph complitedWork = wordDoc.Content.Paragraphs.Add();
+                          complitedWork.Range.Text = $"Выполненнные работы";
+                          complitedWork.Range.Font.Size = 13;
+                          complitedWork.Range.Font.Bold = 1;
+                          complitedWork.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                          complitedWork.Range.InsertParagraphAfter();
+                          List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestID == request.IDrequest).ToList();
+                          //requestWindow.Show();
+                          foreach (var item in request_services)
+                          {
+                              Services service = context.Services.Find(item.ServiceID);
+                              SelectedServices.Add(service);
+                          }
+                          // Создание таблицы с услугами
+                          Table servicesTable = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, request_services.Count + 1, 3);
+                          servicesTable.Borders.Enable = 1;
+                          servicesTable.Range.Font.Size = 11;
+                          servicesTable.Range.Font.Bold = 0;
+                          servicesTable.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+
+                          // Настройка ширины столбцов
+                          servicesTable.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(10);
+                          servicesTable.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(3);
+                          servicesTable.Columns[3].PreferredWidth = wordApp.CentimetersToPoints(3);
+
+                          // Заполнение заголовков таблицы
+                          servicesTable.Cell(1, 1).Range.Text = "Наименование";
+                          servicesTable.Cell(1, 2).Range.Text = "Кол-во";
+                          servicesTable.Cell(1, 3).Range.Text = "Цена, руб.";
+
+                          // Заполнение таблицы данными из списка
+                          for (int i = 0; i < request_services.Count; i++)
+                          {
+                              servicesTable.Cell(i + 2, 1).Range.Text = context.Services.Find(request_services[i].ServiceID).Name;
+                              servicesTable.Cell(i + 2, 2).Range.Text = request_services[i].Count.ToString();
+                              servicesTable.Cell(i + 2, 3).Range.Text = context.Services.Find(request_services[i].ServiceID).Cost.ToString();
+                          }
+                          Paragraph costParagraph = wordDoc.Content.Paragraphs.Add();
+                          costParagraph.Range.Text = $"ИТОГ: {request.Cost} руб";
+                          costParagraph.Range.Font.Bold = 1;
+                          costParagraph.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                          costParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
+                          costParagraph.Format.SpaceAfter = 0;
+                          costParagraph.Range.InsertParagraphAfter();
+
+                          wordApp.Visible = true;
+
+                          wordDoc.PrintPreview();
+                      }
+                      else MessageBox.Show("Чтобы сформировать акт выполненных работ статус заявки должен быть Готов или Завершен", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
+                  });
             }
         }
 

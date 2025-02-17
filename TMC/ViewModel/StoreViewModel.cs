@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.Xml;
@@ -107,6 +108,25 @@ namespace TMC.ViewModel
                         RepairParts parts = repairPartWindow.RepairParts;
                         //client.Telephone = "avae";
                         context.RepairParts.Add(parts);
+                        context.SaveChanges();
+                        RepairPartsList = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
+                    }
+
+                });
+            }
+        }
+        public RelayCommand EditRepairPartCommand
+        {
+            get
+            {
+                return new RelayCommand((o) =>
+                {
+                    RepairParts selectedPart = o as RepairParts;
+                    RepairPartWindow repairPartWindow = new RepairPartWindow(selectedPart);
+                    if (repairPartWindow.ShowDialog() == true)
+                    {
+                        
+                        context.RepairParts.AddOrUpdate(selectedPart);
                         context.SaveChanges();
                         RepairPartsList = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
                     }

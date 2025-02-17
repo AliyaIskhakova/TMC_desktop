@@ -163,7 +163,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Услуги"  VerticalAlignment="Center" Margin="0" Style="{StaticResource WindowTitle}"/>
                         <Button Style="{StaticResource MainBtn}" Command="{Binding AddServicesCommand}" CommandParameter="{Binding ElementName=window}" Content="Добавить"/>
-                        <Button Style="{StaticResource MainBtn}" Content="Удалить" Margin="0 5" />
+                        <Button Style="{StaticResource MainBtn}"  Command="{Binding DeleteServicesCommand}" CommandParameter="{Binding ElementName=window}" Content="Удалить" Margin="0 5" />
                     </StackPanel>
                     <DataGrid x:Name="selectedServices" ItemsSource="{Binding SelectedServices}" AutoGenerateColumns="False" MinHeight="80" MaxHeight="120" Background="White">
                         <DataGrid.Columns>
@@ -177,9 +177,9 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Необходимые ЗИП" Margin="0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                         <Button Style="{StaticResource MainBtn}" Command="{Binding AddPartsCommand}" CommandParameter="{Binding ElementName=window}"  Content="Добавить"/>
-                        <Button Style="{StaticResource MainBtn}" Content="Удалить" Margin="0 5" />
+                        <Button Style="{StaticResource MainBtn}" Command="{Binding DeletePartsCommand}" CommandParameter="{Binding ElementName=window}" Content="Удалить" Margin="0 5" />
                     </StackPanel>
-                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding SelectedParts}" Margin="0 0 30 0"  MinHeight="80" MaxHeight="120" Background="White">
+                    <DataGrid x:Name="selectedParts" AutoGenerateColumns="False" ItemsSource="{Binding SelectedParts}" Margin="0 0 30 0"  MinHeight="80" MaxHeight="120" Background="White">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название" Binding="{Binding Name}" />
                             <DataGridTextColumn Header="Кол-во" Binding="{Binding Count}"/>
@@ -191,8 +191,8 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
             
             <StackPanel x:Name="PrintBtns" Orientation="Horizontal">
                 <Button Style="{StaticResource MainBtn}"  Content="Акт приёмки" Command="{Binding PrintRepairActCommand}" CommandParameter="{Binding ElementName=window}" Margin="30 10 0 10"/>
-                <Button Style="{StaticResource MainBtn}"  Content="Акт диагностики" Margin="10"/>
-                <Button x:Name="EndDocuument" Style="{StaticResource MainBtn}" Content="Акт выполнения работ" Margin="0 10" IsEnabled="False"/>
+                <Button Style="{StaticResource MainBtn}"  Content="Акт диагностики" Command="{Binding PrintDiagnosticActCommand}" CommandParameter="{Binding ElementName=window}" Margin="10"/>
+                <Button x:Name="EndDocuument" Style="{StaticResource MainBtn}" Command="{Binding PrintComplitedWorkActCommand}" CommandParameter="{Binding ElementName=window}" Content="Акт выполнения работ" Margin="0 10" />
             </StackPanel>
             <Button Name="SaveBtn" Style="{StaticResource MainBtn}" Click="Accept_Click"  Content="Coхранить"/>
             <!--Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=window}"-->

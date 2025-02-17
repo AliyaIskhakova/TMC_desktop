@@ -114,7 +114,14 @@ namespace TMC
 
         private void StoreDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
 
+            if (row != null)
+            {
+                var selectedItem = (sender as DataGrid).SelectedItem;
+                var viewModel = new StoreViewModel();
+                viewModel.EditRepairPartCommand.Execute(selectedItem);
+            }
         }
 
         private void RequestDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -157,23 +164,6 @@ namespace TMC
 
         }
 
-        private void CB_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CB.IsDropDownOpen = true;
-            // убрать selection, если dropdown только открылся
-            var tb = (TextBox)e.OriginalSource;
-            tb.Select(tb.SelectionStart + tb.SelectionLength, 0);
-            CollectionView cv = (CollectionView)CollectionViewSource.GetDefaultView(CB.ItemsSource);
-            cv.Filter = s =>
-            {
-                var client = s as Clients;
-                if (client != null)
-                {
-                    string fullText = $"{client.surname} {client.name} {client.telephone}";
-                    return fullText.IndexOf(CB.Text, StringComparison.CurrentCultureIgnoreCase) >= 0;
-                }
-                return false;
-            };
-        }
+       
     }
 }

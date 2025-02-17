@@ -32,7 +32,7 @@ namespace TMC.Model
         private string _completionDate;
         private string _reason;
         private string _date;
-        private int _deviceID;
+        private int? _deviceID;
         //private string _deviceTypeName;
         //private double _cost;
         //private string _imeiSN;
@@ -252,15 +252,15 @@ namespace TMC.Model
             }
         }
 
-        public int DeviceID
-        {
-            get { return _deviceID; }
-            set
-            {
-                _deviceID = value;
-                OnPropertyChanged();
-            }
-        }
+        //public int? DeviceID
+        //{
+        //    get { return _deviceID; }
+        //    set
+        //    {
+        //        _deviceID = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
         //public string DeviceTypeName
         //{
