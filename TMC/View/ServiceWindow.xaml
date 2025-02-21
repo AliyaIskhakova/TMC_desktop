@@ -1,0 +1,37 @@
+﻿<Window x:Class="TMC.View.ServiceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TMC.View"
+        xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"
+                   WindowStyle="None"
+               WindowStartupLocation="CenterScreen"
+
+   Background="#E4E9FF"
+   Name="window"
+   mc:Ignorable="d"
+   Title="ClientWindow" MinHeight="200" MinWidth="450" MaxHeight="300" MaxWidth="600">
+
+    <DockPanel >
+        <Border DockPanel.Dock="Top">
+            <DockPanel >
+                <Label Content="Услуга" Margin="30 15 30 10" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click" Width="30" Margin="10" IsEnabled="True">
+                    <Image Source="/Image/close.png" />
+                </Button>
+            </DockPanel>
+        </Border>
+        <StackPanel>
+            <Border Padding="30 0">
+                <StackPanel>
+                    <ui:MetroHeader Content="Наименование услуги*"/>
+                    <TextBox x:Name="ServiceName" Text="{Binding Name}" ui:TextBoxHelper.Watermark="Название" Style="{StaticResource InfoTxtBox}"/>
+                    <ui:MetroHeader Content="Цена за ед*"/>
+                    <TextBox x:Name="ServiceCost" Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
+                </StackPanel>
+            </Border>
+            <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Сохранить" Margin="30 5" />
+        </StackPanel>
+    </DockPanel>
+</Window>

@@ -17,7 +17,7 @@ namespace TMC.ViewModel
         ObservableCollection<Employees> _employees;
          string _searchText;
 
-        RelayCommand? addCommand;
+        RelayCommand addCommand;
         ObservableCollection<Employees> _filteredEmployees;
 
         public EmployeesViewModel()

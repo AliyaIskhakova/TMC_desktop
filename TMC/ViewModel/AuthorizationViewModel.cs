@@ -14,7 +14,7 @@ namespace TMC.ViewModel
     public class AuthorizationViewModel: INotifyPropertyChanged
     {
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
-        RelayCommand? authCommand;
+        RelayCommand authCommand;
         public ObservableCollection<Employees> Employees { get; set; }
         // команда авторизации
         public RelayCommand AuthorizationCommand
@@ -31,7 +31,31 @@ namespace TMC.ViewModel
                               Employees employee = context.Employees.Where(u => u.Login == wi.loginBox.Text && u.Password == wi.passwordBox.Password).FirstOrDefault();
                               if (employee != null)
                               {
+                                  Application.Current.Properties["UserID"] = employee.IDEmployee;
+                                  Application.Current.Properties["Role"] = employee.Roles.Name;
                                   MainWindow mainWindow = new MainWindow();
+                                  switch (employee.Roles.Name)
+                                  {
+                                      case ("Admin"):
+                                          mainWindow.RequestBtn.Visibility = Visibility.Collapsed;
+                                          mainWindow.StoreBtn.Visibility = Visibility.Collapsed;
+                                          mainWindow.ClientsBtn.Visibility = Visibility.Collapsed;
+                                          mainWindow.PrintPriceList.Visibility = Visibility.Collapsed;
+                                          mainWindow.AddService.Visibility = Visibility.Visible;
+                                          mainWindow.AddEmployee.Visibility = Visibility.Visible;
+                                          mainWindow.RequestsWindow.Visibility = Visibility.Collapsed;
+                                          mainWindow.ServicesWindow.Visibility = Visibility.Visible;
+                                          break;
+                                      case ("Master"):
+                                          mainWindow.StoreBtn.Visibility = Visibility.Collapsed;
+                                          mainWindow.ClientsBtn.Visibility = Visibility.Collapsed;
+                                          mainWindow.ServicesBtn.Visibility = Visibility.Collapsed;
+                                          mainWindow.EmployeesBtn.Visibility = Visibility.Collapsed;
+                                          break;
+                                      case ("Director"):
+                                          mainWindow.ResultsBtn.Visibility = Visibility.Visible;
+                                          break;
+                                  }
                                   mainWindow.Show();
                                   wi.Close();
                               }

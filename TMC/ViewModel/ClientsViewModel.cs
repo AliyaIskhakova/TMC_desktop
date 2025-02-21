@@ -20,8 +20,8 @@ namespace TMC.ViewModel
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
         ObservableCollection<Clients> _clients;
         string _searchText;
-        RelayCommand? addCommand;
-        RelayCommand? editCommand;
+        RelayCommand addCommand;
+        RelayCommand editCommand;
 
         Clients _selectedClient;
         ObservableCollection<Clients> _filteredClients;
@@ -70,15 +70,22 @@ namespace TMC.ViewModel
         }
         private void FilterPersons()
         {
-            if (string.IsNullOrEmpty(_searchText))
+            try
             {
-                ClientsList = new ObservableCollection<Clients>(_clients);
+                if (string.IsNullOrEmpty(_searchText))
+                {
+                    ClientsList = new ObservableCollection<Clients>(_clients);
+                }
+                else
+                {
+                    var filtered = _clients.Where(e =>
+            e.Surname.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()) || e.Name.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()));
+                    ClientsList = new ObservableCollection<Clients>(filtered);
+                }
             }
-            else
+            catch (Exception e)
             {
-                var filtered = _clients.Where(e =>
-        e.Surname.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()) || e.Name.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()));
-                ClientsList = new ObservableCollection<Clients>(filtered);
+                MessageBox.Show($"Произошла ошибка: {e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -91,15 +98,22 @@ namespace TMC.ViewModel
                 return addCommand ??
                   (addCommand = new RelayCommand((o) =>
                   {
-                      ClientWindow clientWindow = new ClientWindow(new Clients());
-                      if (clientWindow.ShowDialog() == true)
+                      try
                       {
-                           Clients client = clientWindow.Clients;
-                           context.Clients.Add(client);
-                           context.SaveChanges();
-                           _clients = new ObservableCollection<Clients>(context.Clients.ToList());
-                           ClientsList = new ObservableCollection<Clients>(_clients);
-                          
+                          ClientWindow clientWindow = new ClientWindow(new Clients());
+                          if (clientWindow.ShowDialog() == true)
+                          {
+                              Clients client = clientWindow.Clients;
+                              context.Clients.Add(client);
+                              context.SaveChanges();
+                              _clients = new ObservableCollection<Clients>(context.Clients.ToList());
+                              ClientsList = new ObservableCollection<Clients>(_clients);
+
+                          }
+                      }
+                      catch (Exception e)
+                      {
+                          MessageBox.Show($"Произошла ошибка: {e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                       }
                   }));
             }
@@ -113,30 +127,31 @@ namespace TMC.ViewModel
                   (editCommand = new RelayCommand((selectedItem) =>
                   {
                       // получаем выделенный объект
-                      Clients client = selectedItem as Clients;
-                      if (client == null) return;
-
-                      //Clients vm = new Clients
-                      //{
-                      //    Id = client.Id,
-                      //    Name = client.Name,
-                      //    Age = client.Age
-                      //};
-                      ClientWindow userWindow = new ClientWindow(client);
-
-
-                      if (userWindow.ShowDialog() == true)
+                      try
                       {
-                          client.surname = userWindow.Clients.surname;
-                          client.name = userWindow.Clients.name;
-                          client.patronymic = userWindow.Clients.patronymic;
-                          client.telephone = userWindow.Clients.telephone;
-                          client.email = userWindow.Clients.email;
-                          client.type = userWindow.Clients.type;
-                          client.companyname = userWindow.Clients.companyname;
-                          context.Clients.AddOrUpdate(client);
-                          //context.Entry(client).State = EntityState.Modified;
-                          context.SaveChanges();
+                          Clients client = selectedItem as Clients;
+                          if (client == null) return;
+
+                          ClientWindow userWindow = new ClientWindow(client);
+
+
+                          if (userWindow.ShowDialog() == true)
+                          {
+                              client.surname = userWindow.Clients.surname;
+                              client.name = userWindow.Clients.name;
+                              client.patronymic = userWindow.Clients.patronymic;
+                              client.telephone = userWindow.Clients.telephone;
+                              client.email = userWindow.Clients.email;
+                              client.type = userWindow.Clients.type;
+                              client.companyname = userWindow.Clients.companyname;
+                              context.Clients.AddOrUpdate(client);
+                              //context.Entry(client).State = EntityState.Modified;
+                              context.SaveChanges();
+                          }
+                      }
+                      catch (Exception e)
+                      {
+                          MessageBox.Show($"Произошла ошибка: {e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                       }
                   }));
             }

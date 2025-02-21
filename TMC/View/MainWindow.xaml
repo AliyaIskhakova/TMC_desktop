@@ -288,8 +288,10 @@
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Услуги</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchServices" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                    <Button x:Name="FilterServiceBtn" >Фильтр</Button>
+                    <!--<Button x:Name="FilterServiceBtn" >Фильтр</Button>-->
                     <Button x:Name="PrintPriceList" Command="{Binding PrintPriceListCommand}" >Печать</Button>
+                    <Button x:Name="AddService" Visibility="Collapsed" Command="{Binding AddServicesCommand}">+ Добавить</Button>
+         
                 </StackPanel>
                 <DataGrid x:Name="ServicesDG" ItemsSource="{Binding ServicesList}" MouseDoubleClick="ServicesDG_MouseDoubleClick" Style="{StaticResource MainDataGrid}" >
                     <DataGrid.Resources>

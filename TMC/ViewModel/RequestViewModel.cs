@@ -27,17 +27,16 @@ namespace TMC.ViewModel
     public class RequestViewModel : INotifyPropertyChanged
     {
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
-        RelayCommand? addCommand;
-        RelayCommand? relayCommand;
+        RelayCommand addCommand;
+        RelayCommand relayCommand;
         RelayCommand printRepairActCommand;
-        RelayCommand? editCommand;
-        RelayCommand? saveCommand;
-        RelayCommand? selectRequestByStatus;
+        RelayCommand editCommand;
+        RelayCommand saveCommand;
+        RelayCommand selectRequestByStatus;
         RelayCommand addServicesCommand;
         
         RelayCommand addPartsCommand;
         ObservableCollection<Employees> _mastersList;
-        Employees SelectedMaster;
         private ObservableCollection<RequestView> _requests;
         public ObservableCollection<RequestView> RequestsList
         {
@@ -207,8 +206,6 @@ namespace TMC.ViewModel
                           var selectedMaster = requestWindow.MastersBox.SelectedItem as Employees;
                           if (selectedMaster != null) newRequest.MasterID = selectedMaster.IDEmployee;
                           context.Requests.Add(newRequest);
-                          MessageBox.Show("r");
-
                           context.SaveChanges();
                           foreach (var service in SelectedServices)
                           {

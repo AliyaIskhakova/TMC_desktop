@@ -20,9 +20,9 @@ namespace TMC.ViewModel
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
         ObservableCollection<Services> _services;
         string _searchText;
-        RelayCommand? addCommand;
-        RelayCommand? editCommand;
-        RelayCommand? printCommand;
+        RelayCommand addCommand;
+        RelayCommand editCommand;
+        RelayCommand printCommand;
         ObservableCollection<Services> _filteredServices;
 
         public ServicesViewModel()
@@ -93,6 +93,30 @@ namespace TMC.ViewModel
                     }
                     // Закрываем окно после добавления услуг
                     (o as System.Windows.Window).DialogResult = true;
+                });
+            }
+        }
+        public RelayCommand AddServicesCommand
+        {
+            get
+            {
+                return new RelayCommand((o) =>
+                {
+                    try
+                    {
+                        ServiceWindow serviceWindow = new ServiceWindow(new Services());
+                        if (serviceWindow.ShowDialog() == true)
+                        {
+                            Services service = serviceWindow.Services;
+                            context.Services.Add(service);
+                            context.SaveChanges();
+                            FilterServices();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 });
             }
         }

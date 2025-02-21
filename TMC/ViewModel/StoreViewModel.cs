@@ -20,8 +20,6 @@ namespace TMC.ViewModel
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
         ObservableCollection<RepairParts> _parts;
         string _searchText;
-        RelayCommand? addCommand;
-        RelayCommand? editCommand;
         ObservableCollection<RepairParts> _filteredParts;
 
         public StoreViewModel()
