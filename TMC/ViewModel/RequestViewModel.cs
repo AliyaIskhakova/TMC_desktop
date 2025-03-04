@@ -21,6 +21,7 @@ using System.Runtime.Remoting.Messaging;
 using Table = Microsoft.Office.Interop.Word.Table;
 using Paragraph = Microsoft.Office.Interop.Word.Paragraph;
 using System.Web.UI.WebControls.WebParts;
+using App = System.Windows.Application;
 
 namespace TMC.ViewModel
 {
@@ -95,17 +96,19 @@ namespace TMC.ViewModel
             {
                 r.StatusColor = ColorStatus(r.StatusName);
                 if(r.CompletionDate!= "")  r.CompletionDate = (Convert.ToDateTime(r.CompletionDate)).ToShortDateString();
-                if (r.Date != "") r.Date = (Convert.ToDateTime(r.Date)).ToString("dd.MM.yyyy \n hh:mm");
+                if (r.Date != "") r.Date = (Convert.ToDateTime(r.Date)).ToString("dd.MM.yyyy \n HH:mm");
                 return r;
             }));
+            string role =  App.Current.Properties["Role"] as string;
+            int id = (int)App.Current.Properties["UserID"];
+            if (role == "Master") RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r=> r.EmployeeID == id));
         }
 
         public RelayCommand SelectRequestByStatus
         {
             get
             {
-                return selectRequestByStatus ??
-                  (selectRequestByStatus = new RelayCommand((status) =>
+                return selectRequestByStatus ??= new RelayCommand((status) =>
                   {
                       RequestsList.Clear();
                       LoadRequests();
@@ -131,7 +134,7 @@ namespace TMC.ViewModel
                               break;
                       }
                                        
-                  }));
+                  });
             }
         }
 
@@ -170,8 +173,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return addCommand ??
-                  (addCommand = new RelayCommand((o) =>
+                return addCommand ??= new RelayCommand((o) =>
                   {
 
                       SelectedServices.Clear();
@@ -248,7 +250,7 @@ namespace TMC.ViewModel
                           LoadRequests();
 
                       }
-                  }));
+                  });
             }
         }
         // команда редактирования
@@ -256,8 +258,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return editCommand ??
-                  (editCommand = new RelayCommand((selectedItem) =>
+                return editCommand ??= new RelayCommand((selectedItem) =>
                   {
                       // получаем выделенный объект
 
@@ -271,6 +272,7 @@ namespace TMC.ViewModel
                       requestWindow.RequestDate.Visibility = Visibility.Visible;
                       requestWindow.ClientInfo.DataContext = context.Clients.Find(request.ClientID);
                       requestWindow.ClientInfo.IsEnabled = false;
+                      requestWindow.ClientComboBox.Visibility = Visibility.Collapsed;
                       requestWindow.MastersBox.ItemsSource = MastersList;
                       requestWindow.MastersBox.SelectedItem = context.Employees.Find(request.EmployeeID);
                       requestWindow.StatusBox.ItemsSource = context.Status.ToList();
@@ -278,6 +280,15 @@ namespace TMC.ViewModel
                       requestWindow.DeviceTypeBox.ItemsSource = context.DeviseTypes.ToList();
                       requestWindow.DeviceTypeBox.SelectedItem = context.DeviseTypes.Find(selectedRequest.DeviceType);
                       List<Requests_Services> request_services = context.Requests_Services.Where(r=>r.RequestID == selectedRequest.IDrequest).ToList();
+                      string role = App.Current.Properties["Role"] as string;
+                      int id = (int)App.Current.Properties["UserID"];
+                      if (role == "Master")
+                      {
+                          requestWindow.RequestInfo.IsEnabled = false;
+                          requestWindow.MasterInfo.IsEnabled = false;
+                          requestWindow.ServiceAndPartsInfo.IsEnabled = false;
+                          requestWindow.PrintBtns.Visibility= Visibility.Collapsed;
+                      }
                       //requestWindow.Show();
                       foreach (var item in request_services)
                       {
@@ -343,7 +354,7 @@ namespace TMC.ViewModel
                           SelectedParts.Clear();
                       }
                       LoadRequests();
-                  }));
+                  });
             }
         }
     
@@ -362,8 +373,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return addServicesCommand ??
-                  (addServicesCommand = new RelayCommand((o) =>
+                return addServicesCommand ??= new RelayCommand((o) =>
                   {
                       AddServicesWindow servicesWindow = new AddServicesWindow();
                       var vm = servicesWindow.DataContext as ServicesViewModel;
@@ -382,7 +392,7 @@ namespace TMC.ViewModel
                           }
                       }
 
-                  }));
+                  });
             }
         }
         public RelayCommand DeleteServicesCommand
@@ -420,8 +430,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return addPartsCommand ??
-                  (addPartsCommand = new RelayCommand((o) =>
+                return addPartsCommand ??= new RelayCommand((o) =>
                   {
                       AddPartsWindow partsWindow = new AddPartsWindow();
                       var vm = partsWindow.DataContext as StoreViewModel;
@@ -442,7 +451,7 @@ namespace TMC.ViewModel
 
                           }
                       }
-                  }));
+                  });
             }
         }
         public RelayCommand DeletePartsCommand
@@ -468,8 +477,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return printRepairActCommand ??
-                  (printRepairActCommand = new RelayCommand((o) =>
+                return printRepairActCommand ??= new RelayCommand((o) =>
                   {
                       RequestWindow requestWindow = o as RequestWindow;
                       var request = requestWindow.Requests;
@@ -534,6 +542,7 @@ namespace TMC.ViewModel
                       table.Cell(5, 1).Range.Text = "Примечание";
 
                       table.Cell(1, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
+                      //есть случай с нуливым 
                       table.Cell(2, 2).Range.Text = $"{device.Name} {request.Model}";
                       table.Cell(3, 2).Range.Text = $"{request.IMEI_SN}";
                       table.Cell(4, 2).Range.Text = $"{request.Reason}";
@@ -594,7 +603,7 @@ namespace TMC.ViewModel
                       //// Закрытие документа и завершение работы с Word
                       //wordDoc.Close(SaveChanges: false);
                       //wordApp.Quit();
-                  }));
+                  });
             }
         }
         public RelayCommand PrintComplitedWorkActCommand

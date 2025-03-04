@@ -416,6 +416,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Image\report.png" />
     <Content Include="Model\Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model.edmx</DependentUpon>

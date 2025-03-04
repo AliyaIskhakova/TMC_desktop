@@ -40,12 +40,12 @@ namespace TMC
         {
 
             int index = int.Parse(((Button)e.Source).Uid);
-            Button clickedButton = (Button)e.Source;
-            foreach (Button button in MenuPanel.Children)
-            {
-                button.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#CFD9FF");
-            }
-            clickedButton.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#B4C3FF");
+            //Button clickedButton = (Button)e.Source;
+            //foreach (Button button in MenuPanel.Children)
+            //{
+            //    button.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#CFD9FF");
+            //}
+            //clickedButton.Background = (SolidColorBrush)new BrushConverter().ConvertFromString("#B4C3FF");
             RequestsWindow.Visibility = Visibility.Collapsed;
             StoreWindow.Visibility = Visibility.Collapsed;
             ClientsWindow.Visibility = Visibility.Collapsed;
@@ -104,12 +104,34 @@ namespace TMC
 
         private void ServicesDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            string role = App.Current.Properties["Role"] as string;
+            if (role == "Admin")
+            {
+                var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
 
+                if (row != null)
+                {
+                    var selectedItem = (sender as DataGrid).SelectedItem;
+                    var viewModel = new ServicesViewModel();
+                    viewModel.EditServicesCommand.Execute(selectedItem);
+                }
+            }
         }
 
         private void EmployeesDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            string role = App.Current.Properties["Role"] as string;
+            if (role == "Admin")
+            {
+                var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
 
+                if (row != null)
+                {
+                    var selectedItem = (sender as DataGrid).SelectedItem;
+                    var viewModel = new EmployeesViewModel();
+                    viewModel.EditEmployeeCommand.Execute(selectedItem);
+                }
+            }
         }
 
         private void StoreDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -126,14 +148,14 @@ namespace TMC
 
         private void RequestDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
+             var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
 
-            if (row != null)
-            {
-                var selectedItem = (sender as DataGrid).SelectedItem;
-                //var viewModel = new RequestViewModel();
-                requestVM.EditRequestCommand.Execute(selectedItem);
-            }
+                if (row != null)
+                {
+                    var selectedItem = (sender as DataGrid).SelectedItem;
+                    //var viewModel = new RequestViewModel();
+                    requestVM.EditRequestCommand.Execute(selectedItem);
+                } 
         }
 
         private void ButtonFilter_Click(object sender, RoutedEventArgs e)

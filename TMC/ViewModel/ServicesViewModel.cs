@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using TMC.Model;
 using TMC.View;
+using Xceed.Wpf.Toolkit.Primitives;
 using Application = Microsoft.Office.Interop.Word.Application;
 
 namespace TMC.ViewModel
@@ -120,13 +122,38 @@ namespace TMC.ViewModel
                 });
             }
         }
+        public RelayCommand EditServicesCommand
+        {
+            get
+            {
+                return new RelayCommand((selectedItem) =>
+                {
+                    try
+                    {
+                        Services service = selectedItem as Services;
+                        if (service == null) return;
+                        ServiceWindow serviceWindow = new ServiceWindow(service);
+                        if (serviceWindow.ShowDialog() == true)
+                        {
+                            service = serviceWindow.Services;
+                            context.Services.AddOrUpdate(service);
+                            context.SaveChanges();
+                            FilterServices();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
+            }
+        }
 
         public RelayCommand PrintPriceListCommand
         {
             get
             {
-                return printCommand ??
-                  (printCommand = new RelayCommand((o) =>
+                return printCommand ??= new RelayCommand((o) =>
                   {
                       MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -217,7 +244,7 @@ namespace TMC.ViewModel
                       // Предварительный просмотр документа
                       wordDoc.PrintPreview();
 
-                  }));
+                  });
             }
         }
 

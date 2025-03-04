@@ -21,8 +21,9 @@
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Кол-во на складе" Binding="{Binding Count}"/>
                 <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
-                <DataGridTextColumn Header="Гарантия" Binding="{Binding Count}"/>
+
                 <!--<DataGridTemplateColumn Header="Количество">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

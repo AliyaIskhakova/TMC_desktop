@@ -21,8 +21,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return authCommand ??
-                  (authCommand = new RelayCommand(( w) =>
+                return authCommand ??= new RelayCommand(( w) =>
                   {
                       try
                       {
@@ -45,15 +44,21 @@ namespace TMC.ViewModel
                                           mainWindow.AddEmployee.Visibility = Visibility.Visible;
                                           mainWindow.RequestsWindow.Visibility = Visibility.Collapsed;
                                           mainWindow.ServicesWindow.Visibility = Visibility.Visible;
+                                          mainWindow.DeleteEmployee.Visibility = Visibility.Visible;
+                                          mainWindow.DeleteService.Visibility = Visibility.Visible;
                                           break;
                                       case ("Master"):
                                           mainWindow.StoreBtn.Visibility = Visibility.Collapsed;
                                           mainWindow.ClientsBtn.Visibility = Visibility.Collapsed;
                                           mainWindow.ServicesBtn.Visibility = Visibility.Collapsed;
                                           mainWindow.EmployeesBtn.Visibility = Visibility.Collapsed;
+                                          mainWindow.AddRequest.Visibility = Visibility.Collapsed;
                                           break;
                                       case ("Director"):
                                           mainWindow.ResultsBtn.Visibility = Visibility.Visible;
+                                          mainWindow.AddClient.Visibility = Visibility.Collapsed;
+                                          mainWindow.AddRequest.Visibility = Visibility.Collapsed;
+                                          mainWindow.AddReraipPart.Visibility = Visibility.Collapsed;
                                           break;
                                   }
                                   mainWindow.Show();
@@ -68,7 +73,7 @@ namespace TMC.ViewModel
                            MessageBox.Show(ex.Message);
                       }
 
-                  }));
+                  });
             }
         }
 

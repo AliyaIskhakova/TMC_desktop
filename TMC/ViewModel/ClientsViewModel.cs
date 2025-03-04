@@ -95,8 +95,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return addCommand ??
-                  (addCommand = new RelayCommand((o) =>
+                return addCommand ??= new RelayCommand((o) =>
                   {
                       try
                       {
@@ -115,7 +114,7 @@ namespace TMC.ViewModel
                       {
                           MessageBox.Show($"Произошла ошибка: {e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                       }
-                  }));
+                  });
             }
         }
 
@@ -123,8 +122,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return editCommand ??
-                  (editCommand = new RelayCommand((selectedItem) =>
+                return editCommand ??= new RelayCommand((selectedItem) =>
                   {
                       // получаем выделенный объект
                       try
@@ -153,7 +151,7 @@ namespace TMC.ViewModel
                       {
                           MessageBox.Show($"Произошла ошибка: {e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                       }
-                  }));
+                  });
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;

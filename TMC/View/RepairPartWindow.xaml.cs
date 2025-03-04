@@ -30,7 +30,7 @@ namespace TMC.View
         }
         void Accept_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(PartName.Text) && int.TryParse(PartCount.Text, out int count) && double.TryParse(PartCost.Text, out double cost)) DialogResult = true;
+            if (!string.IsNullOrWhiteSpace(PartName.Text) && int.TryParse(PartCount.Text, out int count) && double.TryParse(PartCost.Text, out double cost) && cost>=0 && count>=1) DialogResult = true;
             else MessageBox.Show("Проверьте корректность данных!");
         }
 

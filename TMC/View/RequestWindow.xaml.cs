@@ -29,6 +29,8 @@ namespace TMC.View
         public RequestWindow(Requests request, RequestViewModel vm)
         {
             InitializeComponent();
+            ComplitionDate.DisplayDateStart = DateTime.Now;
+            ComplitionDate.DisplayDateEnd = DateTime.Now.AddMonths(6);
             Requests = request;
             DataContext = Requests;
             RequestServices.DataContext = vm; 
@@ -47,7 +49,7 @@ namespace TMC.View
         }
         void Accept_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() && int.TryParse(RequestCost.Text, out int cost))
+            if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() && int.TryParse(RequestCost.Text, out int cost) && cost>=0)
             {
                 DialogResult = true;
             }
@@ -97,6 +99,21 @@ namespace TMC.View
             Info.IsEnabled = true;
             Info2.IsEnabled = true;
             ClientComboBox.IsEnabled = true;
+        }
+
+        private void viezd_Checked(object sender, RoutedEventArgs e)
+        {
+            Address.Visibility = Visibility.Visible;
+        }
+
+        private void viezd_Checked_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void viezd_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Address.Visibility = Visibility.Collapsed;
         }
     }
 }

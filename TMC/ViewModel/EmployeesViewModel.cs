@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using TMC.Model;
 using TMC.View;
+using Xceed.Wpf.Toolkit.Primitives;
 
 namespace TMC.ViewModel
 {
@@ -68,8 +69,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return addCommand ??
-                  (addCommand = new RelayCommand((o) =>
+                return addCommand ??= new RelayCommand((o) =>
                   {
                       EmployeeWindow employeeWindow = new EmployeeWindow(new Employees());
                       if (employeeWindow.ShowDialog() == true)
@@ -78,10 +78,27 @@ namespace TMC.ViewModel
                           //db.Users.Add(user);
                           //db.SaveChanges();
                       }
-                  }));
+                  });
             }
         }
-
+        public RelayCommand EditEmployeeCommand
+        {
+            get
+            {
+                return new RelayCommand((selectedItem) =>
+                {
+                    Employees employee = selectedItem as Employees;
+                    if (employee == null) return;
+                    EmployeeWindow employeeWindow = new EmployeeWindow(employee);
+                    if (employeeWindow.ShowDialog() == true)
+                    {
+                        //User user = userWindow.User;
+                        //db.Users.Add(user);
+                        //db.SaveChanges();
+                    }
+                });
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

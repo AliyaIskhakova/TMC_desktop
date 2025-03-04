@@ -17,14 +17,14 @@
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="Background" Value="#CFD9FF"/>
             <Setter Property="FontWeight" Value="Medium"/>
-            <!--<Style.Triggers>
+            <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#B4C3FF"/>
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="#B4C3FF"/>
                 </Trigger>
-            </Style.Triggers>-->
+            </Style.Triggers>
             <!--<Style.Triggers>
                 <EventTrigger RoutedEvent="MouseEnter">
                     <EventTrigger.Actions>
@@ -115,7 +115,7 @@
             </Button>
 
             <StackPanel x:Name="MenuPanel"  DockPanel.Dock="Top">
-                <Button x:Name="RequestBtn" Background="#B4C3FF"  x:Uid="1" Click="Button_Click" Style="{StaticResource MenuBtn}">
+                <Button x:Name="RequestBtn"  x:Uid="1" Click="Button_Click" Style="{StaticResource MenuBtn}">
                     <Button.Template>
                         <ControlTemplate>
                             <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}" >
@@ -181,7 +181,7 @@
                         <ControlTemplate>
                             <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}">
                                 <StackPanel Orientation="Horizontal" >
-                                    <Image Source="/Image/employee.png" Style="{StaticResource MenuImg}" />
+                                    <Image Source="/Image/report.png" Style="{StaticResource MenuImg}" />
                                     <Label>Отчёты</Label>
                                 </StackPanel>
                             </Border>
@@ -275,7 +275,25 @@
                         <DataGridTextColumn Header="Имя" Binding="{Binding Name}" />
                         <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}" />
                         <DataGridTextColumn Header="Телефон" Binding="{Binding Telephone}"/>
-                        <DataGridTextColumn Header="Тип" Binding="{Binding Type}"/>
+                        <!--<DataGridTextColumn Header="Тип" Binding="{Binding Type}"/>-->
+                        <DataGridTemplateColumn Header="Тип">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="Физ лицо"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Type}" Value="True">
+                                                        <Setter Property="Text" Value="Юр лицо"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Почта" Binding="{Binding Email}"/>
                         <DataGridTextColumn Header="Компания" Binding="{Binding CompanyName}"/>
                     </DataGrid.Columns>
@@ -291,7 +309,8 @@
                     <!--<Button x:Name="FilterServiceBtn" >Фильтр</Button>-->
                     <Button x:Name="PrintPriceList" Command="{Binding PrintPriceListCommand}" >Печать</Button>
                     <Button x:Name="AddService" Visibility="Collapsed" Command="{Binding AddServicesCommand}">+ Добавить</Button>
-         
+                    <Button x:Name="DeleteService" Visibility="Collapsed">Удалить</Button>
+
                 </StackPanel>
                 <DataGrid x:Name="ServicesDG" ItemsSource="{Binding ServicesList}" MouseDoubleClick="ServicesDG_MouseDoubleClick" Style="{StaticResource MainDataGrid}" >
                     <DataGrid.Resources>
@@ -312,6 +331,7 @@
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchEmployee" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBox}" MinWidth="400" ></TextBox>
                     <Button x:Name="AddEmployee" Visibility="Collapsed" Command="{Binding AddEmployeeCommand}">+ Добавить</Button>
+                    <Button x:Name="DeleteEmployee" Visibility="Collapsed">Удалить</Button>
                 </StackPanel>
                 <DataGrid x:Name="EmployeesDG" MouseDoubleClick="EmployeesDG_MouseDoubleClick" ItemsSource="{Binding EmployeesList}" Style="{StaticResource MainDataGrid}">
                         <DataGrid.Resources>
