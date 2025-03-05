@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -17,7 +18,7 @@ namespace TMC.ViewModel
     {
         ObservableCollection<Employees> _employees;
          string _searchText;
-
+        ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
         RelayCommand addCommand;
         ObservableCollection<Employees> _filteredEmployees;
 
@@ -59,8 +60,7 @@ namespace TMC.ViewModel
             }
             else
             {
-                var filtered = _employees.Where(e =>
-        e.Surname.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()) || e.Name.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()) || e.Patronymic.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()));
+                var filtered = _employees.Where(e => e.Surname.ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()) || e.Name.ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()) || e.Patronymic.ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()));
                 EmployeesList = new ObservableCollection<Employees>(filtered);
             }
         }
@@ -69,14 +69,19 @@ namespace TMC.ViewModel
         {
             get
             {
-                return addCommand ??= new RelayCommand((o) =>
+                return new RelayCommand((o) =>
                   {
                       EmployeeWindow employeeWindow = new EmployeeWindow(new Employees());
+                      employeeWindow.RoleBox.ItemsSource = context.Roles.ToList();
                       if (employeeWindow.ShowDialog() == true)
                       {
-                          //User user = userWindow.User;
-                          //db.Users.Add(user);
-                          //db.SaveChanges();
+                          Employees employee = employeeWindow.Employees;
+                          employee.Roles = employeeWindow.RoleBox.SelectedItem as Roles;
+                          context.Employees.AddOrUpdate(employee);
+                          context.SaveChanges();
+                          _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
+                          FilterPersons();
+
                       }
                   });
             }
@@ -90,12 +95,32 @@ namespace TMC.ViewModel
                     Employees employee = selectedItem as Employees;
                     if (employee == null) return;
                     EmployeeWindow employeeWindow = new EmployeeWindow(employee);
+                    employeeWindow.RoleBox.ItemsSource = context.Roles.ToList();
+                    employeeWindow.RoleBox.SelectedItem = context.Roles.Find(employee.RoleID);
                     if (employeeWindow.ShowDialog() == true)
                     {
-                        //User user = userWindow.User;
-                        //db.Users.Add(user);
-                        //db.SaveChanges();
+                        employee = employeeWindow.Employees;
+                        employee.Roles = employeeWindow.RoleBox.SelectedItem as Roles;
+                        context.Employees.AddOrUpdate(employee);
+                        context.SaveChanges();
+                        _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
+                        FilterPersons();
                     }
+                });
+            }
+        }
+        public RelayCommand DeleteEmployeeCommand
+        {
+            get
+            {
+                return new RelayCommand((selectedItem) =>
+                {
+                    Employees employee = selectedItem as Employees;
+                    if (employee == null) return;
+                    context.Employees.Remove(employee);
+                    context.SaveChanges();
+                    _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
+                    FilterPersons();
                 });
             }
         }

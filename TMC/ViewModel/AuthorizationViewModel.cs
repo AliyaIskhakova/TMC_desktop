@@ -35,7 +35,7 @@ namespace TMC.ViewModel
                                   MainWindow mainWindow = new MainWindow();
                                   switch (employee.Roles.Name)
                                   {
-                                      case ("Admin"):
+                                      case ("Администратор"):
                                           mainWindow.RequestBtn.Visibility = Visibility.Collapsed;
                                           mainWindow.StoreBtn.Visibility = Visibility.Collapsed;
                                           mainWindow.ClientsBtn.Visibility = Visibility.Collapsed;
@@ -47,14 +47,14 @@ namespace TMC.ViewModel
                                           mainWindow.DeleteEmployee.Visibility = Visibility.Visible;
                                           mainWindow.DeleteService.Visibility = Visibility.Visible;
                                           break;
-                                      case ("Master"):
+                                      case ("Мастер"):
                                           mainWindow.StoreBtn.Visibility = Visibility.Collapsed;
                                           mainWindow.ClientsBtn.Visibility = Visibility.Collapsed;
                                           mainWindow.ServicesBtn.Visibility = Visibility.Collapsed;
                                           mainWindow.EmployeesBtn.Visibility = Visibility.Collapsed;
                                           mainWindow.AddRequest.Visibility = Visibility.Collapsed;
                                           break;
-                                      case ("Director"):
+                                      case ("Директор"):
                                           mainWindow.ResultsBtn.Visibility = Visibility.Visible;
                                           mainWindow.AddClient.Visibility = Visibility.Collapsed;
                                           mainWindow.AddRequest.Visibility = Visibility.Collapsed;
@@ -68,12 +68,12 @@ namespace TMC.ViewModel
                           }
                           else MessageBox.Show("Введите логин и пароль!");
 
-                      }
+                  }
                       catch (Exception ex) {
                            MessageBox.Show(ex.Message);
-                      }
+            }
 
-                  });
+        });
             }
         }
 

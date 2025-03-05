@@ -16,7 +16,8 @@
         <StackPanel>
             <DockPanel>
             <StackPanel  Orientation="Horizontal " Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center">
-                <Label Content="Заявка" Margin="30 15 30 10" FontSize="24" VerticalContentAlignment="Center" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                <Label Content="Заявка" Margin="30 15 30 10" FontSize="22" VerticalContentAlignment="Center" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+
                     <!--<CheckBox x:Name="viezd" Content="Выезд" FontSize="15" FontWeight="Medium" VerticalAlignment="Center" IsChecked="{Binding Type}" Checked="viezd_Checked" Unchecked="viezd_Unchecked">
                         <CheckBox.Resources>
                             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
@@ -35,14 +36,14 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <StackPanel>
+                <StackPanel x:Name="InfoBlock1">
                     <StackPanel x:Name="ClientInfo"  >
 
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="Клиент" Margin="30 0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                            <Label Content="Клиент" Margin="30 0" FontSize="19"  VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                             <StackPanel x:Name="Info" Orientation="Horizontal">
                                 <RadioButton Content="Физ.лицо" IsChecked="True" Margin="0"/>
-                                <RadioButton Content="Юр.лицо" IsChecked="{Binding type}" />
+                                <RadioButton Content="Юр.лицо" Checked="RadioButton_Checked" Unchecked="RadioButton_Unchecked" IsChecked="{Binding type}" />
                             </StackPanel>
                             <!--<Button >
                                 <Image Width="25" Source="/Image/clients.png" />
@@ -91,7 +92,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                             </StackPanel>
                         </Border>
                     </StackPanel>
-                        <Label Margin="30 0" Content="Исполнитель" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                        <Label Margin="30 0" FontSize="19" Content="Исполнитель" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                     <Border Padding="30 0 ">
                         <StackPanel x:Name="MasterInfo">
                             <ComboBox Name="MastersBox"   Style="{StaticResource MainComboBox}" ui:TextBoxHelper.Watermark="Исполнитель" SelectionChanged="MastersBox_SelectionChanged" >
@@ -113,6 +114,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
+                            <Label Margin="0" FontSize="19" Content="Дата готовности" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                             <DatePicker x:Name="ComplitionDate" SelectedDate="{Binding CompletionDate}"   ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности" >
                                 <DatePicker.Resources>
                                     <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
@@ -121,9 +123,9 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                         </StackPanel>
                     </Border>
                 </StackPanel>
-                <StackPanel Grid.Column="2">
+                <StackPanel x:Name="InfoBlock2" Grid.Column="2">
                     <Border DockPanel.Dock="Top">
-                        <Label Content="Информация о заявке" Margin="0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                        <Label Content="Информация о заявке" FontSize="19" Margin="0" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                     </Border>
                     <Border Padding="0 0 30 0">
                         <StackPanel>
@@ -138,9 +140,12 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                             <StackPanel x:Name="RequestInfo">
-                            <TextBox x:Name="RequestReason" Text="{Binding Reason}" ui:TextBoxHelper.Watermark="Причина обращения*" Style="{StaticResource InfoTxtBox}" />
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                                    <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Дата обращения" Visibility="{Binding Visibility, ElementName=RequestDate}"/>
+                                    <DatePicker x:Name="RequestDate" Visibility="Collapsed" VerticalAlignment="Center"  SelectedDate="{Binding Date}" IsEnabled="False" ui:ControlsHelper.CornerRadius="5" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White"  ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата обращения" ui:TextBoxHelper.Watermark="Дата обращения"  />
+                                </StackPanel>
+                                <TextBox x:Name="RequestReason" Text="{Binding Reason}" ui:TextBoxHelper.Watermark="Причина обращения*" Style="{StaticResource InfoTxtBox}" />
                                 <TextBox Text="{Binding  DetectedMulfunction}" ui:TextBoxHelper.Watermark="Выявленные неисправности" Style="{StaticResource InfoTxtBox}"/>
-                                <DatePicker x:Name="RequestDate" Visibility="Collapsed" SelectedDate="{Binding Date}" IsEnabled="False" ui:ControlsHelper.CornerRadius="5" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White"  ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата обращения" ui:TextBoxHelper.Watermark="Дата обращения"  />
                                 <ComboBox Name="DeviceTypeBox" ui:TextBoxHelper.Watermark="Вид устройства" Style="{StaticResource MainComboBox}" >
                                 <ComboBox.Resources>
                                     <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
@@ -151,13 +156,15 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
+                             
                             <TextBox Text="{Binding Model}" ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}"/>
                             <TextBox Text="{Binding IMEI_SN}" ui:TextBoxHelper.Watermark="IMEI/SN" Style="{StaticResource InfoTxtBox}"/>
                             <TextBox Text="{Binding Appearance}" ui:TextBoxHelper.Watermark="Внешний вид" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox x:Name="RequestCost" Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox Text="{Binding Notes}" ui:TextBoxHelper.Watermark="Заметки" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox Text="{Binding Notes}" ui:TextBoxHelper.Watermark="Заметки" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox  x:Name="Address" Text="{Binding Address}" Visibility="Collapsed" ui:TextBoxHelper.Watermark="Адрес" Style="{StaticResource InfoTxtBox}"/>
+                                <Label Margin="0" FontSize="19" Content="Итоговая цена:" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                                <TextBox x:Name="RequestCost" Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
 
-                            <TextBox  x:Name="Address" Text="{Binding Address}" Visibility="Collapsed" ui:TextBoxHelper.Watermark="Адрес" Style="{StaticResource InfoTxtBox}"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>

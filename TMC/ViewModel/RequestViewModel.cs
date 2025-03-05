@@ -80,17 +80,9 @@ namespace TMC.ViewModel
                               ClientName = c.Name,
                               ClientPatronymic = c.Patronymic,
                               ClientTelephone = c.Telephone,
-                              //ClientType = c.Type,
-                              //ClientCompanyName = c.CompanyName,
-                              //ClientEmail = c.Email,
                               CompletionDate = r.CompletionDate.ToString(),
                              Reason = r.Reason,
                              Date = r.Date.ToString(),
-                             //DeviceID = dt.IDtype,
-                             //DeviceTypeName = dt.Name,
-                             //Cost = r.Cost,
-                             //IMEI_SN = r.IMEI_SN,
-                             //Model = r.Model,
                          }).ToList();
             RequestsList = new ObservableCollection<RequestView>(result.Select(r =>
             {
@@ -101,7 +93,7 @@ namespace TMC.ViewModel
             }));
             string role =  App.Current.Properties["Role"] as string;
             int id = (int)App.Current.Properties["UserID"];
-            if (role == "Master") RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r=> r.EmployeeID == id));
+            if (role == "Мастер") RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r=> r.EmployeeID == id));
         }
 
         public RelayCommand SelectRequestByStatus
@@ -180,16 +172,14 @@ namespace TMC.ViewModel
                       SelectedParts.Clear();
                       RequestWindow requestWindow = new RequestWindow(new Requests(), this);
                       requestWindow.MastersBox.ItemsSource = MastersList;
-                      requestWindow.StatusBox.ItemsSource = context.Status.ToList();
+                      requestWindow.StatusBox.ItemsSource = context.Status.Where(s => s.Name != "Завершен" && s.Name != "Отменен").ToList();
                       requestWindow.DeviceTypeBox.ItemsSource = context.DeviseTypes.ToList();
-                      //requestWindow.ClientInfo.DataContext = new Clients();
-                      
+                      requestWindow.EndDocuument.Visibility = Visibility.Collapsed;
                       if (requestWindow.ShowDialog() == true)
                       {
                           Requests newRequest = requestWindow.Requests;
                           Clients client = requestWindow.ClientInfo.DataContext as Clients;
 
-                          //Clients client = context.Clients.Find(request.ClientID);
                           if (context.Clients.Any(x => x.IDClient == client.IDClient))
                           {
                               newRequest.ClientID = client.IDClient;
@@ -197,7 +187,6 @@ namespace TMC.ViewModel
                           else
                           {
                               context.Clients.Add(client);
-
                           }
                           var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
                           newRequest.StatusID = selectedStatus.IDstatus;
@@ -260,29 +249,36 @@ namespace TMC.ViewModel
             {
                 return editCommand ??= new RelayCommand((selectedItem) =>
                   {
-                      // получаем выделенный объект
-
                       SelectedServices.Clear();
                       SelectedParts.Clear();
+                      string role = App.Current.Properties["Role"] as string;
+                      int id = (int)App.Current.Properties["UserID"];
+                      List<Status> status = new List<Status>();
+                      
                       RequestView request = selectedItem as RequestView;
                       if (request == null) return;
                       Requests selectedRequest = context.Requests.Find(request.IDRequest);
-
                       RequestWindow requestWindow = new RequestWindow(selectedRequest, this);
+                      if (role == "Мастер" && request.StatusName != "Завершен" && request.StatusName != "Отменен") status = context.Status.Where(s => s.Name != "Завершен" && s.Name != "Отменен").ToList();
+                      else status = context.Status.ToList();
                       requestWindow.RequestDate.Visibility = Visibility.Visible;
                       requestWindow.ClientInfo.DataContext = context.Clients.Find(request.ClientID);
                       requestWindow.ClientInfo.IsEnabled = false;
                       requestWindow.ClientComboBox.Visibility = Visibility.Collapsed;
                       requestWindow.MastersBox.ItemsSource = MastersList;
                       requestWindow.MastersBox.SelectedItem = context.Employees.Find(request.EmployeeID);
-                      requestWindow.StatusBox.ItemsSource = context.Status.ToList();
+                      requestWindow.StatusBox.ItemsSource = status;
                       requestWindow.StatusBox.SelectedItem = context.Status.Find(request.StatusID);
                       requestWindow.DeviceTypeBox.ItemsSource = context.DeviseTypes.ToList();
                       requestWindow.DeviceTypeBox.SelectedItem = context.DeviseTypes.Find(selectedRequest.DeviceType);
-                      List<Requests_Services> request_services = context.Requests_Services.Where(r=>r.RequestID == selectedRequest.IDrequest).ToList();
-                      string role = App.Current.Properties["Role"] as string;
-                      int id = (int)App.Current.Properties["UserID"];
-                      if (role == "Master")
+                      if(selectedRequest.Status.Name == "Завершен" || selectedRequest.Status.Name == "Отменен")
+                      {
+                          requestWindow.InfoBlock1.IsEnabled = false;
+                          requestWindow.InfoBlock2.IsEnabled = false;
+                          requestWindow.ServiceAndPartsInfo.IsEnabled = false;
+                          requestWindow.SaveBtn.Visibility = Visibility.Collapsed;
+                      }
+                      if (role == "Мастер")
                       {
                           requestWindow.RequestInfo.IsEnabled = false;
                           requestWindow.MasterInfo.IsEnabled = false;
@@ -290,6 +286,7 @@ namespace TMC.ViewModel
                           requestWindow.PrintBtns.Visibility= Visibility.Collapsed;
                       }
                       //requestWindow.Show();
+                      List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestID == selectedRequest.IDrequest).ToList();
                       foreach (var item in request_services)
                       {
                           Services service = context.Services.Find(item.ServiceID);
@@ -315,14 +312,18 @@ namespace TMC.ViewModel
                           selectedRequest.Cost = (int)requestWindow.Requests.Cost;
                           context.Requests.AddOrUpdate(selectedRequest);
                           context.SaveChanges();
+                          foreach (var item in request_services)
+                          {
+                              context.Requests_Services.Remove(item);
+                              }
                           foreach (var service in SelectedServices)
                           {
                               // Проверяем, существует ли уже такая запись
-                              bool exists = context.Requests_Services
-                                  .Any(rs => rs.RequestID == selectedRequest.IDrequest && rs.ServiceID == service.IDservice);
-
-                              if (!exists)
-                              {
+                              //bool exists = context.Requests_Services
+                              //    .Any(rs => rs.RequestID == selectedRequest.IDrequest && rs.ServiceID == service.IDservice);
+                              
+                              //if (!exists)
+                              //{
                                   Requests_Services requests_Services = new Requests_Services
                                   {
                                       RequestID = selectedRequest.IDrequest,
@@ -330,16 +331,20 @@ namespace TMC.ViewModel
                                       Count = 1 // Можно добавить логику для указания количества
                                   };
                                   context.Requests_Services.Add(requests_Services);
-                              }
+                              //}
+                          }
+                          foreach (var item in request_parts)
+                          {
+                              context.Request_RepairParts.Remove(item);
                           }
                           foreach (var part in SelectedParts)
                           {
                               // Проверяем, существует ли уже такая запись
-                              bool exists = context.Request_RepairParts
-                                  .Any(rs => rs.RequestID == selectedRequest.IDrequest && rs.RepairPartID == part.IDpart);
+                              //bool exists = context.Request_RepairParts
+                              //    .Any(rs => rs.RequestID == selectedRequest.IDrequest && rs.RepairPartID == part.IDpart);
 
-                              if (!exists)
-                              {
+                              //if (!exists)
+                              //{
                                   Request_RepairParts request_RepairParts = new Request_RepairParts
                                   {
                                       RequestID = selectedRequest.IDrequest,
@@ -347,7 +352,7 @@ namespace TMC.ViewModel
                                       Count = 1 // Можно добавить логику для указания количества
                                   };
                                   context.Request_RepairParts.Add(request_RepairParts);
-                              }
+                              //}
                           }
                           context.SaveChanges();
                           SelectedServices.Clear();
@@ -473,139 +478,143 @@ namespace TMC.ViewModel
                 });
             }
         }
+
         public RelayCommand PrintRepairActCommand
         {
             get
             {
-                return printRepairActCommand ??= new RelayCommand((o) =>
-                  {
-                      RequestWindow requestWindow = o as RequestWindow;
-                      var request = requestWindow.Requests;
-                      var device = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
-                      var client = requestWindow.ClientInfo.DataContext as Clients;
-                      MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
+                return new RelayCommand(async (o) =>
+                {
 
-                      Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
-                      Microsoft.Office.Interop.Word.Document wordDoc = wordApp.Documents.Add();
+                    RequestWindow requestWindow = o as RequestWindow;
+                    if (!(!string.IsNullOrWhiteSpace(requestWindow.RequestReason.Text) && !(requestWindow.ClientInfo.DataContext as Clients).HasValidationErrors()
+                    && int.TryParse(requestWindow.RequestCost.Text, out int cost) && cost >= 0))
+                    {
+                        MessageBox.Show("Проверьте введенные данные!");
+                        return;
+                    }
+                    var request = requestWindow.Requests;
+                    var device = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
+                    if (device != null) device = new DeviseTypes();
+                    var client = requestWindow.ClientInfo.DataContext as Clients;
+                        // Показываем MessageBox в основном потоке
+                    MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                      wordDoc.Content.ParagraphFormat.SpaceAfter = 0;
-                      wordDoc.Content.ParagraphFormat.SpaceBefore = 0;
-                      wordDoc.Content.Font.Name = "Times New Roman";
-                      wordDoc.Content.Font.Size = 12;
-                      // Добавление описания
-                      Paragraph name = wordDoc.Content.Paragraphs.Add();
-                      name.Range.Text = "Сервисный центр ТехноМедиаСоюз";
-                      name.Range.Font.Size = 12;
-                      name.Range.Font.Bold = 1;
-                      name.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
-                      name.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-                      name.Format.SpaceAfter = 0;
-                      name.Range.InsertParagraphAfter();
+                    // Запускаем формирование документа в отдельном потоке
+                    await System.Threading.Tasks.Task.Run(() =>
+                    {
+                        Application wordApp = new Microsoft.Office.Interop.Word.Application();
+                        Document wordDoc = wordApp.Documents.Add();
 
+                        wordDoc.Content.ParagraphFormat.SpaceAfter = 0;
+                        wordDoc.Content.ParagraphFormat.SpaceBefore = 0;
+                        wordDoc.Content.Font.Name = "Times New Roman";
+                        wordDoc.Content.Font.Size = 12;
 
-                      Paragraph descriptionParagraph1 = wordDoc.Content.Paragraphs.Add();
-                      descriptionParagraph1.Range.Text = "ИП \"Сулейманов М.Р.\", г. Арск ул. Школьная 17, http://www.vk.com/servistmsouz," +
-                                                       "тел. 8(443) 248-92-60. Время работы с 9.00 до 18.00 (понедельник-пятница), без перерывов ";
-                      descriptionParagraph1.Range.Font.Size = 12;
-                      descriptionParagraph1.Range.Font.Bold = 0;
-                      descriptionParagraph1.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
-                      descriptionParagraph1.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-                      descriptionParagraph1.Format.SpaceAfter = 0;
-                      descriptionParagraph1.Range.InsertParagraphAfter();
-                      descriptionParagraph1.Range.InsertParagraphAfter();
-                      descriptionParagraph1.Range.InsertParagraphAfter();
+                        // Добавление описания
+                        Paragraph name = wordDoc.Content.Paragraphs.Add();
+                        name.Range.Text = "Сервисный центр ТехноМедиаСоюз";
+                        name.Range.Font.Size = 13;
+                        name.Range.Font.Bold = 1;
+                        name.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                        name.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                        name.Range.InsertParagraphAfter();
 
-                      // Добавление заголовка
-                      Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
-                      titleParagraph.Range.Text = $"Акт о приеме на ремонт №{request.IDrequest}";
-                      titleParagraph.Range.Font.Size = 13;
-                      titleParagraph.Range.Font.Bold = 1;
-                      titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-                      titleParagraph.Range.InsertParagraphAfter();
+                        Paragraph descriptionParagraph1 = wordDoc.Content.Paragraphs.Add();
+                        descriptionParagraph1.Range.Text = "ИП \"Сулейманов М.Р.\", г. Арск ул. Школьная 17, http://www.vk.com/servistmsouz," +
+                                                         "тел. 8(443) 248-92-60. Время работы с 9.00 до 18.00 (понедельник-пятница), без перерывов ";
+                        descriptionParagraph1.Range.Font.Bold = 0;
+                        descriptionParagraph1.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                        descriptionParagraph1.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                        descriptionParagraph1.Range.InsertParagraphAfter();
+                        descriptionParagraph1.Range.InsertParagraphAfter();
+                        descriptionParagraph1.Range.InsertParagraphAfter();
 
-                      // Создание таблицы с 5 строками и 2 колонками
-                      Table table = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 5, 2);
-                      table.Borders.Enable = 1;
-                      table.Range.Bold = 0;
-                      table.Range.Font.Size = 12;
-                      table.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                        // Добавление заголовка
+                        Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
+                        titleParagraph.Range.Text = $"Акт о приеме на ремонт №{request.IDrequest}";
+                        titleParagraph.Range.Font.Size = 13;
+                        titleParagraph.Range.Font.Bold = 1;
+                        titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                        titleParagraph.Range.InsertParagraphAfter();
 
-                      // Настройка ширины столбцов
-                      table.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(5);
-                      table.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(12);
-                      
-                      // Заполнение таблицы данными
-                      table.Cell(1, 1).Range.Text = "Клиент";
-                      table.Cell(2, 1).Range.Text = "Оборудование";
-                      table.Cell(3, 1).Range.Text = "Серийный номер";
-                      table.Cell(4, 1).Range.Text = "Проблема со слов клиента";
-                      table.Cell(5, 1).Range.Text = "Примечание";
+                        // Создание таблицы с 5 строками и 2 колонками
+                        Table table = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 5, 2);
+                        table.Borders.Enable = 1;
+                        table.Range.Bold = 0;
+                        table.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
 
-                      table.Cell(1, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
-                      //есть случай с нуливым 
-                      table.Cell(2, 2).Range.Text = $"{device.Name} {request.Model}";
-                      table.Cell(3, 2).Range.Text = $"{request.IMEI_SN}";
-                      table.Cell(4, 2).Range.Text = $"{request.Reason}";
-                      table.Cell(5, 2).Range.Text = $"{request.Notes}";
-                      for (int i = 1; i <= 5; i++)
-                      {
-                          table.Cell(i, 1).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
-                          table.Cell(i, 1).Range.Font.Bold = 1; // Жирный шрифт
-                      }
+                        // Настройка ширины столбцов
+                        table.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(5);
+                        table.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(12);
 
-                      // Выравнивание текста во втором столбце по левому краю
-                      for (int i = 1; i <= 5; i++)
-                      {
-                          table.Cell(i, 2).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
-                      }
-                      // Добавление дополнительного описания
-                      Paragraph descriptionParagraph = wordDoc.Content.Paragraphs.Add();
-                      descriptionParagraph.Range.Text = "Клиент согласен, что все неисправности и внутренние повреждения, которые могут быть обнаружены в оборудовании при техническом обслуживании, " +
-                      "возникли до приема оборудования по данной квитанции. В случае утери акта о приеме оборудования на ремонт выдача аппарата производится при предъявлении паспорта лица сдававшего аппарат " +
-                      "и письменного заявления. Внимание: Срок ремонта аппарата 21 день, максимальный срок при отсутствии запчастей на складе поставщика может быть увеличен до 45 дней. Заказчик согласен на " +
-                      "обработку персональных данных, а также несет ответственность за достоверность предоставленной информации. С комплектацией, описанием неисправностей и повреждений, условиями хранения и " +
-                      "обслуживания оборудования ознакомлен и согласен.";
-                      descriptionParagraph.Range.Font.Size = 9;
-                      descriptionParagraph.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
-                      descriptionParagraph.Range.Font.Bold = 0;
-                      descriptionParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
-                      
-                      descriptionParagraph.Range.InsertParagraphAfter();
-                      descriptionParagraph.Range.InsertParagraphAfter();
-                      // Создание таблицы для подписей
-                      Table signatureTable = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 2, 2);
-                      signatureTable.Borders.Enable = 0;
-                      signatureTable.Range.Font.Size = 12;
+                        // Заполнение таблицы данными
+                        table.Cell(1, 1).Range.Text = "Клиент";
+                        table.Cell(2, 1).Range.Text = "Оборудование";
+                        table.Cell(3, 1).Range.Text = "Серийный номер";
+                        table.Cell(4, 1).Range.Text = "Проблема со слов клиента";
+                        table.Cell(5, 1).Range.Text = "Примечание";
 
-                      // Заполнение таблицы подписей
-                      signatureTable.Cell(1, 1).Range.Text = $"Оборудование в ремонт сдал: {client.surname} {client.name[0]}. {client.patronymic[0]}.";
-                      signatureTable.Cell(1, 2).Range.Text = "_____________________";
-                      signatureTable.Cell(2, 1).Range.Text = $"Оборудование в ремонт принял: инженер приемщик {request.MasterID}";
-                      signatureTable.Cell(2, 2).Range.Text = "_____________________";
+                        table.Cell(1, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
+                         table.Cell(2, 2).Range.Text = $"{device.Name} {request.Model}";
+                        table.Cell(3, 2).Range.Text = $"{request.IMEI_SN}";
+                        table.Cell(4, 2).Range.Text = $"{request.Reason}";
+                        table.Cell(5, 2).Range.Text = $"{request.Notes}";
+                        for (int i = 1; i <= 5; i++)
+                        {
+                            table.Cell(i, 1).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
+                            table.Cell(i, 1).Range.Font.Bold = 1; // Жирный шрифт
+                        }
 
-                      // Выравнивание текста в таблице подписей
-                      signatureTable.Rows[1].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
-                      signatureTable.Rows[1].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
-                      signatureTable.Rows[2].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
-                      signatureTable.Rows[2].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
-                      // Отображение документа
-                      wordApp.Visible = true;
+                        // Выравнивание текста во втором столбце по левому краю
+                        for (int i = 1; i <= 5; i++)
+                        {
+                            table.Cell(i, 2).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                        }
 
-                      // Сохранение документа во временный файл в формате XPS
-                      //string tempFilePath = Path.GetTempFileName() + ".xps";
-                      //wordDoc.SaveAs2(tempFilePath, WdSaveFormat.wdFormatXPS);
+                        // Добавление дополнительного описания
+                        Paragraph descriptionParagraph = wordDoc.Content.Paragraphs.Add();
+                        descriptionParagraph.Range.Text = "Клиент согласен, что все неисправности и внутренние повреждения, которые могут быть обнаружены в оборудовании при техническом обслуживании, " +
+                        "возникли до приема оборудования по данной квитанции. В случае утери акта о приеме оборудования на ремонт выдача аппарата производится при предъявлении паспорта лица сдававшего аппарат " +
+                        "и письменного заявления. Внимание: Срок ремонта аппарата 21 день, максимальный срок при отсутствии запчастей на складе поставщика может быть увеличен до 45 дней. Заказчик согласен на " +
+                        "обработку персональных данных, а также несет ответственность за достоверность предоставленной информации. С комплектацией, описанием неисправностей и повреждений, условиями хранения и " +
+                        "обслуживания оборудования ознакомлен и согласен.";
+                        descriptionParagraph.Range.Font.Size = 9;
+                        descriptionParagraph.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                        descriptionParagraph.Range.Font.Bold = 0;
+                        descriptionParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphJustify;
 
-                      // Предварительный просмотр документа
-                      wordDoc.PrintPreview();
-                      // Ожидание завершения предварительного просмотра
-                      //Console.WriteLine("Пожалуйста, закройте окно предварительного просмотра для продолжения...");
+                        descriptionParagraph.Range.InsertParagraphAfter();
+                        descriptionParagraph.Range.InsertParagraphAfter();
 
-                      //// Закрытие документа и завершение работы с Word
-                      //wordDoc.Close(SaveChanges: false);
-                      //wordApp.Quit();
-                  });
+                        // Создание таблицы для подписей
+                        Table signatureTable = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 2, 2);
+                        signatureTable.Borders.Enable = 0;
+
+                        // Заполнение таблицы подписей
+                        signatureTable.Cell(1, 1).Range.Text = $"Оборудование в ремонт сдал: {client.surname} {client.name[0]}.{client.patronymic[0]}.";
+                        signatureTable.Cell(1, 2).Range.Text = "_____________________";
+                        var receiver = context.Employees.Find((int)App.Current.Properties["UserID"]);
+                        signatureTable.Cell(2, 1).Range.Text = $"Оборудование в ремонт принял: инженер приемщик {receiver.Surname} {receiver.Name[0]}.{receiver.Patronymic[0]}.";
+                        signatureTable.Cell(2, 2).Range.Text = "_____________________";
+
+                        // Выравнивание текста в таблице подписей
+                        signatureTable.Rows[1].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                        signatureTable.Rows[1].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
+                        signatureTable.Rows[2].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                        signatureTable.Rows[2].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
+
+                        // Отображение документа
+                        wordApp.Visible = true;
+
+                        // Предварительный просмотр документа
+                        wordDoc.PrintPreview();
+                    });
+
+                });
             }
         }
+       
         public RelayCommand PrintComplitedWorkActCommand
         {
             get

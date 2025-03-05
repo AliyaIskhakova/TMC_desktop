@@ -105,7 +105,7 @@ namespace TMC
         private void ServicesDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             string role = App.Current.Properties["Role"] as string;
-            if (role == "Admin")
+            if (role == "Администратор")
             {
                 var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
 
@@ -121,7 +121,7 @@ namespace TMC
         private void EmployeesDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             string role = App.Current.Properties["Role"] as string;
-            if (role == "Admin")
+            if (role == "Администратор")
             {
                 var row = ItemsControl.ContainerFromElement((DataGrid)sender, e.OriginalSource as DependencyObject) as DataGridRow;
 

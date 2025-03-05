@@ -89,7 +89,25 @@ namespace TMC.ViewModel
             }
         }
 
+        public RelayCommand updateCommand
+        {
+            get
+            {
+                return new RelayCommand((o) =>
+                {
+                    try
+                    {
+                        var context = new ServiceCenterTMCEntities();
+                        ClientsList = new ObservableCollection<Clients>(context.Clients.ToList());
 
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
+            }
+        }
 
         public RelayCommand AddClientCommand
         {
@@ -103,10 +121,10 @@ namespace TMC.ViewModel
                           if (clientWindow.ShowDialog() == true)
                           {
                               Clients client = clientWindow.Clients;
+                              if (!client.Type) client.companyname = null; 
                               context.Clients.Add(client);
                               context.SaveChanges();
-                              _clients = new ObservableCollection<Clients>(context.Clients.ToList());
-                              ClientsList = new ObservableCollection<Clients>(_clients);
+                              ClientsList = new ObservableCollection<Clients>(context.Clients.ToList());
 
                           }
                       }
@@ -132,20 +150,15 @@ namespace TMC.ViewModel
 
                           ClientWindow userWindow = new ClientWindow(client);
 
-
                           if (userWindow.ShowDialog() == true)
                           {
-                              client.surname = userWindow.Clients.surname;
-                              client.name = userWindow.Clients.name;
-                              client.patronymic = userWindow.Clients.patronymic;
-                              client.telephone = userWindow.Clients.telephone;
-                              client.email = userWindow.Clients.email;
-                              client.type = userWindow.Clients.type;
-                              client.companyname = userWindow.Clients.companyname;
+                              client = userWindow.Clients;
                               context.Clients.AddOrUpdate(client);
                               //context.Entry(client).State = EntityState.Modified;
                               context.SaveChanges();
+                              ClientsList = new ObservableCollection<Clients>(context.Clients.ToList());
                           }
+
                       }
                       catch (Exception e)
                       {

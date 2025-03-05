@@ -4,12 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMC.View"
+        xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"      
         Background="#E4E9FF"
                 WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         WindowStyle="None"
-        Title="EmployeeWindow" Height="500" Width="450">
+        Title="EmployeeWindow" Height="550" Width="450">
     <DockPanel >
         <Border DockPanel.Dock="Top">
             <DockPanel >
@@ -24,27 +25,30 @@
             <Border Padding="30 0">
                 <StackPanel>
                     <ui:MetroHeader Content="Фамилия*"/>
-                    <TextBox Text="{Binding Surname}" ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox x:Name="SurnameTxt" Text="{Binding Surname}" ui:TextBoxHelper.Watermark="Фамилия" Style="{StaticResource InfoTxtBox}"/>
                     <ui:MetroHeader Content="Имя*"/>
-                    <TextBox Text="{Binding Name}" ui:TextBoxHelper.Watermark="Имя"  Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox x:Name="NameTxt" Text="{Binding Name}" ui:TextBoxHelper.Watermark="Имя"  Style="{StaticResource InfoTxtBox}"/>
                     <ui:MetroHeader Content="Отчество"/>
                     <TextBox Text="{Binding Patronymic}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}" />
                     <ui:MetroHeader Content="Телефон*"/>
-                    <TextBox Text="{Binding Telephone}" ui:TextBoxHelper.Watermark="Телефон"  Style="{StaticResource InfoTxtBox}"/>
+                    <toolkit:MaskedTextBox x:Name="TelephoneTxt" Mask="+7(000)000-00-00" Text="{Binding telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
                     <ui:MetroHeader Content="Роль*"/>
-                    <ComboBox SelectedIndex="{Binding Role}" ui:ControlsHelper.CornerRadius="5" Background="White" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5">
+                    <ComboBox x:Name="RoleBox" ui:ControlsHelper.CornerRadius="5" Background="White" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5">
                         <ComboBox.Resources>
                             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                         </ComboBox.Resources>
-                        <ComboBoxItem IsSelected="True" Content="Администратор"/>
-                        <ComboBoxItem Content="Инженер-приёмщик"/>
-                        <ComboBoxItem Content="Мастер"/>
-                        <ComboBoxItem Content="Администратор"/>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
                     <ui:MetroHeader Content="Логин*"/>
-                    <TextBox Text="{Binding Login}" ui:TextBoxHelper.Watermark="Логин" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox x:Name="LoginTxt" Text="{Binding Login}" ui:TextBoxHelper.Watermark="Логин" Style="{StaticResource InfoTxtBox}"/>
                     <ui:MetroHeader Content="Пароль*"/>
-                    <TextBox Text="{Binding Password}" ui:TextBoxHelper.Watermark="Пароль" Style="{StaticResource InfoTxtBox}" />
+                    <TextBox x:Name="PasswordTxt" Text="{Binding Password}" ui:TextBoxHelper.Watermark="Пароль" Style="{StaticResource InfoTxtBox}" />
                 </StackPanel>
             </Border>
             <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Сохранить" Margin="30 5" />

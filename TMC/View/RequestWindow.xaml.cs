@@ -39,9 +39,7 @@ namespace TMC.View
             RequestRepairParts.DataContext = vm;
             ClientComboBox.DataContext = new ClientsViewModel();
             ClientInfo.DataContext = new Clients();
-            //RequestDetails.DataContext = new RequestDetailViewModel(RequestView);
         }
-
 
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -76,20 +74,12 @@ namespace TMC.View
         {
             if (ClientComboBox.SelectedItem is Clients selectedClient)
             {
-                // Заполняем поля данными выбранного клиента
                 ClientInfo.DataContext = selectedClient;
                 ClientComboBox.Text = "" ;
                 Info.IsEnabled = false;
                 Info2.IsEnabled = false;
                 ClientComboBox.IsEnabled = false;
             }
-            //else
-            //{
-            //    Info.IsEnabled = true;
-            //    Info2.IsEnabled = true;
-            //    ClientComboBox.IsEnabled = true;
-            //}
-
         }
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
@@ -114,6 +104,16 @@ namespace TMC.View
         private void viezd_Unchecked(object sender, RoutedEventArgs e)
         {
             Address.Visibility = Visibility.Collapsed;
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            CompanyTxt.Visibility = Visibility.Visible;
+        }
+
+        private void RadioButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CompanyTxt.Visibility = Visibility.Collapsed;
         }
     }
 }

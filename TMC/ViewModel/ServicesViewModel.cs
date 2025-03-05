@@ -65,7 +65,7 @@ namespace TMC.ViewModel
             }
             else
             {
-                var filtered = _services.Where(e => e.Name.ToLowerInvariant().StartsWith(_searchText.ToLowerInvariant().Trim()));
+                var filtered = _services.Where(e => e.Name.ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()));
                 ServicesList = new ObservableCollection<Services>(filtered);
             }
         }
@@ -112,7 +112,10 @@ namespace TMC.ViewModel
                             Services service = serviceWindow.Services;
                             context.Services.Add(service);
                             context.SaveChanges();
+                            _services = new ObservableCollection<Services>(context.Services.ToList());
+
                             FilterServices();
+
                         }
                     }
                     catch (Exception e)
@@ -138,8 +141,34 @@ namespace TMC.ViewModel
                             service = serviceWindow.Services;
                             context.Services.AddOrUpdate(service);
                             context.SaveChanges();
+                            _services = new ObservableCollection<Services>(context.Services.ToList());
+
                             FilterServices();
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
+            }
+        }
+        public RelayCommand DeleteServicesCommand
+        {
+            get
+            {
+                return new RelayCommand((selectedItem) =>
+                {
+                    try
+                    {
+                        Services service = selectedItem as Services;
+                        if (service == null) return;
+                        
+                            context.Services.Remove(service);
+                            context.SaveChanges();
+                        _services = new ObservableCollection<Services>(context.Services.ToList());
+
+                        FilterServices();
                     }
                     catch (Exception e)
                     {

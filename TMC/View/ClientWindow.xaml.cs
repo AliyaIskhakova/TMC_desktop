@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TMC.Model;
+using TMC.ViewModel;
 
 namespace TMC.View
 {
@@ -26,13 +27,15 @@ namespace TMC.View
             InitializeComponent();
             Clients = client;
             DataContext = Clients;
-            if(Clients.Type==true) ur.IsChecked = true;
+            if(Clients.type==true) ur.IsChecked = true;
             else fiz.IsChecked = true;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+            var vm = new ClientsViewModel();
+            vm.updateCommand.Execute(vm);
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)

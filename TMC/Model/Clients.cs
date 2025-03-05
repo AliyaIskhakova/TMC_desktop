@@ -76,7 +76,7 @@ namespace TMC.Model
             set
             {
                 Email = value;
-                OnPropertyChanged("email");
+                //OnPropertyChanged("email");
             }
         }
 

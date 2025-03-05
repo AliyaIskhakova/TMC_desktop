@@ -309,7 +309,7 @@
                     <!--<Button x:Name="FilterServiceBtn" >Фильтр</Button>-->
                     <Button x:Name="PrintPriceList" Command="{Binding PrintPriceListCommand}" >Печать</Button>
                     <Button x:Name="AddService" Visibility="Collapsed" Command="{Binding AddServicesCommand}">+ Добавить</Button>
-                    <Button x:Name="DeleteService" Visibility="Collapsed">Удалить</Button>
+                    <Button x:Name="DeleteService" Visibility="Collapsed" Command="{Binding DeleteServicesCommand}" CommandParameter="{Binding ElementName=ServicesDG, Path=SelectedItem}">Удалить</Button>
 
                 </StackPanel>
                 <DataGrid x:Name="ServicesDG" ItemsSource="{Binding ServicesList}" MouseDoubleClick="ServicesDG_MouseDoubleClick" Style="{StaticResource MainDataGrid}" >
@@ -331,7 +331,7 @@
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchEmployee" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBox}" MinWidth="400" ></TextBox>
                     <Button x:Name="AddEmployee" Visibility="Collapsed" Command="{Binding AddEmployeeCommand}">+ Добавить</Button>
-                    <Button x:Name="DeleteEmployee" Visibility="Collapsed">Удалить</Button>
+                    <Button x:Name="DeleteEmployee" Visibility="Collapsed" Command="{Binding DeleteEmployeeCommand}" CommandParameter="{Binding ElementName=EmployeesDG, Path=SelectedItem}">Удалить</Button>
                 </StackPanel>
                 <DataGrid x:Name="EmployeesDG" MouseDoubleClick="EmployeesDG_MouseDoubleClick" ItemsSource="{Binding EmployeesList}" Style="{StaticResource MainDataGrid}">
                         <DataGrid.Resources>

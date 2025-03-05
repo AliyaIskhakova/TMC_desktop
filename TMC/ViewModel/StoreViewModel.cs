@@ -60,7 +60,7 @@ namespace TMC.ViewModel
             }
             else
             {
-                var filtered = _parts.Where(e => e.Name.Contains(SearchText));
+                var filtered = _parts.Where(e => e.Name.ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()));
                 RepairPartsList = new ObservableCollection<RepairParts>(filtered);
             }
         }

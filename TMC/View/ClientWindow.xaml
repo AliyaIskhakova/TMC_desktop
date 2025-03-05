@@ -27,13 +27,13 @@
         <StackPanel>
             <Border Padding="30 0">
                 <StackPanel>
-                    <TextBox x:Name="surnameTextBox" Text="{Binding surname,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Фамилия*" Style="{StaticResource InfoTxtBox}" />
+                    <TextBox x:Name="surnameTextBox" Text="{Binding surname,  ValidatesOnDataErrors=True}" ui:TextBoxHelper.Watermark="Фамилия*" Style="{StaticResource InfoTxtBox}" />
                     <!--<TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=surnameTextBox}" FontSize="7" Foreground="Red" Visibility="{Binding (Validation.HasError), ElementName=surnameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" />-->
                     <TextBox Text="{Binding name,ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Имя*" Style="{StaticResource InfoTxtBox}"/>
                     <TextBox Text="{Binding patronymic, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
                     <toolkit:MaskedTextBox Mask="+7(000)000-00-00" Text="{Binding telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
                     <TextBox Text="{Binding email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"   ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
-                    <TextBox Text="{Binding companyname, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания*" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox Text="{Binding companyname, ValidatesOnDataErrors=True}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания*" Style="{StaticResource InfoTxtBox}"/>
                 </StackPanel>
             </Border>
             <Button Style="{StaticResource MainBtn}" Content="Сохранить" IsDefault="True" Click="Accept_Click" Margin="30 5" />
