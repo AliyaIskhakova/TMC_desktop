@@ -28,17 +28,24 @@ namespace TMC.View
         public RequestView RequestView { get; private set; }
         public RequestWindow(Requests request, RequestViewModel vm)
         {
-            InitializeComponent();
-            ComplitionDate.DisplayDateStart = DateTime.Now;
-            ComplitionDate.DisplayDateEnd = DateTime.Now.AddMonths(6);
-            Requests = request;
-            DataContext = Requests;
-            RequestServices.DataContext = vm; 
-            SaveBtn.DataContext = vm;
-            PrintBtns.DataContext = vm;
-            RequestRepairParts.DataContext = vm;
-            ClientComboBox.DataContext = new ClientsViewModel();
-            ClientInfo.DataContext = new Clients();
+            try
+            {
+                InitializeComponent();
+                ComplitionDate.DisplayDateStart = DateTime.Now;
+                ComplitionDate.DisplayDateEnd = DateTime.Now.AddMonths(6);
+                Requests = request;
+                DataContext = Requests;
+                RequestServices.DataContext = vm;
+                SaveBtn.DataContext = vm;
+                PrintBtns.DataContext = vm;
+                RequestRepairParts.DataContext = vm;
+                ClientComboBox.DataContext = new ClientsViewModel();
+                ClientInfo.DataContext = new Clients();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void CloseBtn_Click(object sender, RoutedEventArgs e)
@@ -47,22 +54,36 @@ namespace TMC.View
         }
         void Accept_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() && int.TryParse(RequestCost.Text, out int cost) && cost>=0)
+            try
             {
-                DialogResult = true;
+                if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() && int.TryParse(RequestCost.Text, out int cost) && cost >= 0)
+                {
+                    DialogResult = true;
+                }
+                else MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            else MessageBox.Show("Проверьте введенные данные!");
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void StatusBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selected = sender as ComboBox;
-            string status = selected.SelectionBoxItemTemplate.ToString();
-            if (status == "Готов")
+            try
             {
-                EndDocuument.IsEnabled = true;
+                var selected = sender as ComboBox;
+                string status = selected.SelectionBoxItemTemplate.ToString();
+                if (status == "Готов")
+                {
+                    EndDocuument.IsEnabled = true;
+                }
+                else EndDocuument.IsEnabled = false;
             }
-            else EndDocuument.IsEnabled = false;
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void MastersBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -72,23 +93,38 @@ namespace TMC.View
 
         private void ClientComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ClientComboBox.SelectedItem is Clients selectedClient)
+            try
             {
-                ClientInfo.DataContext = selectedClient;
-                ClientComboBox.Text = "" ;
-                Info.IsEnabled = false;
-                Info2.IsEnabled = false;
-                ClientComboBox.IsEnabled = false;
+                if (ClientComboBox.SelectedItem is Clients selectedClient)
+                {
+                    ClientInfo.DataContext = selectedClient;
+                    ClientComboBox.Text = "";
+                    Info.IsEnabled = false;
+                    Info2.IsEnabled = false;
+                    ClientComboBox.IsEnabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
-            ClientComboBox.SelectedItem = null;
-            ClientInfo.DataContext = new Clients();
-            Info.IsEnabled = true;
-            Info2.IsEnabled = true;
-            ClientComboBox.IsEnabled = true;
+            try
+            {
+                ClientComboBox.SelectedItem = null;
+                ClientInfo.DataContext = new Clients();
+                Info.IsEnabled = true;
+                Info2.IsEnabled = true;
+                ClientComboBox.IsEnabled = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         private void viezd_Checked(object sender, RoutedEventArgs e)

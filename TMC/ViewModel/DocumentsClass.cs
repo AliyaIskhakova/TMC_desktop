@@ -16,7 +16,6 @@ namespace TMC.ViewModel
         {
             RequestWindow requestWindow = o as RequestWindow;
             var request = requestWindow.Requests;
-            var device = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
             var client = requestWindow.ClientInfo.DataContext as Clients;
             //MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -78,7 +77,7 @@ namespace TMC.ViewModel
 
             table.Cell(1, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
             //есть случай с нуливым 
-            table.Cell(2, 2).Range.Text = $"{device.Name} {request.Model}";
+            table.Cell(2, 2).Range.Text = $"{request.Model}";
             table.Cell(3, 2).Range.Text = $"{request.IMEI_SN}";
             table.Cell(4, 2).Range.Text = $"{request.Reason}";
             table.Cell(5, 2).Range.Text = $"{request.Notes}";

@@ -27,23 +27,37 @@ namespace TMC.View
        
         public EmployeeWindow(Employees employee)
         {
-            InitializeComponent();
-            Employees = employee;
-            DataContext = employee;
-            login = employee.login;
+            try
+            {
+                InitializeComponent();
+                Employees = employee;
+                DataContext = employee;
+                login = employee.login;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         void Accept_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(SurnameTxt.Text) && !string.IsNullOrWhiteSpace(NameTxt.Text) && !string.IsNullOrWhiteSpace(TelephoneTxt.Text)
-                && RoleBox.SelectedItem != null && !string.IsNullOrWhiteSpace(TelephoneTxt.Text) && !string.IsNullOrWhiteSpace(LoginTxt.Text)
-                && !string.IsNullOrWhiteSpace(PasswordTxt.Text) && Regex.IsMatch(TelephoneTxt.Text, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
+            try
             {
-                ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
-                var employee = context.Employees.FirstOrDefault(e=>e.Login == LoginTxt.Text);
-                if (employee == null || employee.login== login) DialogResult = true;
-                else MessageBox.Show("Пользователь с таким логином уже существует");
+                if (!string.IsNullOrWhiteSpace(SurnameTxt.Text) && !string.IsNullOrWhiteSpace(NameTxt.Text) && !string.IsNullOrWhiteSpace(TelephoneTxt.Text)
+                        && RoleBox.SelectedItem != null && !string.IsNullOrWhiteSpace(TelephoneTxt.Text) && !string.IsNullOrWhiteSpace(LoginTxt.Text)
+                        && !string.IsNullOrWhiteSpace(PasswordTxt.Text) && Regex.IsMatch(TelephoneTxt.Text, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
+                {
+                    ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
+                    var employee = context.Employees.FirstOrDefault(e => e.Login == LoginTxt.Text);
+                    if (employee == null || employee.login == login) DialogResult = true;
+                    else MessageBox.Show("Пользователь с таким логином уже существует", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else MessageBox.Show("Заполните обязательные поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            else MessageBox.Show("Заполните обязательные поля!");
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

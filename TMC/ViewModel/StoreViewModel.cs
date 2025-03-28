@@ -24,9 +24,16 @@ namespace TMC.ViewModel
 
         public StoreViewModel()
         {
-            // Инициализация данных
-            _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
-            _filteredParts = new ObservableCollection<RepairParts>(_parts);
+            try
+            {
+                // Инициализация данных
+                _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
+                _filteredParts = new ObservableCollection<RepairParts>(_parts);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
 
@@ -54,14 +61,21 @@ namespace TMC.ViewModel
 
         private void FilterParts()
         {
-            if (string.IsNullOrEmpty(_searchText))
+            try
             {
-                RepairPartsList = new ObservableCollection<RepairParts>(_parts);
+                if (string.IsNullOrEmpty(_searchText))
+                {
+                    RepairPartsList = new ObservableCollection<RepairParts>(_parts);
+                }
+                else
+                {
+                    var filtered = _parts.Where(e => e.Name.ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()));
+                    RepairPartsList = new ObservableCollection<RepairParts>(filtered);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                var filtered = _parts.Where(e => e.Name.ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()));
-                RepairPartsList = new ObservableCollection<RepairParts>(filtered);
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -82,14 +96,21 @@ namespace TMC.ViewModel
             {
                 return new RelayCommand((o) =>
                 {
-                    AddPartsWindow window = o as AddPartsWindow;
-                    var selectedItems = window.RepairPartsDG.SelectedItems.Cast<RepairParts>().ToList();
-                    foreach (var item in selectedItems)
+                    try
                     {
-                        SelectedParts.Add(item);
+                        AddPartsWindow window = o as AddPartsWindow;
+                        var selectedItems = window.RepairPartsDG.SelectedItems.Cast<RepairParts>().ToList();
+                        foreach (var item in selectedItems)
+                        {
+                            SelectedParts.Add(item);
+                        }
+                     // Закрываем окно после добавления услуг
+                     (o as Window).DialogResult = true;
                     }
-                    // Закрываем окно после добавления услуг
-                    (o as Window).DialogResult = true;
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 });
             }
         }
@@ -100,16 +121,23 @@ namespace TMC.ViewModel
             {
                 return new RelayCommand((o) =>
                 {
-                    RepairPartWindow repairPartWindow = new RepairPartWindow(new RepairParts());
-                    if (repairPartWindow.ShowDialog() == true)
+                    try
                     {
-                        RepairParts parts = repairPartWindow.RepairParts;
-                        //client.Telephone = "avae";
-                        context.RepairParts.Add(parts);
-                        context.SaveChanges();
-                        RepairPartsList = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
-                    }
+                        RepairPartWindow repairPartWindow = new RepairPartWindow(new RepairParts());
+                        if (repairPartWindow.ShowDialog() == true)
+                        {
+                            RepairParts parts = repairPartWindow.RepairParts;
+                            //client.Telephone = "avae";
+                            context.RepairParts.Add(parts);
+                            context.SaveChanges();
+                            RepairPartsList = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
+                        }
 
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 });
             }
         }
@@ -119,14 +147,21 @@ namespace TMC.ViewModel
             {
                 return new RelayCommand((o) =>
                 {
-                    RepairParts selectedPart = o as RepairParts;
-                    RepairPartWindow repairPartWindow = new RepairPartWindow(selectedPart);
-                    if (repairPartWindow.ShowDialog() == true)
+                    try
                     {
-                        
-                        context.RepairParts.AddOrUpdate(selectedPart);
-                        context.SaveChanges();
-                        RepairPartsList = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
+                        RepairParts selectedPart = o as RepairParts;
+                        RepairPartWindow repairPartWindow = new RepairPartWindow(selectedPart);
+                        if (repairPartWindow.ShowDialog() == true)
+                        {
+
+                            context.RepairParts.AddOrUpdate(selectedPart);
+                            context.SaveChanges();
+                            RepairPartsList = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
 
                 });

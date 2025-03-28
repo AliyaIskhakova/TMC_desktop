@@ -16,15 +16,12 @@
         <StackPanel>
             <DockPanel>
             <StackPanel  Orientation="Horizontal " Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center">
-                <Label Content="Заявка" Margin="30 15 30 10" FontSize="22" VerticalContentAlignment="Center" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-
-                    <!--<CheckBox x:Name="viezd" Content="Выезд" FontSize="15" FontWeight="Medium" VerticalAlignment="Center" IsChecked="{Binding Type}" Checked="viezd_Checked" Unchecked="viezd_Unchecked">
+                    <Label Content="Заявка" Margin="30 15 30 10" FontSize="22" VerticalContentAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                    <CheckBox x:Name="viezd" Content="Выездная" FontSize="15" FontWeight="Medium" IsChecked="{Binding Type}" Checked="viezd_Checked" Unchecked="viezd_Unchecked">
                         <CheckBox.Resources>
                             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                         </CheckBox.Resources>
-                    </CheckBox>-->
-                    <!--<RadioButton Content="Гарантийный" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                    <RadioButton Content="Выездной" VerticalAlignment="Center" VerticalContentAlignment="Center" />-->
+                    </CheckBox>
                 </StackPanel>
                 <Button x:Name="CloseBtn" Click="CloseBtn_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Margin="10">
                     <Image Source="/Image/close.png" />
@@ -144,27 +141,24 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                                     <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Дата обращения" Visibility="{Binding Visibility, ElementName=RequestDate}"/>
                                     <DatePicker x:Name="RequestDate" Visibility="Collapsed" VerticalAlignment="Center"  SelectedDate="{Binding Date}" IsEnabled="False" ui:ControlsHelper.CornerRadius="5" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White"  ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата обращения" ui:TextBoxHelper.Watermark="Дата обращения"  />
                                 </StackPanel>
+
+                                <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Причина обращения:" />
                                 <TextBox x:Name="RequestReason" Text="{Binding Reason}" ui:TextBoxHelper.Watermark="Причина обращения*" Style="{StaticResource InfoTxtBox}" />
+                                <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Выявленная неисправность:" />
                                 <TextBox Text="{Binding  DetectedMulfunction}" ui:TextBoxHelper.Watermark="Выявленные неисправности" Style="{StaticResource InfoTxtBox}"/>
-                                <ComboBox Name="DeviceTypeBox" ui:TextBoxHelper.Watermark="Вид устройства" Style="{StaticResource MainComboBox}" >
-                                <ComboBox.Resources>
-                                    <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                                </ComboBox.Resources>
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Name}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                             
-                            <TextBox Text="{Binding Model}" ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox Text="{Binding IMEI_SN}" ui:TextBoxHelper.Watermark="IMEI/SN" Style="{StaticResource InfoTxtBox}"/>
-                            <TextBox Text="{Binding Appearance}" ui:TextBoxHelper.Watermark="Внешний вид" Style="{StaticResource InfoTxtBox}"/>
+
+                                <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Устройство:" />
+                                <UniformGrid Columns="2" >
+                                    <TextBox Text="{Binding Model}" ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}"/>
+                                    <TextBox Text="{Binding IMEI_SN}" ui:TextBoxHelper.Watermark="IMEI/SN" Style="{StaticResource InfoTxtBox}"/>
+                                </UniformGrid>
+                                <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Внешний вид устройства при приёмке::" />
+                                <TextBox Text="{Binding Appearance}" ui:TextBoxHelper.Watermark="Внешний вид" Style="{StaticResource InfoTxtBox}"/>
                                 <TextBox Text="{Binding Notes}" ui:TextBoxHelper.Watermark="Заметки" Style="{StaticResource InfoTxtBox}"/>
+                                <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Адресс выезда:" Visibility="{Binding Visibility, ElementName=Address}"/>
                                 <TextBox  x:Name="Address" Text="{Binding Address}" Visibility="Collapsed" ui:TextBoxHelper.Watermark="Адрес" Style="{StaticResource InfoTxtBox}"/>
                                 <Label Margin="0" FontSize="19" Content="Итоговая цена:" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                                 <TextBox x:Name="RequestCost" Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
-
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -181,7 +175,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                         <Button Style="{StaticResource MainBtn}" Command="{Binding AddServicesCommand}" CommandParameter="{Binding ElementName=window}" Content="Добавить"/>
                         <Button Style="{StaticResource MainBtn}"  Command="{Binding DeleteServicesCommand}" CommandParameter="{Binding ElementName=window}" Content="Удалить" Margin="0 5" />
                     </StackPanel>
-                    <DataGrid x:Name="selectedServices" ItemsSource="{Binding SelectedServices}" AutoGenerateColumns="False" MinHeight="80" MaxHeight="120" Background="White">
+                    <DataGrid x:Name="selectedServices" ItemsSource="{Binding SelectedServices}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto" MinHeight="80" Background="White">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
                             <DataGridTextColumn Header="Кол-во" Binding="{Binding Count}"/>
@@ -198,7 +192,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                     <DataGrid x:Name="selectedParts" AutoGenerateColumns="False" ItemsSource="{Binding SelectedParts}" Margin="0 0 30 0"  MinHeight="80" MaxHeight="120" Background="White">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название" Binding="{Binding Name}" />
-                            <DataGridTextColumn Header="Кол-во" Binding="{Binding Count}"/>
+                            <DataGridTextColumn Header="Кол-во" Binding="{Binding Count, Mode=TwoWay}"/>
                             <DataGridTextColumn Header="Цена за ед." Binding="{Binding Cost}"/>
                         </DataGrid.Columns>
                     </DataGrid>

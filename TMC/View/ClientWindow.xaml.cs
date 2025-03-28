@@ -24,18 +24,32 @@ namespace TMC.View
         public Clients Clients { get; private set; }
         public ClientWindow( Clients client)
         {
-            InitializeComponent();
-            Clients = client;
-            DataContext = Clients;
-            if(Clients.type==true) ur.IsChecked = true;
-            else fiz.IsChecked = true;
+            try
+            {
+                InitializeComponent();
+                Clients = client;
+                DataContext = Clients;
+                if (Clients.type == true) ur.IsChecked = true;
+                else fiz.IsChecked = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
-            var vm = new ClientsViewModel();
-            vm.updateCommand.Execute(vm);
+            try
+            {
+                this.Close();
+                var vm = new ClientsViewModel();
+                vm.updateCommand.Execute(vm);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
@@ -50,8 +64,16 @@ namespace TMC.View
 
         void Accept_Click(object sender, RoutedEventArgs e)
         {
-            if (Clients.HasValidationErrors()) MessageBox.Show("Проверьте ввведенные данные"); 
-            else DialogResult = true;
+            try
+            {
+                if (Clients.HasValidationErrors()) MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                else DialogResult = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

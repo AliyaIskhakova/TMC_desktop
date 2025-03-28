@@ -29,8 +29,15 @@ namespace TMC.View
 
         void Accept_Click(object sender, RoutedEventArgs e)
         {
-            if (ServicesDG.SelectedItem==null) MessageBox.Show("Выберите необходимые услуги для заявки");
-            else DialogResult = true;
+            try
+            {
+                if (ServicesDG.SelectedItem == null) MessageBox.Show("Выберите необходимые услуги для заявки");
+                else DialogResult = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

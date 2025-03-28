@@ -64,16 +64,17 @@ namespace TMC.ViewModel
                                   mainWindow.Show();
                                   wi.Close();
                               }
-                              else MessageBox.Show("Неверный логин или пароль!");
+                              else MessageBox.Show("Неверный логин или пароль!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                           }
                           else MessageBox.Show("Введите логин и пароль!");
 
                   }
-                      catch (Exception ex) {
-                           MessageBox.Show(ex.Message);
-            }
+                      catch (Exception ex)
+                      {
+                          MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                      }
 
-        });
+                  });
             }
         }
 

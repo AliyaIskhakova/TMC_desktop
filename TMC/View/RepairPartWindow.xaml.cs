@@ -30,8 +30,15 @@ namespace TMC.View
         }
         void Accept_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(PartName.Text) && int.TryParse(PartCount.Text, out int count) && double.TryParse(PartCost.Text, out double cost) && cost>=0 && count>=1) DialogResult = true;
-            else MessageBox.Show("Проверьте корректность данных!");
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(PartName.Text) && int.TryParse(PartCount.Text, out int count) && double.TryParse(PartCost.Text, out double cost) && cost >= 0 && count >= 1) DialogResult = true;
+                else MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

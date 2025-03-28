@@ -251,6 +251,8 @@
     <Compile Include="Model\Roles.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\SelectedPartsView.cs" />
+    <Compile Include="Model\SelectedServicesView.cs" />
     <Compile Include="Model\Services.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

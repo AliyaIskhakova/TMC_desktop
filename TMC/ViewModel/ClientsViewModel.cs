@@ -29,8 +29,15 @@ namespace TMC.ViewModel
         public ClientsViewModel()
         {
             // Инициализация данных
-            _clients = new ObservableCollection<Clients>(context.Clients.ToList());
-            _filteredClients = new ObservableCollection<Clients>(_clients);
+            try
+            {
+                _clients = new ObservableCollection<Clients>(context.Clients.ToList());
+                _filteredClients = new ObservableCollection<Clients>(_clients);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
 

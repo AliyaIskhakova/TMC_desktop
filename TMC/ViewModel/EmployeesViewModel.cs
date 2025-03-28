@@ -92,19 +92,26 @@ namespace TMC.ViewModel
             {
                 return new RelayCommand((selectedItem) =>
                 {
-                    Employees employee = selectedItem as Employees;
-                    if (employee == null) return;
-                    EmployeeWindow employeeWindow = new EmployeeWindow(employee);
-                    employeeWindow.RoleBox.ItemsSource = context.Roles.ToList();
-                    employeeWindow.RoleBox.SelectedItem = context.Roles.Find(employee.RoleID);
-                    if (employeeWindow.ShowDialog() == true)
+                    try
                     {
-                        employee = employeeWindow.Employees;
-                        employee.Roles = employeeWindow.RoleBox.SelectedItem as Roles;
-                        context.Employees.AddOrUpdate(employee);
-                        context.SaveChanges();
-                        _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
-                        FilterPersons();
+                        Employees employee = selectedItem as Employees;
+                        if (employee == null) return;
+                        EmployeeWindow employeeWindow = new EmployeeWindow(employee);
+                        employeeWindow.RoleBox.ItemsSource = context.Roles.ToList();
+                        employeeWindow.RoleBox.SelectedItem = context.Roles.Find(employee.RoleID);
+                        if (employeeWindow.ShowDialog() == true)
+                        {
+                            employee = employeeWindow.Employees;
+                            employee.Roles = employeeWindow.RoleBox.SelectedItem as Roles;
+                            context.Employees.AddOrUpdate(employee);
+                            context.SaveChanges();
+                            _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
+                            FilterPersons();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 });
             }
@@ -115,12 +122,19 @@ namespace TMC.ViewModel
             {
                 return new RelayCommand((selectedItem) =>
                 {
-                    Employees employee = selectedItem as Employees;
-                    if (employee == null) return;
-                    context.Employees.Remove(employee);
-                    context.SaveChanges();
-                    _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
-                    FilterPersons();
+                    try
+                    {
+                        Employees employee = selectedItem as Employees;
+                        if (employee == null) return;
+                        context.Employees.Remove(employee);
+                        context.SaveChanges();
+                        _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
+                        FilterPersons();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 });
             }
         }

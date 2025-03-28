@@ -25,19 +25,11 @@ namespace TMC
         public Authorization()
         {
             InitializeComponent();
-            //DataContext = new AuthorizationViewModel();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
-            //Employees employee = context.Employees.Where(u=>u.Login==loginBox.Text && u.Password==passwordBox.Password).FirstOrDefault();
-            //if (employee != null)
-            //{
-            //    MainWindow mainWindow = new MainWindow();
-            //    mainWindow.Show();
-            //    this.Close();   
-            //}
+            
         }
     }
 }
