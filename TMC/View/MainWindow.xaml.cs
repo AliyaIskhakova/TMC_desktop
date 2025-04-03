@@ -36,6 +36,7 @@ namespace TMC
                 StoreWindow.DataContext = new StoreViewModel();
                 ServicesWindow.DataContext = new ServicesViewModel();
                 EmployeesWindow.DataContext = new EmployeesViewModel();
+                ResultsWindow.DataContext = new ReportsViewModel();
             }
             catch (Exception ex)
             {

@@ -10,6 +10,7 @@
                 WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         WindowStyle="None"
+        Name="window"
         Title="EmployeeWindow" Height="550" Width="450">
     <DockPanel >
         <Border DockPanel.Dock="Top">
@@ -32,7 +33,9 @@
                     <TextBox Text="{Binding Patronymic}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}" />
                     <ui:MetroHeader Content="Телефон*"/>
                     <toolkit:MaskedTextBox x:Name="TelephoneTxt" Mask="+7(000)000-00-00" Text="{Binding telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
-                    <ui:MetroHeader Content="Роль*"/>
+                    <ui:MetroHeader Content="Почта*"/>
+                    <TextBox x:Name="EmailTxt" Text="{Binding Email}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                    <ui:MetroHeader Content="Должность*"/>
                     <ComboBox x:Name="RoleBox" ui:ControlsHelper.CornerRadius="5" Background="White" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5">
                         <ComboBox.Resources>
                             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
@@ -47,10 +50,12 @@
                     </ComboBox>
                     <ui:MetroHeader Content="Логин*"/>
                     <TextBox x:Name="LoginTxt" Text="{Binding Login}" ui:TextBoxHelper.Watermark="Логин" Style="{StaticResource InfoTxtBox}"/>
-                    <ui:MetroHeader Content="Пароль*"/>
-                    <TextBox x:Name="PasswordTxt" Text="{Binding Password}" ui:TextBoxHelper.Watermark="Пароль" Style="{StaticResource InfoTxtBox}" />
+                    <!--<ui:MetroHeader Content="Пароль*"/>
+                    <TextBox x:Name="PasswordTxt" Text="{Binding Password}" ui:TextBoxHelper.Watermark="Пароль" Style="{StaticResource InfoTxtBox}" />-->
                 </StackPanel>
             </Border>
+            <Button x:Name="newPassword" Style="{StaticResource MainBtn}"  Command="{Binding NewPasswordCommand}" CommandParameter="{Binding ElementName=window}" Content="Отправить новый пароль" Background="#889DFB" Margin="30 5" />
+
             <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Сохранить" Margin="30 5" />
         </StackPanel>
     </DockPanel>

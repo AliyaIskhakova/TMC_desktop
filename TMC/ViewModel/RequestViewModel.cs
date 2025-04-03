@@ -23,6 +23,9 @@ using Paragraph = Microsoft.Office.Interop.Word.Paragraph;
 using System.Web.UI.WebControls.WebParts;
 using App = System.Windows.Application;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
+using System.Net.Mail;
+using System.Net;
+using MailMessage = System.Net.Mail.MailMessage;
 
 namespace TMC.ViewModel
 {
@@ -279,6 +282,21 @@ namespace TMC.ViewModel
                   });
             }
         }
+        public void SendEmail(Clients client, Requests requests, string status)
+        {
+            MailAddress from = new MailAddress("aliya_iskhakova12@mail.ru", "Сервисный центр ТехноМедиаСоюз");
+            MailAddress to = new MailAddress(client.Email);
+            MailMessage m = new MailMessage(from, to);
+            m.Subject = "Сервисный центр ТехноМедиаСоюз";
+            m.Body = "<h1>Ваша заявка №"+ requests.IDrequest +":" + status + "</h1>";
+            //user.Password = GetHashString(newPasword);
+
+            m.IsBodyHtml = true;
+            SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
+            smtp.Credentials = new NetworkCredential("aliya_iskhakova12@mail.ru", "HKqzZM2FQTJC3v09cmZd");
+            smtp.EnableSsl = true;
+            smtp.Send(m);
+        }
         // команда редактирования
         public RelayCommand EditRequestCommand
         {
@@ -308,6 +326,7 @@ namespace TMC.ViewModel
                           requestWindow.MastersBox.SelectedItem = context.Employees.Find(request.EmployeeID);
                           requestWindow.StatusBox.ItemsSource = status;
                           requestWindow.StatusBox.SelectedItem = context.Status.Find(request.StatusID);
+                          string statusName = request.StatusName;
                           if (selectedRequest.Status.Name == "Завершен" || selectedRequest.Status.Name == "Отменен")
                           {
                               requestWindow.InfoBlock1.IsEnabled = false;
@@ -356,8 +375,12 @@ namespace TMC.ViewModel
                           {
                               var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
                               selectedRequest.StatusID = selectedStatus.IDstatus;
-                              //var selectedDevice = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
-                              //if (selectedDevice != null) selectedRequest.DeviceType = selectedDevice.IDtype;
+
+                              //ОТПРАВКА УВЕДОМЛЕНИЯ КЛИЕНТУ
+                              if(statusName != selectedStatus.Name)
+                              {
+                                  SendEmail(selectedRequest.Clients, selectedRequest, selectedStatus.Name);
+                              }
                               var selectedMaster = requestWindow.MastersBox.SelectedItem as Employees;
                               if (selectedMaster != null) selectedRequest.MasterID = selectedMaster.IDEmployee;
                               selectedRequest.Cost = (int)requestWindow.Requests.Cost;

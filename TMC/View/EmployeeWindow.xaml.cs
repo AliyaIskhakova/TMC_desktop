@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TMC.Model;
+using TMC.ViewModel;
 
 namespace TMC.View
 {
@@ -33,6 +34,7 @@ namespace TMC.View
                 Employees = employee;
                 DataContext = employee;
                 login = employee.login;
+                newPassword.DataContext = new EmployeesViewModel();
             }
             catch (Exception ex)
             {
@@ -45,7 +47,7 @@ namespace TMC.View
             {
                 if (!string.IsNullOrWhiteSpace(SurnameTxt.Text) && !string.IsNullOrWhiteSpace(NameTxt.Text) && !string.IsNullOrWhiteSpace(TelephoneTxt.Text)
                         && RoleBox.SelectedItem != null && !string.IsNullOrWhiteSpace(TelephoneTxt.Text) && !string.IsNullOrWhiteSpace(LoginTxt.Text)
-                        && !string.IsNullOrWhiteSpace(PasswordTxt.Text) && Regex.IsMatch(TelephoneTxt.Text, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
+                        && Regex.IsMatch(TelephoneTxt.Text, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
                 {
                     ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
                     var employee = context.Employees.FirstOrDefault(e => e.Login == LoginTxt.Text);

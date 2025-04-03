@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TMC.ViewModel"  
         xmlns:l="clr-namespace:TMC.Model"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:ui="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="550" MinWidth="1050">
+        Title="Сервисный центр &quot;ТехноМедиаСоюз&quot;" MinHeight="550" MinWidth="1050" WindowState="Maximized" Icon="/View/Y_MSHrGBV5U.jpg">
     <Window.Resources>
 
         <Style TargetType="Button" x:Key="MenuBtn" BasedOn="{StaticResource {x:Type Button}}">
@@ -124,7 +125,7 @@
                                     <Label>Заявки</Label>
                                 </StackPanel>
                             </Border>
- 
+
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
@@ -133,8 +134,8 @@
                         <ControlTemplate>
                             <Border Style="{StaticResource BtnBorder}" Background="{TemplateBinding Background}">
                                 <StackPanel Orientation="Horizontal">
-                                <Image  Source="/Image/Store.png" Width="27" Margin="11 0" Style="{StaticResource MenuImg}" />
-                                <Label>Склад ЗИП</Label>
+                                    <Image  Source="/Image/Store.png" Width="27" Margin="11 0" Style="{StaticResource MenuImg}" />
+                                    <Label>Склад ЗИП</Label>
                                 </StackPanel>
                             </Border>
                         </ControlTemplate>
@@ -189,9 +190,9 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-           
+
         </DockPanel>
-        <Grid x:Name="RequestsWindow"  Grid.Column="1" >
+        <Grid x:Name="RequestsWindow" Grid.Column="1" >
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Заявки</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
@@ -200,13 +201,13 @@
                     <Button x:Name="AddRequest" Command="{Binding AddRequestCommand}" >+ Добавить заявку</Button>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Top" x:Name="FilterBtnGroup" Orientation="Horizontal" Margin="20 0 ">
-                        <Button Click="ButtonFilter_Click" Style="{StaticResource DefaultCheckFilter}" Content="Все"/>
-                        <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Новые" />
-                        <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="В работе" />
-                        <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Ожидание ЗИП" />
-                        <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Готовые" />
-                        <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Отменены" />
-                    </StackPanel>
+                    <Button Click="ButtonFilter_Click" Style="{StaticResource DefaultCheckFilter}" Content="Все"/>
+                    <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Новые" />
+                    <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="В работе" />
+                    <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Ожидание ЗИП" />
+                    <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Готовые" />
+                    <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Отменены" />
+                </StackPanel>
                 <DataGrid x:Name="RequestDG" MouseDoubleClick="RequestDG_MouseDoubleClick" ColumnWidth="Auto" ItemsSource="{Binding RequestsList}" 
                    Style="{StaticResource MainDataGrid}" >
                     <DataGrid.Resources>
@@ -243,17 +244,17 @@
                     <Button x:Name="AddReraipPart" Command="{Binding AddRepairPartCommand}" >+ Добавить</Button>
                 </StackPanel>
                 <DataGrid x:Name="StoreDG" MouseDoubleClick="StoreDG_MouseDoubleClick" ItemsSource="{Binding RepairPartsList}" Style="{StaticResource MainDataGrid}" >
-                        <DataGrid.Resources>
-                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                        </DataGrid.Resources>
+                    <DataGrid.Resources>
+                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                    </DataGrid.Resources>
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding IDpart}"/>
-                            <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="Количество" Binding="{Binding Count}"/>
-                            <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding IDpart}"/>
+                        <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Количество" Binding="{Binding Count}"/>
+                        <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </DockPanel>
         </Grid>
         <Grid x:Name="ClientsWindow" Visibility="Collapsed"  Grid.Column="1">
@@ -262,9 +263,9 @@
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchClient" Style="{StaticResource SearchBox}"  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Button x:Name="AddClient"  Command="{Binding AddClientCommand}">+ Добавить</Button>
-                    
+
                 </StackPanel>
-                
+
                 <DataGrid x:Name="ClientsDG"  MouseDoubleClick="ClientsDG_MouseDoubleClick"  ItemsSource="{Binding ClientsList}" Style="{StaticResource MainDataGrid}">
                     <DataGrid.Resources>
                         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
@@ -334,22 +335,54 @@
                     <Button x:Name="DeleteEmployee" Visibility="Collapsed" Command="{Binding DeleteEmployeeCommand}" CommandParameter="{Binding ElementName=EmployeesDG, Path=SelectedItem}">Удалить</Button>
                 </StackPanel>
                 <DataGrid x:Name="EmployeesDG" MouseDoubleClick="EmployeesDG_MouseDoubleClick" ItemsSource="{Binding EmployeesList}" Style="{StaticResource MainDataGrid}">
-                        <DataGrid.Resources>
-                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                        </DataGrid.Resources>
+                    <DataGrid.Resources>
+                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                    </DataGrid.Resources>
 
-                        <DataGrid.Columns >
-                            <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}"/>
-                            <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}"/>
-                            <DataGridTextColumn Header="Телефон" Binding="{Binding Telephone}"/>
-                            <!--<DataGridTextColumn Header="Должность" Binding="{Binding Role}"/>-->
-                        </DataGrid.Columns>
+                    <DataGrid.Columns >
+                        <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}"/>
+                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}"/>
+                        <DataGridTextColumn Header="Телефон" Binding="{Binding Telephone}"/>
+                        <!--<DataGridTextColumn Header="Должность" Binding="{Binding Role}"/>-->
+                    </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
         </Grid>
-        <Grid x:Name="ResultsWindow" Visibility="Collapsed"  Grid.Column="1">
-            
+        <Grid x:Name="ResultsWindow" Visibility="Collapsed" Grid.Column="1">
+            <DockPanel>
+                <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}">Отчет</Label>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" Margin="20 0 0 0">За период от</Label>
+                    <DatePicker x:Name="StartDate" SelectedDate="{Binding StartDate, Mode=TwoWay}"   ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности" >
+                        <DatePicker.Resources>
+                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                        </DatePicker.Resources>
+                    </DatePicker>
+                    <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" Margin="0">до</Label>
+                    <DatePicker x:Name="EndDate" SelectedDate="{Binding EndDate, Mode=TwoWay}"   ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности" >
+                        <DatePicker.Resources>
+                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                        </DatePicker.Resources>
+                    </DatePicker>
+                    <Button x:Name="Search" Command="{Binding LoadDataCommand}" >ОК</Button>
+                </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border CornerRadius="10" Margin="20 10" BorderThickness="2" BorderBrush="DarkSlateBlue">
+                        <StackPanel>
+                            <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заявки</Label>
+                            <lvc:PieChart VerticalAlignment="Center" Height="300" Series="{Binding PieSeries}">
+                                
+                            </lvc:PieChart>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </DockPanel>
+
         </Grid>
     </Grid>
 </Window>
