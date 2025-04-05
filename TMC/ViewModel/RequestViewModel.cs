@@ -32,15 +32,8 @@ namespace TMC.ViewModel
     public class RequestViewModel : INotifyPropertyChanged
     {
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
-        RelayCommand addCommand;
-        RelayCommand relayCommand;
-        RelayCommand printRepairActCommand;
-        RelayCommand editCommand;
-        RelayCommand saveCommand;
-        RelayCommand selectRequestByStatus;
-        RelayCommand addServicesCommand;
-        
-        RelayCommand addPartsCommand;
+        private readonly System.Timers.Timer _refreshTimer;
+        private string _currentFilterStatus = "Все"; // По умолчанию "Все"
         ObservableCollection<Employees> _mastersList;
         private ObservableCollection<RequestView> _requests;
         public ObservableCollection<RequestView> RequestsList
@@ -59,37 +52,61 @@ namespace TMC.ViewModel
             try
             {
                 LoadRequests();
-                _mastersList = new ObservableCollection<Employees>(context.Employees.Where(e => e.RoleID == 3).ToList());
-
+                _mastersList = new ObservableCollection<Employees>(context.Employees.Where(e => e.RoleId == 3).ToList());
+                // Инициализация таймера для обновления каждую минуту
+                _refreshTimer = new System.Timers.Timer(30000); // 60000 мс = 1 минута
+                _refreshTimer.Elapsed += (sender, e) => RefreshRequests();
+                _refreshTimer.AutoReset = true;
+                _refreshTimer.Enabled = true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        private void RefreshRequests()
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                // Сохраняем текущую позицию прокрутки (если нужно)
+                // var scrollPosition = ...;
+
+                LoadRequests();
+
+                // Применяем сохраненный фильтр
+                if (_currentFilterStatus != "Все")
+                {
+                    RequestsList = new ObservableCollection<RequestView>(
+                        RequestsList.Where(r => r.StatusName == _currentFilterStatus).ToList());
+                }
+
+                // Восстанавливаем позицию прокрутки (если нужно)
+                // ...
+            });
+        }
+
 
         private void LoadRequests()
         {
             try
             {
                 var result = (from r in context.Requests
-                              join c in context.Clients on r.ClientID equals c.IDClient into clientGroup
+                              join c in context.Clients on r.ClientId equals c.IdClient into clientGroup
                               from c in clientGroup.DefaultIfEmpty() // LEFT JOIN для Clients
-                              join e in context.Employees on r.MasterID equals e.IDEmployee into employeeGroup
+                              join e in context.Employees on r.MasterId equals e.IdEmployee into employeeGroup
                               from e in employeeGroup.DefaultIfEmpty() // LEFT JOIN для Employees
-                              join s in context.Status on r.StatusID equals s.IDstatus // INNER JOIN для Status
-                              /*join dt in context.DeviseTypes on r.DeviceType equals dt.IDtype*/ // INNER JOIN для DeviseTypes
+                              join s in context.Statuses on r.StatusId equals s.IdStatus 
                               select new RequestView
                               {
-                                  IDRequest = r.IDrequest,
-                                  EmployeeID = e.IDEmployee, // Добавьте ID для последующего соединения
+                                  IDRequest = r.IdRequest,
+                                  EmployeeID = e.IdEmployee, // Добавьте ID для последующего соединения
                                   EmployeeSurname = e.Surname,
                                   EmployeeName = e.Name,
                                   EmployeePatronymic = e.Patronymic,
                                   EmployeeTelephone = e.Telephone,
-                                  StatusID = s.IDstatus,
+                                  StatusID = s.IdStatus,
                                   StatusName = s.Name,
-                                  ClientID = c.IDClient, // Добавьте ID для последующего соединения
+                                  ClientID = c.IdClient, // Добавьте ID для последующего соединения
                                   ClientSurname = c.Surname,
                                   ClientName = c.Name,
                                   ClientPatronymic = c.Patronymic,
@@ -120,33 +137,17 @@ namespace TMC.ViewModel
         {
             get
             {
-                return selectRequestByStatus ??= new RelayCommand((status) =>
+                return new RelayCommand((status) =>
                   {
                       try
                       {
+                          string status_name = status as string;
+                          _currentFilterStatus = status_name;
                           RequestsList.Clear();
                           LoadRequests();
-                          switch (status)
-                          {
-                              case "Все":
-                                  LoadRequests();
-                                  break;
-                              case "Готовые":
-                                  RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r => r.StatusName == "Готов").ToList());
-                                  break;
-                              case "Ожидание ЗИП":
-                                  RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r => r.StatusName == "Ждет ЗИП").ToList());
-                                  break;
-                              case "В работе":
-                                  RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r => r.StatusName == "В работе").ToList());
-                                  break;
-                              case "Новые":
-                                  RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r => r.StatusName == "Новый").ToList());
-                                  break;
-                              case "Отменены":
-                                  RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r => r.StatusName == "Отменен").ToList());
-                                  break;
-                          }
+                          if (status_name == "Все") LoadRequests();
+                          else RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r => r.StatusName == status_name).ToList());
+                          
                       }
                       catch (Exception ex)
                       {
@@ -172,20 +173,20 @@ namespace TMC.ViewModel
             {
                 switch (statusName)
                 {
-                    case "Новый":
+                    case "Новая":
                         return "#60B7FF";
-                    case "Готов":
+                    case "Готова":
                         return "#90EE90";
                     case "В работе":
                         return "#FFD700";
-                    case "Завершен":
+                    case "Завершена":
                         return "#D3D3D3";
-                    case "Отменен":
+                    case "Отменена":
                         return "#D3D3D3";
                     case "Ждет ЗИП":
                         return "#FFA500";
-                    //case "Диагностика":
-                    //    return "#BDFB82";
+                    case "Диагностика":
+                        return "#BDFB82";
                     default:
                         return "#FFFFFF";
                 }
@@ -200,7 +201,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return addCommand ??= new RelayCommand((o) =>
+                return new RelayCommand((o) =>
                   {
 
                       try
@@ -209,63 +210,45 @@ namespace TMC.ViewModel
                           SelectedParts.Clear();
                           RequestWindow requestWindow = new RequestWindow(new Requests(), this);
                           requestWindow.MastersBox.ItemsSource = MastersList;
-                          requestWindow.StatusBox.ItemsSource = context.Status.Where(s => s.Name != "Завершен" && s.Name != "Отменен").ToList();
-                          //requestWindow.DeviceTypeBox.ItemsSource = context.DeviseTypes.ToList();
+                          requestWindow.StatusBox.ItemsSource = context.Statuses.Where(s => s.Name != "Завершен" && s.Name != "Отменен").ToList();
                           requestWindow.EndDocuument.Visibility = Visibility.Collapsed;
                           if (requestWindow.ShowDialog() == true)
                           {
                               Requests newRequest = requestWindow.Requests;
                               Clients client = requestWindow.ClientInfo.DataContext as Clients;
 
-                              if (context.Clients.Any(x => x.IDClient == client.IDClient))
-                              {
-                                  newRequest.ClientID = client.IDClient;
-                              }
-                              else
-                              {
-                                  context.Clients.Add(client);
-                              }
-                              var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
-                              newRequest.StatusID = selectedStatus.IDstatus;
-                              //var selectedDevice = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
-                              //if (selectedDevice != null) { newRequest.DeviceType = selectedDevice.IDtype; }
+                              if (context.Clients.Any(x => x.IdClient == client.IdClient)) newRequest.ClientId = client.IdClient;
+                              else context.Clients.Add(client);
+                              
+                              var selectedStatus = requestWindow.StatusBox.SelectedItem as Statuses;
+                              newRequest.StatusId = selectedStatus.IdStatus;
                               newRequest.Date = DateTime.Now;
                               newRequest.Cost = (int)requestWindow.Requests.Cost;
                               var selectedMaster = requestWindow.MastersBox.SelectedItem as Employees;
-                              if (selectedMaster != null) newRequest.MasterID = selectedMaster.IDEmployee;
+                              if (selectedMaster != null) newRequest.MasterId = selectedMaster.IdEmployee;
                               context.Requests.Add(newRequest);
                               context.SaveChanges();
                               foreach (var service in SelectedServices)
                               {
-                                  // Проверяем, существует ли уже такая запись
-                                  bool exists = context.Requests_Services.Any(rs => rs.RequestID == newRequest.IDrequest && rs.ServiceID == service.IDService);
-
-                                  if (!exists)
-                                  {
-                                      Requests_Services requests_Services = new Requests_Services
+                                  Requests_Services requests_Services = new Requests_Services
                                       {
-                                          RequestID = newRequest.IDrequest,
-                                          ServiceID = service.IDService,
-                                          Count = service.Count // Можно добавить логику для указания количества
+                                          RequestId = newRequest.IdRequest,
+                                          ServiceId = service.IDService,
+                                          Count = service.Count 
                                       };
                                       context.Requests_Services.Add(requests_Services);
-                                  }
+                                  
                               }
                               foreach (var part in SelectedParts)
                               {
-                                  // Проверяем, существует ли уже такая запись
-                                  bool exists = context.Request_RepairParts.Any(rs => rs.RequestID == newRequest.IDrequest && rs.RepairPartID == part.IDPart);
-
-                                  if (!exists)
-                                  {
-                                      Request_RepairParts request_RepairParts = new Request_RepairParts
+                                  Request_RepairParts request_RepairParts = new Request_RepairParts
                                       {
-                                          RequestID = newRequest.IDrequest,
-                                          RepairPartID = part.IDPart,
-                                          Count = part.Count // Можно добавить логику для указания количества
+                                          RequestId = newRequest.IdRequest,
+                                          RepairPartId = part.IDPart,
+                                          Count = part.Count 
                                       };
                                       context.Request_RepairParts.Add(request_RepairParts);
-                                  }
+                                  
                               }
                               context.SaveChanges();
                               SelectedServices.Clear();
@@ -288,21 +271,22 @@ namespace TMC.ViewModel
             MailAddress to = new MailAddress(client.Email);
             MailMessage m = new MailMessage(from, to);
             m.Subject = "Сервисный центр ТехноМедиаСоюз";
-            m.Body = "<h1>Ваша заявка №"+ requests.IDrequest +":" + status + "</h1>";
+            m.Body = "<h1>Ваша заявка №"+ requests.IdRequest +":" + status + "</h1>";
             //user.Password = GetHashString(newPasword);
-
             m.IsBodyHtml = true;
             SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
             smtp.Credentials = new NetworkCredential("aliya_iskhakova12@mail.ru", "HKqzZM2FQTJC3v09cmZd");
             smtp.EnableSsl = true;
             smtp.Send(m);
+            MessageBox.Show($"Cтатус заявки был изменен. Уведомление отправлено клиенту",
+                            "Изменение пароля", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         // команда редактирования
         public RelayCommand EditRequestCommand
         {
             get
             {
-                return editCommand ??= new RelayCommand((selectedItem) =>
+                return new RelayCommand((selectedItem) =>
                   {
                       try
                       {
@@ -310,14 +294,14 @@ namespace TMC.ViewModel
                           SelectedParts.Clear();
                           string role = App.Current.Properties["Role"] as string;
                           int id = (int)App.Current.Properties["UserID"];
-                          List<Status> status = new List<Status>();
+                          List<Statuses> status = new List<Statuses>();
 
                           RequestView request = selectedItem as RequestView;
                           if (request == null) return;
                           Requests selectedRequest = context.Requests.Find(request.IDRequest);
                           RequestWindow requestWindow = new RequestWindow(selectedRequest, this);
-                          if (role == "Мастер" && request.StatusName != "Завершен" && request.StatusName != "Отменен") status = context.Status.Where(s => s.Name != "Завершен" && s.Name != "Отменен").ToList();
-                          else status = context.Status.ToList();
+                          if (role == "Мастер" && request.StatusName != "Завершен" && request.StatusName != "Отменен") status = context.Statuses.Where(s => s.Name != "Завершен" && s.Name != "Отменен").ToList();
+                          else status = context.Statuses.ToList();
                           requestWindow.RequestDate.Visibility = Visibility.Visible;
                           requestWindow.ClientInfo.DataContext = context.Clients.Find(request.ClientID);
                           requestWindow.ClientInfo.IsEnabled = false;
@@ -325,9 +309,9 @@ namespace TMC.ViewModel
                           requestWindow.MastersBox.ItemsSource = MastersList;
                           requestWindow.MastersBox.SelectedItem = context.Employees.Find(request.EmployeeID);
                           requestWindow.StatusBox.ItemsSource = status;
-                          requestWindow.StatusBox.SelectedItem = context.Status.Find(request.StatusID);
+                          requestWindow.StatusBox.SelectedItem = context.Statuses.Find(request.StatusID);
                           string statusName = request.StatusName;
-                          if (selectedRequest.Status.Name == "Завершен" || selectedRequest.Status.Name == "Отменен")
+                          if (selectedRequest.Statuses.Name == "Завершен" || selectedRequest.Statuses.Name == "Отменен")
                           {
                               requestWindow.InfoBlock1.IsEnabled = false;
                               requestWindow.InfoBlock2.IsEnabled = false;
@@ -342,13 +326,13 @@ namespace TMC.ViewModel
                               requestWindow.PrintBtns.Visibility = Visibility.Collapsed;
                           }
                           //requestWindow.Show();
-                          List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestID == selectedRequest.IDrequest).ToList();
+                          List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestId == selectedRequest.IdRequest).ToList();
                           foreach (var item in request_services)
                           {
-                              Services service = context.Services.Find(item.ServiceID);
+                              Services service = context.Services.Find(item.ServiceId);
                               SelectedServicesView serviceView = new SelectedServicesView
                               {
-                                  IDService = service.IDservice,
+                                  IDService = service.IdService,
                                   Name = service.Name,
                                   Cost = service.Cost,
                                   Count = (int)item.Count
@@ -356,14 +340,14 @@ namespace TMC.ViewModel
                               SelectedServices.Add(serviceView);
                           }
                           requestWindow.selectedServices.ItemsSource = SelectedServices;
-                          List<Request_RepairParts> request_parts = context.Request_RepairParts.Where(r => r.RequestID == selectedRequest.IDrequest).ToList();
-                          //requestWindow.Show();
+                          List<Request_RepairParts> request_parts = context.Request_RepairParts.Where(r => r.RequestId == selectedRequest.IdRequest).ToList();
+                          
                           foreach (var item in request_parts)
                           {
-                              RepairParts part = context.RepairParts.Find(item.RepairPartID);
+                              RepairParts part = context.RepairParts.Find(item.RepairPartId);
                               SelectedPartsView partsView = new SelectedPartsView
                               {
-                                  IDPart = part.IDpart,
+                                  IDPart = part.IdPart,
                                   Name = part.Name,
                                   Cost = part.Cost,
                                   Count =item.Count
@@ -373,8 +357,8 @@ namespace TMC.ViewModel
                           requestWindow.selectedServices.ItemsSource = SelectedServices;
                           if (requestWindow.ShowDialog() == true)
                           {
-                              var selectedStatus = requestWindow.StatusBox.SelectedItem as Status;
-                              selectedRequest.StatusID = selectedStatus.IDstatus;
+                              var selectedStatus = requestWindow.StatusBox.SelectedItem as Statuses;
+                              selectedRequest.StatusId = selectedStatus.IdStatus;
 
                               //ОТПРАВКА УВЕДОМЛЕНИЯ КЛИЕНТУ
                               if(statusName != selectedStatus.Name)
@@ -382,7 +366,7 @@ namespace TMC.ViewModel
                                   SendEmail(selectedRequest.Clients, selectedRequest, selectedStatus.Name);
                               }
                               var selectedMaster = requestWindow.MastersBox.SelectedItem as Employees;
-                              if (selectedMaster != null) selectedRequest.MasterID = selectedMaster.IDEmployee;
+                              if (selectedMaster != null) selectedRequest.MasterId = selectedMaster.IdEmployee;
                               selectedRequest.Cost = (int)requestWindow.Requests.Cost;
                               context.Requests.AddOrUpdate(selectedRequest);
                               context.SaveChanges();
@@ -392,20 +376,15 @@ namespace TMC.ViewModel
                               }
                               foreach (var service in SelectedServices)
                               {
-                                  // Проверяем, существует ли уже такая запись
-                                  //bool exists = context.Requests_Services
-                                  //    .Any(rs => rs.RequestID == selectedRequest.IDrequest && rs.ServiceID == service.IDservice);
-
-                                  //if (!exists)
-                                  //{
+                   
                                   Requests_Services requests_Services = new Requests_Services
                                   {
-                                      RequestID = selectedRequest.IDrequest,
-                                      ServiceID = service.IDService,
-                                      Count = service.Count // Можно добавить логику для указания количества
+                                      RequestId = selectedRequest.IdRequest,
+                                      ServiceId = service.IDService,
+                                      Count = service.Count 
                                   };
                                   context.Requests_Services.Add(requests_Services);
-                                  //}
+                                  
                               }
                               foreach (var item in request_parts)
                               {
@@ -416,9 +395,9 @@ namespace TMC.ViewModel
                                   
                                   Request_RepairParts request_RepairParts = new Request_RepairParts
                                   {
-                                      RequestID = selectedRequest.IDrequest,
-                                      RepairPartID = part.IDPart,
-                                      Count = part.Count // Можно добавить логику для указания количества
+                                      RequestId = selectedRequest.IdRequest,
+                                      RepairPartId = part.IDPart,
+                                      Count = part.Count 
                                   };
                                   context.Request_RepairParts.Add(request_RepairParts);
                                   
@@ -452,7 +431,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return addServicesCommand ??= new RelayCommand((o) =>
+                return new RelayCommand((o) =>
                   {
                       try
                       {
@@ -464,12 +443,12 @@ namespace TMC.ViewModel
                               // Добавляем выбранные услуги к заявке
                               foreach (var service in vm.SelectedServices)
                               {
-                                  bool exists = SelectedServices.Any(rs => rs.IDService == service.IDservice);
+                                  bool exists = SelectedServices.Any(rs => rs.IDService == service.IdService);
                                   if (!exists)
                                   {
                                       SelectedServicesView serviceView = new SelectedServicesView
                                       {
-                                          IDService = service.IDservice,
+                                          IDService = service.IdService,
                                           Name = service.Name,
                                           Cost = service.Cost,
                                           Count = 1
@@ -503,7 +482,6 @@ namespace TMC.ViewModel
                           {
                               SelectedServices.Remove(services);
                               requestWindow.Requests.Cost = (int)(requestWindow.Requests.Cost - services.Cost*services.Count);
-
                           }
                           else MessageBox.Show("Если хотите удалить услугу из заявки, выберите услугу для удаления", "Формирование заявки", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -531,7 +509,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return addPartsCommand ??= new RelayCommand((o) =>
+                return new RelayCommand((o) =>
                   {
                       try
                       {
@@ -545,12 +523,12 @@ namespace TMC.ViewModel
                               // Добавляем выбранные услуги к заявке
                               foreach (var part in vm.SelectedParts)
                               {
-                                  bool exists = SelectedParts.Any(rs => rs.IDPart == part.IDpart);
+                                  bool exists = SelectedParts.Any(rs => rs.IDPart == part.IdPart);
                                   if (!exists)
                                   {
                                       SelectedPartsView partsView = new SelectedPartsView
                                       {
-                                          IDPart = part.IDpart,
+                                          IDPart = part.IdPart,
                                           Name = part.Name,
                                           Cost = part.Cost,
                                           Count = 1
@@ -612,8 +590,6 @@ namespace TMC.ViewModel
                             return;
                         }
                         var request = requestWindow.Requests;
-                        //var device = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
-                        //if (device != null) device = new DeviseTypes();
                         var client = requestWindow.ClientInfo.DataContext as Clients;
                         // Показываем MessageBox в основном потоке
                         MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -650,7 +626,7 @@ namespace TMC.ViewModel
 
                             // Добавление заголовка
                             Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
-                            titleParagraph.Range.Text = $"Акт о приеме на ремонт №{request.IDrequest}";
+                            titleParagraph.Range.Text = $"Акт о приеме на ремонт №{request.IdRequest}";
                             titleParagraph.Range.Font.Size = 13;
                             titleParagraph.Range.Font.Bold = 1;
                             titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
@@ -668,13 +644,13 @@ namespace TMC.ViewModel
 
                             // Заполнение таблицы данными
                             table.Cell(1, 1).Range.Text = "Клиент";
-                            table.Cell(2, 1).Range.Text = "Оборудование";
+                            table.Cell(2, 1).Range.Text = "Устройство";
                             table.Cell(3, 1).Range.Text = "Серийный номер";
                             table.Cell(4, 1).Range.Text = "Проблема со слов клиента";
                             table.Cell(5, 1).Range.Text = "Примечание";
 
                             table.Cell(1, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
-                            table.Cell(2, 2).Range.Text = $"{request.Model}";
+                            table.Cell(2, 2).Range.Text = $"{request.Device}";
                             table.Cell(3, 2).Range.Text = $"{request.IMEI_SN}";
                             table.Cell(4, 2).Range.Text = $"{request.Reason}";
                             table.Cell(5, 2).Range.Text = $"{request.Notes}";
@@ -750,7 +726,7 @@ namespace TMC.ViewModel
                           var request = requestWindow.Requests;
                           //var device = requestWindow.DeviceTypeBox.SelectedItem as DeviseTypes;
                           var client = requestWindow.ClientInfo.DataContext as Clients;
-                          var status = requestWindow.StatusBox.SelectedItem as Status;
+                          var status = requestWindow.StatusBox.SelectedItem as Statuses;
                           if (status.Name == "Готов" || status.Name == "Завершен")
                           {
                               MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -786,7 +762,7 @@ namespace TMC.ViewModel
 
                               // Добавление заголовка
                               Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
-                              titleParagraph.Range.Text = $"Акт о выполненных рвбот №{request.IDrequest} от {DateTime.Now.ToShortDateString()}";
+                              titleParagraph.Range.Text = $"Акт о выполненных рвбот №{request.IdRequest} от {DateTime.Now.ToShortDateString()}";
                               titleParagraph.Range.Font.Size = 13;
                               titleParagraph.Range.Font.Bold = 1;
                               titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
@@ -813,10 +789,10 @@ namespace TMC.ViewModel
                               table.Cell(7, 1).Range.Text = "Дата выдачи";
                               table.Cell(8, 1).Range.Text = "Гарантия";
 
-                              table.Cell(1, 2).Range.Text = $"{request.IDrequest}";
+                              table.Cell(1, 2).Range.Text = $"{request.IdRequest}";
                               table.Cell(2, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
                               table.Cell(3, 2).Range.Text = $"{client.telephone}";
-                              table.Cell(4, 2).Range.Text = $" {request.Model}";
+                              table.Cell(4, 2).Range.Text = $" {request.Device}";
                               table.Cell(5, 2).Range.Text = $"{request.IMEI_SN}";
                               table.Cell(6, 2).Range.Text = $"{request.Date}";
                               table.Cell(7, 2).Range.Text = $"{DateTime.Now.ToShortDateString()}";
@@ -839,14 +815,14 @@ namespace TMC.ViewModel
                               complitedWork.Range.Font.Bold = 1;
                               complitedWork.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
                               complitedWork.Range.InsertParagraphAfter();
-                              List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestID == request.IDrequest).ToList();
+                              List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestId == request.IdRequest).ToList();
                               //requestWindow.Show();
                               foreach (var item in request_services)
                               {
-                                  Services service = context.Services.Find(item.ServiceID);
+                                  Services service = context.Services.Find(item.ServiceId);
                                   SelectedServicesView serviceView = new SelectedServicesView
                                   {
-                                      IDService = service.IDservice,
+                                      IDService = service.IdService,
                                       Name = service.Name,
                                       Cost = service.Cost,
                                       Count = (int)item.Count
@@ -873,9 +849,9 @@ namespace TMC.ViewModel
                               // Заполнение таблицы данными из списка
                               for (int i = 0; i < request_services.Count; i++)
                               {
-                                  servicesTable.Cell(i + 2, 1).Range.Text = context.Services.Find(request_services[i].ServiceID).Name;
+                                  servicesTable.Cell(i + 2, 1).Range.Text = context.Services.Find(request_services[i].ServiceId).Name;
                                   servicesTable.Cell(i + 2, 2).Range.Text = request_services[i].Count.ToString();
-                                  servicesTable.Cell(i + 2, 3).Range.Text = context.Services.Find(request_services[i].ServiceID).Cost.ToString();
+                                  servicesTable.Cell(i + 2, 3).Range.Text = context.Services.Find(request_services[i].ServiceId).Cost.ToString();
                               }
                               Paragraph costParagraph = wordDoc.Content.Paragraphs.Add();
                               costParagraph.Range.Text = $"ИТОГ: {request.Cost} руб";

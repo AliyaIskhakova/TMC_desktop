@@ -26,7 +26,6 @@ namespace TMC.Model
         }
     
         public virtual DbSet<Clients> Clients { get; set; }
-        public virtual DbSet<DeviseTypes> DeviseTypes { get; set; }
         public virtual DbSet<Employees> Employees { get; set; }
         public virtual DbSet<RepairParts> RepairParts { get; set; }
         public virtual DbSet<Request_RepairParts> Request_RepairParts { get; set; }
@@ -34,7 +33,9 @@ namespace TMC.Model
         public virtual DbSet<Requests_Services> Requests_Services { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<Services> Services { get; set; }
-        public virtual DbSet<Status> Status { get; set; }
+        public virtual DbSet<ServiceTypes> ServiceTypes { get; set; }
+        public virtual DbSet<Statuses> Statuses { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<WriteOff_RepairParts> WriteOff_RepairParts { get; set; }
     }
 }

@@ -10,6 +10,7 @@ using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using TMC.Model;
 using TMC.View;
 
@@ -120,7 +121,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return addCommand ??= new RelayCommand((o) =>
+                return new RelayCommand((o) =>
                   {
                       try
                       {
@@ -147,23 +148,36 @@ namespace TMC.ViewModel
         {
             get
             {
-                return editCommand ??= new RelayCommand((selectedItem) =>
+                return new RelayCommand((selectedItem) =>
                   {
                       // получаем выделенный объект
                       try
                       {
-                          Clients client = selectedItem as Clients;
+                          var dataGrid = selectedItem as DataGrid;
+                          Clients client = dataGrid.SelectedItem as Clients;
                           if (client == null) return;
-
-                          ClientWindow userWindow = new ClientWindow(client);
+                          Clients vm = new Clients
+                          {
+                              IdClient = client.IdClient,
+                              Surname = client.Surname,
+                              Name = client.Name,
+                              Patronymic = client.Patronymic,
+                              Telephone = client.Telephone,
+                              Type = client.Type,
+                              CompanyName = client.CompanyName,
+                              Email = client.Email
+                          };
+                          ClientWindow userWindow = new ClientWindow(vm);
 
                           if (userWindow.ShowDialog() == true)
                           {
                               client = userWindow.Clients;
                               context.Clients.AddOrUpdate(client);
-                              //context.Entry(client).State = EntityState.Modified;
                               context.SaveChanges();
-                              ClientsList = new ObservableCollection<Clients>(context.Clients.ToList());
+                              _clients = new ObservableCollection<Clients>(context.Clients.ToList());
+                              _filteredClients = _clients;
+                              FilterPersons();
+                              dataGrid.ItemsSource = ClientsList;
                           }
 
                       }

@@ -51,7 +51,7 @@ namespace TMC.ViewModel
 
             // Добавление заголовка
             Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
-            titleParagraph.Range.Text = $"Акт о приеме на ремонт №{request.IDrequest}";
+            titleParagraph.Range.Text = $"Акт о приеме на ремонт №{request.IdRequest}";
             titleParagraph.Range.Font.Size = 13;
             titleParagraph.Range.Font.Bold = 1;
             titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
@@ -77,7 +77,7 @@ namespace TMC.ViewModel
 
             table.Cell(1, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
             //есть случай с нуливым 
-            table.Cell(2, 2).Range.Text = $"{request.Model}";
+            table.Cell(2, 2).Range.Text = $"{request.Device}";
             table.Cell(3, 2).Range.Text = $"{request.IMEI_SN}";
             table.Cell(4, 2).Range.Text = $"{request.Reason}";
             table.Cell(5, 2).Range.Text = $"{request.Notes}";
@@ -114,7 +114,7 @@ namespace TMC.ViewModel
             // Заполнение таблицы подписей
             signatureTable.Cell(1, 1).Range.Text = $"Оборудование в ремонт сдал: {client.surname} {client.name[0]}. {client.patronymic[0]}.";
             signatureTable.Cell(1, 2).Range.Text = "_____________________";
-            signatureTable.Cell(2, 1).Range.Text = $"Оборудование в ремонт принял: инженер приемщик {request.MasterID}";
+            signatureTable.Cell(2, 1).Range.Text = $"Оборудование в ремонт принял: инженер приемщик {request.MasterId}";
             signatureTable.Cell(2, 2).Range.Text = "_____________________";
 
             // Выравнивание текста в таблице подписей

@@ -12,15 +12,15 @@ namespace TMC.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class DeviseTypes
+    public partial class Statuses
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DeviseTypes()
+        public Statuses()
         {
             this.Requests = new HashSet<Requests>();
         }
     
-        public int IDtype { get; set; }
+        public int IdStatus { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

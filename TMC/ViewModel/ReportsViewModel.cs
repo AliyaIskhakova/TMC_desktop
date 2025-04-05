@@ -109,10 +109,10 @@ namespace TMC.ViewModel
         {
             using (var context = new ServiceCenterTMCEntities())
             {
-                return context.Status
+                return context.Statuses
                     .Select(s => new RequestStatistics
                     {
-                        StatusID = s.IDstatus,
+                        StatusID = s.IdStatus,
                         Count = s.Requests.Count(r => r.Date >= startDate && r.Date <= endDate)
                     })
                     .Where(s => s.Count > 0)
@@ -124,7 +124,7 @@ namespace TMC.ViewModel
         {
             using (var context = new ServiceCenterTMCEntities())
             {
-                return context.Status.Find(statusId)?.Name ?? "Неизвестный статус";
+                return context.Statuses.Find(statusId)?.Name ?? "Неизвестный статус";
             }
         }
 

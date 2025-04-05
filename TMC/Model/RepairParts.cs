@@ -18,14 +18,17 @@ namespace TMC.Model
         public RepairParts()
         {
             this.Request_RepairParts = new HashSet<Request_RepairParts>();
+            this.WriteOff_RepairParts = new HashSet<WriteOff_RepairParts>();
         }
     
-        public int IDpart { get; set; }
+        public int IdPart { get; set; }
         public string Name { get; set; }
         public int Count { get; set; }
         public double Cost { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Request_RepairParts> Request_RepairParts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WriteOff_RepairParts> WriteOff_RepairParts { get; set; }
     }
 }

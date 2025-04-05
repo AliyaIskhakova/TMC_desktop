@@ -13,6 +13,8 @@ using System.Windows;
 using TMC.Model;
 using TMC.View;
 using Xceed.Wpf.Toolkit.Primitives;
+using System.Windows.Resources;
+using System.Windows.Controls;
 
 namespace TMC.ViewModel
 {
@@ -21,14 +23,13 @@ namespace TMC.ViewModel
         ObservableCollection<Employees> _employees;
          string _searchText;
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
-        RelayCommand addCommand;
+        
         ObservableCollection<Employees> _filteredEmployees;
 
         public EmployeesViewModel()
         {
             // Инициализация данных
-            ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
-            _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
+            _employees = new ObservableCollection<Employees>(context.Employees.ToList()); 
             _filteredEmployees = new ObservableCollection<Employees>(_employees);
         }
 
@@ -74,16 +75,21 @@ namespace TMC.ViewModel
                 return new RelayCommand((o) =>
                   {
                       EmployeeWindow employeeWindow = new EmployeeWindow(new Employees());
+                      employeeWindow.newPassword.Visibility = Visibility.Collapsed;
                       employeeWindow.RoleBox.ItemsSource = context.Roles.ToList();
                       if (employeeWindow.ShowDialog() == true)
                       {
                           Employees employee = employeeWindow.Employees;
                           employee.Roles = employeeWindow.RoleBox.SelectedItem as Roles;
+                          string password = GeneratePassword();
+                          employee.Password = password;
+                          SendPassword(employee, password);
                           context.Employees.AddOrUpdate(employee);
                           context.SaveChanges();
-                          _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
+                          EmployeesList.Clear();
+                          _employees = new ObservableCollection<Employees>(context.Employees.ToList());
+                          _filteredEmployees = new ObservableCollection<Employees>(_employees);
                           FilterPersons();
-
                       }
                   });
             }
@@ -96,19 +102,35 @@ namespace TMC.ViewModel
                 {
                     try
                     {
-                        Employees employee = selectedItem as Employees;
+                        var dataGrid = selectedItem as DataGrid;
+                        Employees employee = dataGrid.SelectedItem as Employees;
                         if (employee == null) return;
-                        EmployeeWindow employeeWindow = new EmployeeWindow(employee);
+                        Employees vm = new Employees
+                        {
+                            IdEmployee = employee.IdEmployee,
+                            Surname = employee.Surname,
+                            Name = employee.Name,
+                            Patronymic = employee.Patronymic,
+                            RoleId = employee.RoleId,
+                            Telephone = employee.Telephone,
+                            Login = employee.Login,
+                            Password = employee.Password,
+                            Email = employee.Email,
+                            Roles = employee.Roles
+                        };
+                        EmployeeWindow employeeWindow = new EmployeeWindow(vm);
                         employeeWindow.RoleBox.ItemsSource = context.Roles.ToList();
-                        employeeWindow.RoleBox.SelectedItem = context.Roles.Find(employee.RoleID);
+                        employeeWindow.RoleBox.SelectedItem = context.Roles.Find(employee.RoleId);
                         if (employeeWindow.ShowDialog() == true)
                         {
                             employee = employeeWindow.Employees;
-                            employee.Roles = employeeWindow.RoleBox.SelectedItem as Roles;
+                            employee.RoleId = (employeeWindow.RoleBox.SelectedItem as Roles).IdRole;
                             context.Employees.AddOrUpdate(employee);
                             context.SaveChanges();
-                            _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
+                            _employees = new ObservableCollection<Employees>(context.Employees);
+                            _filteredEmployees = _employees;
                             FilterPersons();
+                            dataGrid.ItemsSource = EmployeesList;
                         }
                     }
                     catch (Exception ex)
@@ -130,7 +152,9 @@ namespace TMC.ViewModel
                         if (employee == null) return;
                         context.Employees.Remove(employee);
                         context.SaveChanges();
-                        _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
+                        EmployeesList.Clear();
+                        _employees = new ObservableCollection<Employees>(context.Employees.ToList());
+                        _filteredEmployees = new ObservableCollection<Employees>(_employees);
                         FilterPersons();
                     }
                     catch (Exception ex)
@@ -153,22 +177,13 @@ namespace TMC.ViewModel
                         if (employeeWindow == null) return;
 
                         Employees employee = employeeWindow.Employees;
-                        employee.password = GeneratePassword();
-                        MailAddress from = new MailAddress("aliya_iskhakova12@mail.ru", "Сервисный центр ТехноМедиаСоюз");
-                        MailAddress to = new MailAddress(employeeWindow.EmailTxt.Text);
-                        MailMessage m = new MailMessage(from, to);
-                        m.Subject = "Тест";
-                        m.Body = "<h1>Пароль: " + employee.Password + "</h1>";
-                        //user.Password = GetHashString(newPasword);
-                                                
-                        m.IsBodyHtml = true;
-                        SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
-                        smtp.Credentials = new NetworkCredential("aliya_iskhakova12@mail.ru", "HKqzZM2FQTJC3v09cmZd");
-                        smtp.EnableSsl = true;
-                        smtp.Send(m);
+                        string password = GeneratePassword();
+                        SendPassword(employee, password);
+                        employee.Password = password;
                         context.Employees.AddOrUpdate(employee);
                         context.SaveChanges();
-                        _employees = new ObservableCollection<Employees>(context.Employees.ToList()); ;
+                        _employees = new ObservableCollection<Employees>(context.Employees.ToList());
+                        _filteredEmployees = new ObservableCollection<Employees>(_employees);
                         FilterPersons();
                     }
                     catch (Exception ex)
@@ -200,6 +215,24 @@ namespace TMC.ViewModel
             }
 
             return new string(password);
+        }
+        public void SendPassword(Employees employee, string password)
+        {
+            MailAddress from = new MailAddress("aliya_iskhakova12@mail.ru", "Сервисный центр ТехноМедиаСоюз");
+            MailAddress to = new MailAddress(employee.Email);
+            MailMessage m = new MailMessage(from, to);
+            m.Subject = "Тест";
+            m.Body = "<h1>Пароль: " + password + "</h1>";
+            //user.Password = GetHashString(newPasword);
+
+            m.IsBodyHtml = true;
+            SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
+            smtp.Credentials = new NetworkCredential("aliya_iskhakova12@mail.ru", "HKqzZM2FQTJC3v09cmZd");
+            smtp.EnableSsl = true;
+            smtp.Send(m);
+
+            MessageBox.Show($"Пароль сотрудника {employee.Surname} {employee.Name} {employee.Patronymic} отправлен на почту {employee.Email}",
+                "Изменение пароля", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

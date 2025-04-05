@@ -20,23 +20,21 @@ namespace TMC.Model
         public Employees()
         {
             this.Requests = new HashSet<Requests>();
-            this.Requests1 = new HashSet<Requests>();
         }
     
-        public int IDEmployee { get; set; }
+        public int IdEmployee { get; set; }
         public string Surname { get; set; }
         public string Name { get; set; }
         public string Patronymic { get; set; }
-        public int RoleID { get; set; }
+        public int RoleId { get; set; }
         public string Telephone { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public string Email { get; set; }
     
         public virtual Roles Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests> Requests { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Requests> Requests1 { get; set; }
         public string name
         {
             get { return Name; }
@@ -91,7 +89,15 @@ namespace TMC.Model
                 OnPropertyChanged("password");
             }
         }
-
+        public string email
+        {
+            get { return Email; }
+            set
+            {
+                Email = value;
+                OnPropertyChanged("email");
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {

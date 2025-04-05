@@ -14,8 +14,8 @@ namespace TMC.Model
     
     public partial class Request_RepairParts
     {
-        public int RequestID { get; set; }
-        public int RepairPartID { get; set; }
+        public int RequestId { get; set; }
+        public int RepairPartId { get; set; }
         public int Count { get; set; }
     
         public virtual RepairParts RepairParts { get; set; }

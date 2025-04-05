@@ -220,9 +220,6 @@
     <Compile Include="Model\Clients.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\DeviseTypes.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model\Employees.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -263,10 +260,16 @@
     <Compile Include="Model\Services.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
-    <Compile Include="Model\Status.cs">
+    <Compile Include="Model\ServiceTypes.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Statuses.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\sysdiagrams.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\WriteOff_RepairParts.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\AuthorizationViewModel.cs" />
@@ -429,6 +432,8 @@
   <ItemGroup>
     <Resource Include="View\Y_MSHrGBV5U.jpg" />
     <Resource Include="Image\report.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Model\Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model.edmx</DependentUpon>

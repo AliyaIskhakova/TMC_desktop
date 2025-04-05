@@ -33,7 +33,7 @@ namespace TMC.View
                 InitializeComponent();
                 Employees = employee;
                 DataContext = employee;
-                login = employee.login;
+                login = employee.Login;
                 newPassword.DataContext = new EmployeesViewModel();
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace TMC.View
                 {
                     ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
                     var employee = context.Employees.FirstOrDefault(e => e.Login == LoginTxt.Text);
-                    if (employee == null || employee.login == login) DialogResult = true;
+                    if (employee == null || employee.Login == login) DialogResult = true;
                     else MessageBox.Show("Пользователь с таким логином уже существует", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else MessageBox.Show("Заполните обязательные поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);

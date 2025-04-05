@@ -89,20 +89,6 @@ namespace TMC
         }
 
 
-        private void DataGridRow_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            try
-            {
-                var selectedItem = (sender as DataGrid).SelectedItem;
-                var viewModel = new ClientsViewModel();
-                viewModel.EditClientCommand.Execute(selectedItem);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-        }
         private void ClientsDG_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
@@ -114,7 +100,7 @@ namespace TMC
 
                     if (row != null)
                     {
-                        var selectedItem = (sender as DataGrid).SelectedItem;
+                        var selectedItem = sender as DataGrid;
                         var viewModel = new ClientsViewModel();
                         viewModel.EditClientCommand.Execute(selectedItem);
                     }
@@ -138,7 +124,7 @@ namespace TMC
 
                     if (row != null)
                     {
-                        var selectedItem = (sender as DataGrid).SelectedItem;
+                        var selectedItem = sender as DataGrid;
                         var viewModel = new ServicesViewModel();
                         viewModel.EditServicesCommand.Execute(selectedItem);
                     }
@@ -161,7 +147,7 @@ namespace TMC
 
                     if (row != null)
                     {
-                        var selectedItem = (sender as DataGrid).SelectedItem;
+                        var selectedItem = sender as DataGrid;
                         var viewModel = new EmployeesViewModel();
                         viewModel.EditEmployeeCommand.Execute(selectedItem);
                     }
@@ -184,7 +170,7 @@ namespace TMC
 
                     if (row != null)
                     {
-                        var selectedItem = (sender as DataGrid).SelectedItem;
+                        var selectedItem = sender as DataGrid;
                         var viewModel = new StoreViewModel();
                         viewModel.EditRepairPartCommand.Execute(selectedItem);
                     }
@@ -231,7 +217,7 @@ namespace TMC
                 clickedButton.BorderThickness = new Thickness(0, 0, 0, 3);
                 clickedButton.BorderBrush = (Brush)converter.ConvertFromString("#2747BB");
                 clickedButton.FontWeight = FontWeights.Bold;
-                requestVM.SelectRequestByStatus.Execute(clickedButton.Content);
+                requestVM.SelectRequestByStatus.Execute(clickedButton.CommandParameter);
             }
             catch (Exception ex)
             {

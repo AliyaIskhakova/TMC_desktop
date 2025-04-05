@@ -12,18 +12,18 @@ namespace TMC.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Status
+    public partial class ServiceTypes
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Status()
+        public ServiceTypes()
         {
-            this.Requests = new HashSet<Requests>();
+            this.Services = new HashSet<Services>();
         }
     
-        public int IDstatus { get; set; }
+        public int IdType { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Requests> Requests { get; set; }
+        public virtual ICollection<Services> Services { get; set; }
     }
 }

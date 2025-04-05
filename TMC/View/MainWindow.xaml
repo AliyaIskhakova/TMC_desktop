@@ -197,16 +197,18 @@
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Заявки</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchRequest" Style="{StaticResource SearchBox}"></TextBox>
-                    <!--<Button x:Name="FilterBtn" >Фильтр</Button>-->
+                    <Button x:Name="FilterBtn" >Фильтр</Button>
                     <Button x:Name="AddRequest" Command="{Binding AddRequestCommand}" >+ Добавить заявку</Button>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Top" x:Name="FilterBtnGroup" Orientation="Horizontal" Margin="20 0 ">
-                    <Button Click="ButtonFilter_Click" Style="{StaticResource DefaultCheckFilter}" Content="Все"/>
-                    <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Новые" />
-                    <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="В работе" />
-                    <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Ожидание ЗИП" />
-                    <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Готовые" />
-                    <Button Click="ButtonFilter_Click" Style="{StaticResource Filter}" Content="Отменены" />
+                    <Button Click="ButtonFilter_Click" CommandParameter="Все" Style="{StaticResource DefaultCheckFilter}" Content="Все"/>
+                    <Button Click="ButtonFilter_Click" CommandParameter="Новая" Style="{StaticResource Filter}" Content="Новые" />
+                    <Button Click="ButtonFilter_Click" CommandParameter="В работе" Style="{StaticResource Filter}" Content="В работе" />
+                    <Button Click="ButtonFilter_Click" CommandParameter="Ждет ЗИП" Style="{StaticResource Filter}" Content="Ждет ЗИП" />
+                    <Button Click="ButtonFilter_Click" CommandParameter="Готова" Style="{StaticResource Filter}" Content="Готовые" />
+                    <Button Click="ButtonFilter_Click" CommandParameter="Диагностика" Style="{StaticResource Filter}" Content="На диагностике" />
+                    <Button Click="ButtonFilter_Click" CommandParameter="Завершена" Style="{StaticResource Filter}" Content="Завершенные" />
+                    <Button Click="ButtonFilter_Click" CommandParameter="Отменена" Style="{StaticResource Filter}" Content="Отменены" />
                 </StackPanel>
                 <DataGrid x:Name="RequestDG" MouseDoubleClick="RequestDG_MouseDoubleClick" ColumnWidth="Auto" ItemsSource="{Binding RequestsList}" 
                    Style="{StaticResource MainDataGrid}" >
@@ -249,7 +251,7 @@
                     </DataGrid.Resources>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding IDpart}"/>
+                        <DataGridTextColumn Header="ID" Binding="{Binding IdPart}"/>
                         <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
                         <DataGridTextColumn Header="Количество" Binding="{Binding Count}"/>
                         <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
@@ -307,7 +309,6 @@
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Услуги</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchServices" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                    <!--<Button x:Name="FilterServiceBtn" >Фильтр</Button>-->
                     <Button x:Name="PrintPriceList" Command="{Binding PrintPriceListCommand}" >Печать</Button>
                     <Button x:Name="AddService" Visibility="Collapsed" Command="{Binding AddServicesCommand}">+ Добавить</Button>
                     <Button x:Name="DeleteService" Visibility="Collapsed" Command="{Binding DeleteServicesCommand}" CommandParameter="{Binding ElementName=ServicesDG, Path=SelectedItem}">Удалить</Button>
@@ -319,7 +320,7 @@
                     </DataGrid.Resources>
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="№" Binding="{Binding IDservice}"/>
+                        <DataGridTextColumn Header="№" Binding="{Binding IdService}"/>
                         <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
                         <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
                     </DataGrid.Columns>
@@ -340,11 +341,12 @@
                     </DataGrid.Resources>
 
                     <DataGrid.Columns >
-                        <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}"/>
-                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}"/>
-                        <DataGridTextColumn Header="Телефон" Binding="{Binding Telephone}"/>
-                        <!--<DataGridTextColumn Header="Должность" Binding="{Binding Role}"/>-->
+                        <DataGridTextColumn Header="Фамилия" Binding="{Binding surname}"/>
+                        <DataGridTextColumn Header="Имя" Binding="{Binding name}"/>
+                        <DataGridTextColumn Header="Отчество" Binding="{Binding patronymic}"/>
+                        <DataGridTextColumn Header="Телефон" Binding="{Binding telephone}"/>
+                        <DataGridTextColumn Header="Почта" Binding="{Binding email}"/>
+                        <DataGridTextColumn Header="Должность" Binding="{Binding Roles.Name}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>

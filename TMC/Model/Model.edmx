@@ -7,9 +7,9 @@
       <Schema Namespace="Хранилище ServiceCenterTMCModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Clients">
           <Key>
-            <PropertyRef Name="IDClient" />
+            <PropertyRef Name="IdClient" />
           </Key>
-          <Property Name="IDClient" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdClient" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Surname" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Patronymic" Type="nvarchar(max)" />
@@ -18,95 +18,95 @@
           <Property Name="CompanyName" Type="nvarchar(max)" />
           <Property Name="Email" Type="nvarchar(max)" />
         </EntityType>
-        <EntityType Name="DeviseTypes">
-          <Key>
-            <PropertyRef Name="IDtype" />
-          </Key>
-          <Property Name="IDtype" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-        </EntityType>
         <EntityType Name="Employees">
           <Key>
-            <PropertyRef Name="IDEmployee" />
+            <PropertyRef Name="IdEmployee" />
           </Key>
-          <Property Name="IDEmployee" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdEmployee" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Surname" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Patronymic" Type="nvarchar(max)" />
-          <Property Name="RoleID" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
           <Property Name="Telephone" Type="nvarchar" MaxLength="17" Nullable="false" />
           <Property Name="Login" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Email" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="RepairParts">
           <Key>
-            <PropertyRef Name="IDpart" />
+            <PropertyRef Name="IdPart" />
           </Key>
-          <Property Name="IDpart" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPart" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Count" Type="int" Nullable="false" />
           <Property Name="Cost" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="Request_RepairParts">
           <Key>
-            <PropertyRef Name="RequestID" />
-            <PropertyRef Name="RepairPartID" />
+            <PropertyRef Name="RequestId" />
+            <PropertyRef Name="RepairPartId" />
           </Key>
-          <Property Name="RequestID" Type="int" Nullable="false" />
-          <Property Name="RepairPartID" Type="int" Nullable="false" />
+          <Property Name="RequestId" Type="int" Nullable="false" />
+          <Property Name="RepairPartId" Type="int" Nullable="false" />
           <Property Name="Count" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Requests">
           <Key>
-            <PropertyRef Name="IDrequest" />
+            <PropertyRef Name="IdRequest" />
           </Key>
-          <Property Name="IDrequest" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClientID" Type="int" Nullable="false" />
-          <Property Name="StatusID" Type="int" Nullable="false" />
+          <Property Name="IdRequest" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
           <Property Name="Reason" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Date" Type="datetime" />
-          <Property Name="DeviceType" Type="int" />
           <Property Name="Cost" Type="float" Nullable="false" />
-          <Property Name="ReceiverID" Type="int" />
           <Property Name="IMEI/SN" Type="nvarchar(max)" />
-          <Property Name="Model" Type="nvarchar(max)" />
+          <Property Name="Device" Type="nvarchar(max)" />
           <Property Name="CompletionDate" Type="datetime" />
-          <Property Name="MasterID" Type="int" />
+          <Property Name="MasterId" Type="int" />
           <Property Name="Notes" Type="nvarchar(max)" />
           <Property Name="DetectedMulfunction" Type="nvarchar(max)" />
           <Property Name="Appearance" Type="nvarchar(max)" />
           <Property Name="Address" Type="nvarchar(max)" />
+          <Property Name="Type" Type="bit" />
         </EntityType>
         <EntityType Name="Requests_Services">
           <Key>
-            <PropertyRef Name="RequestID" />
-            <PropertyRef Name="ServiceID" />
+            <PropertyRef Name="RequestId" />
+            <PropertyRef Name="ServiceId" />
           </Key>
-          <Property Name="RequestID" Type="int" Nullable="false" />
-          <Property Name="ServiceID" Type="int" Nullable="false" />
-          <Property Name="Count" Type="int" />
+          <Property Name="RequestId" Type="int" Nullable="false" />
+          <Property Name="ServiceId" Type="int" Nullable="false" />
+          <Property Name="Count" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
-            <PropertyRef Name="IDRole" />
+            <PropertyRef Name="IdRole" />
           </Key>
-          <Property Name="IDRole" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdRole" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Services">
           <Key>
-            <PropertyRef Name="IDservice" />
+            <PropertyRef Name="IdService" />
           </Key>
-          <Property Name="IDservice" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdService" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Cost" Type="float" Nullable="false" />
-          <Property Name="Warranty" Type="int" />
+          <Property Name="TypeId" Type="int" />
         </EntityType>
-        <EntityType Name="Status">
+        <EntityType Name="ServiceTypes">
           <Key>
-            <PropertyRef Name="IDstatus" />
+            <PropertyRef Name="IdType" />
           </Key>
-          <Property Name="IDstatus" Type="int" Nullable="false" />
+          <Property Name="IdType" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Statuses">
+          <Key>
+            <PropertyRef Name="IdStatus" />
+          </Key>
+          <Property Name="IdStatus" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
@@ -119,15 +119,25 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <EntityType Name="WriteOff_RepairParts">
+          <Key>
+            <PropertyRef Name="IdWriteOff" />
+          </Key>
+          <Property Name="IdWriteOff" Type="int" Nullable="false" />
+          <Property Name="RepaitPartId" Type="int" Nullable="false" />
+          <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Reson" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Employees_Roles">
           <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
           <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Roles">
-              <PropertyRef Name="IDRole" />
+              <PropertyRef Name="IdRole" />
             </Principal>
             <Dependent Role="Employees">
-              <PropertyRef Name="RoleID" />
+              <PropertyRef Name="RoleId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -136,10 +146,10 @@
           <End Role="Request_RepairParts" Type="Self.Request_RepairParts" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="RepairParts">
-              <PropertyRef Name="IDpart" />
+              <PropertyRef Name="IdPart" />
             </Principal>
             <Dependent Role="Request_RepairParts">
-              <PropertyRef Name="RepairPartID" />
+              <PropertyRef Name="RepairPartId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -150,10 +160,10 @@
           <End Role="Request_RepairParts" Type="Self.Request_RepairParts" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Requests">
-              <PropertyRef Name="IDrequest" />
+              <PropertyRef Name="IdRequest" />
             </Principal>
             <Dependent Role="Request_RepairParts">
-              <PropertyRef Name="RequestID" />
+              <PropertyRef Name="RequestId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -164,22 +174,10 @@
           <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Clients">
-              <PropertyRef Name="IDClient" />
+              <PropertyRef Name="IdClient" />
             </Principal>
             <Dependent Role="Requests">
-              <PropertyRef Name="ClientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Requests_DeviseTypes">
-          <End Role="DeviseTypes" Type="Self.DeviseTypes" Multiplicity="0..1" />
-          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DeviseTypes">
-              <PropertyRef Name="IDtype" />
-            </Principal>
-            <Dependent Role="Requests">
-              <PropertyRef Name="DeviceType" />
+              <PropertyRef Name="ClientId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -188,22 +186,10 @@
           <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Employees">
-              <PropertyRef Name="IDEmployee" />
+              <PropertyRef Name="IdEmployee" />
             </Principal>
             <Dependent Role="Requests">
-              <PropertyRef Name="MasterID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Requests_Employees1">
-          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
-          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Employees">
-              <PropertyRef Name="IDEmployee" />
-            </Principal>
-            <Dependent Role="Requests">
-              <PropertyRef Name="ReceiverID" />
+              <PropertyRef Name="MasterId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -214,10 +200,10 @@
           <End Role="Requests_Services" Type="Self.Requests_Services" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Requests">
-              <PropertyRef Name="IDrequest" />
+              <PropertyRef Name="IdRequest" />
             </Principal>
             <Dependent Role="Requests_Services">
-              <PropertyRef Name="RequestID" />
+              <PropertyRef Name="RequestId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -226,28 +212,53 @@
           <End Role="Requests_Services" Type="Self.Requests_Services" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Services">
-              <PropertyRef Name="IDservice" />
+              <PropertyRef Name="IdService" />
             </Principal>
             <Dependent Role="Requests_Services">
-              <PropertyRef Name="ServiceID" />
+              <PropertyRef Name="ServiceId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Requests_Status">
-          <End Role="Status" Type="Self.Status" Multiplicity="1" />
+          <End Role="Statuses" Type="Self.Statuses" Multiplicity="1" />
           <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Status">
-              <PropertyRef Name="IDstatus" />
+            <Principal Role="Statuses">
+              <PropertyRef Name="IdStatus" />
             </Principal>
             <Dependent Role="Requests">
-              <PropertyRef Name="StatusID" />
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Services_ServiceType">
+          <End Role="ServiceTypes" Type="Self.ServiceTypes" Multiplicity="0..1" />
+          <End Role="Services" Type="Self.Services" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceTypes">
+              <PropertyRef Name="IdType" />
+            </Principal>
+            <Dependent Role="Services">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WriteOff_RepairParts_RepairParts">
+          <End Role="RepairParts" Type="Self.RepairParts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WriteOff_RepairParts" Type="Self.WriteOff_RepairParts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairParts">
+              <PropertyRef Name="IdPart" />
+            </Principal>
+            <Dependent Role="WriteOff_RepairParts">
+              <PropertyRef Name="RepaitPartId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="Хранилище ServiceCenterTMCModelContainer">
           <EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DeviseTypes" EntityType="Self.DeviseTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employees" EntityType="Self.Employees" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RepairParts" EntityType="Self.RepairParts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Request_RepairParts" EntityType="Self.Request_RepairParts" Schema="dbo" store:Type="Tables" />
@@ -255,8 +266,10 @@
           <EntitySet Name="Requests_Services" EntityType="Self.Requests_Services" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Services" EntityType="Self.Services" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ServiceTypes" EntityType="Self.ServiceTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Statuses" EntityType="Self.Statuses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WriteOff_RepairParts" EntityType="Self.WriteOff_RepairParts" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Employees_Roles" Association="Self.FK_Employees_Roles">
             <End Role="Roles" EntitySet="Roles" />
             <End Role="Employees" EntitySet="Employees" />
@@ -273,15 +286,7 @@
             <End Role="Clients" EntitySet="Clients" />
             <End Role="Requests" EntitySet="Requests" />
           </AssociationSet>
-          <AssociationSet Name="FK_Requests_DeviseTypes" Association="Self.FK_Requests_DeviseTypes">
-            <End Role="DeviseTypes" EntitySet="DeviseTypes" />
-            <End Role="Requests" EntitySet="Requests" />
-          </AssociationSet>
           <AssociationSet Name="FK_Requests_Employees" Association="Self.FK_Requests_Employees">
-            <End Role="Employees" EntitySet="Employees" />
-            <End Role="Requests" EntitySet="Requests" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Requests_Employees1" Association="Self.FK_Requests_Employees1">
             <End Role="Employees" EntitySet="Employees" />
             <End Role="Requests" EntitySet="Requests" />
           </AssociationSet>
@@ -294,8 +299,16 @@
             <End Role="Requests_Services" EntitySet="Requests_Services" />
           </AssociationSet>
           <AssociationSet Name="FK_Requests_Status" Association="Self.FK_Requests_Status">
-            <End Role="Status" EntitySet="Status" />
+            <End Role="Statuses" EntitySet="Statuses" />
             <End Role="Requests" EntitySet="Requests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Services_ServiceType" Association="Self.FK_Services_ServiceType">
+            <End Role="ServiceTypes" EntitySet="ServiceTypes" />
+            <End Role="Services" EntitySet="Services" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WriteOff_RepairParts_RepairParts" Association="Self.FK_WriteOff_RepairParts_RepairParts">
+            <End Role="RepairParts" EntitySet="RepairParts" />
+            <End Role="WriteOff_RepairParts" EntitySet="WriteOff_RepairParts" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -305,9 +318,9 @@
       <Schema Namespace="ServiceCenterTMCModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Clients">
           <Key>
-            <PropertyRef Name="IDClient" />
+            <PropertyRef Name="IdClient" />
           </Key>
-          <Property Name="IDClient" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdClient" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Patronymic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
@@ -317,115 +330,114 @@
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Clients" FromRole="Clients" ToRole="Requests" />
         </EntityType>
-        <EntityType Name="DeviseTypes">
-          <Key>
-            <PropertyRef Name="IDtype" />
-          </Key>
-          <Property Name="IDtype" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_DeviseTypes" FromRole="DeviseTypes" ToRole="Requests" />
-        </EntityType>
         <EntityType Name="Employees">
           <Key>
-            <PropertyRef Name="IDEmployee" />
+            <PropertyRef Name="IdEmployee" />
           </Key>
-          <Property Name="IDEmployee" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdEmployee" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Surname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Patronymic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="RoleID" Type="Int32" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
           <Property Name="Telephone" Type="String" MaxLength="17" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Login" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Roles" Relationship="Self.FK_Employees_Roles" FromRole="Employees" ToRole="Roles" />
           <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Employees" FromRole="Employees" ToRole="Requests" />
-          <NavigationProperty Name="Requests1" Relationship="Self.FK_Requests_Employees1" FromRole="Employees" ToRole="Requests" />
         </EntityType>
         <EntityType Name="RepairParts">
           <Key>
-            <PropertyRef Name="IDpart" />
+            <PropertyRef Name="IdPart" />
           </Key>
-          <Property Name="IDpart" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPart" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Count" Type="Int32" Nullable="false" />
           <Property Name="Cost" Type="Double" Nullable="false" />
           <NavigationProperty Name="Request_RepairParts" Relationship="Self.FK_Request_RepairParts_RepairParts" FromRole="RepairParts" ToRole="Request_RepairParts" />
+          <NavigationProperty Name="WriteOff_RepairParts" Relationship="Self.FK_WriteOff_RepairParts_RepairParts" FromRole="RepairParts" ToRole="WriteOff_RepairParts" />
         </EntityType>
         <EntityType Name="Request_RepairParts">
           <Key>
-            <PropertyRef Name="RequestID" />
-            <PropertyRef Name="RepairPartID" />
+            <PropertyRef Name="RequestId" />
+            <PropertyRef Name="RepairPartId" />
           </Key>
-          <Property Name="RequestID" Type="Int32" Nullable="false" />
-          <Property Name="RepairPartID" Type="Int32" Nullable="false" />
+          <Property Name="RequestId" Type="Int32" Nullable="false" />
+          <Property Name="RepairPartId" Type="Int32" Nullable="false" />
           <Property Name="Count" Type="Int32" Nullable="false" />
           <NavigationProperty Name="RepairParts" Relationship="Self.FK_Request_RepairParts_RepairParts" FromRole="Request_RepairParts" ToRole="RepairParts" />
           <NavigationProperty Name="Requests" Relationship="Self.FK_Request_RepairParts_Requests" FromRole="Request_RepairParts" ToRole="Requests" />
         </EntityType>
         <EntityType Name="Requests">
           <Key>
-            <PropertyRef Name="IDrequest" />
+            <PropertyRef Name="IdRequest" />
           </Key>
-          <Property Name="IDrequest" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ClientID" Type="Int32" Nullable="false" />
-          <Property Name="StatusID" Type="Int32" Nullable="false" />
+          <Property Name="IdRequest" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" Nullable="false" />
+          <Property Name="StatusId" Type="Int32" Nullable="false" />
           <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Date" Type="DateTime" Precision="3" />
-          <Property Name="DeviceType" Type="Int32" />
           <Property Name="Cost" Type="Double" Nullable="false" />
-          <Property Name="ReceiverID" Type="Int32" />
           <Property Name="IMEI_SN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Model" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Device" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CompletionDate" Type="DateTime" Precision="3" />
-          <Property Name="MasterID" Type="Int32" />
+          <Property Name="MasterId" Type="Int32" />
           <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DetectedMulfunction" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Appearance" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="Boolean" />
           <NavigationProperty Name="Clients" Relationship="Self.FK_Requests_Clients" FromRole="Requests" ToRole="Clients" />
-          <NavigationProperty Name="DeviseTypes" Relationship="Self.FK_Requests_DeviseTypes" FromRole="Requests" ToRole="DeviseTypes" />
           <NavigationProperty Name="Employees" Relationship="Self.FK_Requests_Employees" FromRole="Requests" ToRole="Employees" />
-          <NavigationProperty Name="Employees1" Relationship="Self.FK_Requests_Employees1" FromRole="Requests" ToRole="Employees" />
           <NavigationProperty Name="Request_RepairParts" Relationship="Self.FK_Request_RepairParts_Requests" FromRole="Requests" ToRole="Request_RepairParts" />
           <NavigationProperty Name="Requests_Services" Relationship="Self.FK_Requests_Services_Requests" FromRole="Requests" ToRole="Requests_Services" />
-          <NavigationProperty Name="Status" Relationship="Self.FK_Requests_Status" FromRole="Requests" ToRole="Status" />
+          <NavigationProperty Name="Statuses" Relationship="Self.FK_Requests_Status" FromRole="Requests" ToRole="Statuses" />
         </EntityType>
         <EntityType Name="Requests_Services">
           <Key>
-            <PropertyRef Name="RequestID" />
-            <PropertyRef Name="ServiceID" />
+            <PropertyRef Name="RequestId" />
+            <PropertyRef Name="ServiceId" />
           </Key>
-          <Property Name="RequestID" Type="Int32" Nullable="false" />
-          <Property Name="ServiceID" Type="Int32" Nullable="false" />
-          <Property Name="Count" Type="Int32" />
+          <Property Name="RequestId" Type="Int32" Nullable="false" />
+          <Property Name="ServiceId" Type="Int32" Nullable="false" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Services_Requests" FromRole="Requests_Services" ToRole="Requests" />
           <NavigationProperty Name="Services" Relationship="Self.FK_Requests_Services_Services" FromRole="Requests_Services" ToRole="Services" />
         </EntityType>
         <EntityType Name="Roles">
           <Key>
-            <PropertyRef Name="IDRole" />
+            <PropertyRef Name="IdRole" />
           </Key>
-          <Property Name="IDRole" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdRole" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Employees" Relationship="Self.FK_Employees_Roles" FromRole="Roles" ToRole="Employees" />
         </EntityType>
         <EntityType Name="Services">
           <Key>
-            <PropertyRef Name="IDservice" />
+            <PropertyRef Name="IdService" />
           </Key>
-          <Property Name="IDservice" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdService" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Cost" Type="Double" Nullable="false" />
-          <Property Name="Warranty" Type="Int32" />
+          <Property Name="TypeId" Type="Int32" />
           <NavigationProperty Name="Requests_Services" Relationship="Self.FK_Requests_Services_Services" FromRole="Services" ToRole="Requests_Services" />
+          <NavigationProperty Name="ServiceTypes" Relationship="Self.FK_Services_ServiceType" FromRole="Services" ToRole="ServiceTypes" />
         </EntityType>
-        <EntityType Name="Status">
+        <EntityType Name="ServiceTypes">
           <Key>
-            <PropertyRef Name="IDstatus" />
+            <PropertyRef Name="IdType" />
           </Key>
-          <Property Name="IDstatus" Type="Int32" Nullable="false" />
+          <Property Name="IdType" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Services" Relationship="Self.FK_Services_ServiceType" FromRole="ServiceTypes" ToRole="Services" />
+        </EntityType>
+        <EntityType Name="Statuses">
+          <Key>
+            <PropertyRef Name="IdStatus" />
+          </Key>
+          <Property Name="IdStatus" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Status" FromRole="Status" ToRole="Requests" />
+          <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Status" FromRole="Statuses" ToRole="Requests" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -437,6 +449,17 @@
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
+        <EntityType Name="WriteOff_RepairParts">
+          <Key>
+            <PropertyRef Name="IdWriteOff" />
+          </Key>
+          <Property Name="IdWriteOff" Type="Int32" Nullable="false" />
+          <Property Name="RepaitPartId" Type="Int32" Nullable="false" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Reson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="RepairParts" Relationship="Self.FK_WriteOff_RepairParts_RepairParts" FromRole="WriteOff_RepairParts" ToRole="RepairParts" />
+        </EntityType>
         <Association Name="FK_Requests_Clients">
           <End Role="Clients" Type="Self.Clients" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -444,22 +467,10 @@
           <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Clients">
-              <PropertyRef Name="IDClient" />
+              <PropertyRef Name="IdClient" />
             </Principal>
             <Dependent Role="Requests">
-              <PropertyRef Name="ClientID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Requests_DeviseTypes">
-          <End Role="DeviseTypes" Type="Self.DeviseTypes" Multiplicity="0..1" />
-          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DeviseTypes">
-              <PropertyRef Name="IDtype" />
-            </Principal>
-            <Dependent Role="Requests">
-              <PropertyRef Name="DeviceType" />
+              <PropertyRef Name="ClientId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -468,10 +479,10 @@
           <End Role="Employees" Type="Self.Employees" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Roles">
-              <PropertyRef Name="IDRole" />
+              <PropertyRef Name="IdRole" />
             </Principal>
             <Dependent Role="Employees">
-              <PropertyRef Name="RoleID" />
+              <PropertyRef Name="RoleId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -480,22 +491,10 @@
           <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Employees">
-              <PropertyRef Name="IDEmployee" />
+              <PropertyRef Name="IdEmployee" />
             </Principal>
             <Dependent Role="Requests">
-              <PropertyRef Name="MasterID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Requests_Employees1">
-          <End Role="Employees" Type="Self.Employees" Multiplicity="0..1" />
-          <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Employees">
-              <PropertyRef Name="IDEmployee" />
-            </Principal>
-            <Dependent Role="Requests">
-              <PropertyRef Name="ReceiverID" />
+              <PropertyRef Name="MasterId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -504,10 +503,24 @@
           <End Role="Request_RepairParts" Type="Self.Request_RepairParts" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="RepairParts">
-              <PropertyRef Name="IDpart" />
+              <PropertyRef Name="IdPart" />
             </Principal>
             <Dependent Role="Request_RepairParts">
-              <PropertyRef Name="RepairPartID" />
+              <PropertyRef Name="RepairPartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WriteOff_RepairParts_RepairParts">
+          <End Role="RepairParts" Type="Self.RepairParts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="WriteOff_RepairParts" Type="Self.WriteOff_RepairParts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RepairParts">
+              <PropertyRef Name="IdPart" />
+            </Principal>
+            <Dependent Role="WriteOff_RepairParts">
+              <PropertyRef Name="RepaitPartId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -518,10 +531,10 @@
           <End Role="Request_RepairParts" Type="Self.Request_RepairParts" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Requests">
-              <PropertyRef Name="IDrequest" />
+              <PropertyRef Name="IdRequest" />
             </Principal>
             <Dependent Role="Request_RepairParts">
-              <PropertyRef Name="RequestID" />
+              <PropertyRef Name="RequestId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -532,22 +545,22 @@
           <End Role="Requests_Services" Type="Self.Requests_Services" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Requests">
-              <PropertyRef Name="IDrequest" />
+              <PropertyRef Name="IdRequest" />
             </Principal>
             <Dependent Role="Requests_Services">
-              <PropertyRef Name="RequestID" />
+              <PropertyRef Name="RequestId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Requests_Status">
-          <End Role="Status" Type="Self.Status" Multiplicity="1" />
+          <End Role="Statuses" Type="Self.Statuses" Multiplicity="1" />
           <End Role="Requests" Type="Self.Requests" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Status">
-              <PropertyRef Name="IDstatus" />
+            <Principal Role="Statuses">
+              <PropertyRef Name="IdStatus" />
             </Principal>
             <Dependent Role="Requests">
-              <PropertyRef Name="StatusID" />
+              <PropertyRef Name="StatusId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -556,16 +569,27 @@
           <End Role="Requests_Services" Type="Self.Requests_Services" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Services">
-              <PropertyRef Name="IDservice" />
+              <PropertyRef Name="IdService" />
             </Principal>
             <Dependent Role="Requests_Services">
-              <PropertyRef Name="ServiceID" />
+              <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Services_ServiceType">
+          <End Role="ServiceTypes" Type="Self.ServiceTypes" Multiplicity="0..1" />
+          <End Role="Services" Type="Self.Services" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ServiceTypes">
+              <PropertyRef Name="IdType" />
+            </Principal>
+            <Dependent Role="Services">
+              <PropertyRef Name="TypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="ServiceCenterTMCEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Clients" EntityType="Self.Clients" />
-          <EntitySet Name="DeviseTypes" EntityType="Self.DeviseTypes" />
           <EntitySet Name="Employees" EntityType="Self.Employees" />
           <EntitySet Name="RepairParts" EntityType="Self.RepairParts" />
           <EntitySet Name="Request_RepairParts" EntityType="Self.Request_RepairParts" />
@@ -573,14 +597,12 @@
           <EntitySet Name="Requests_Services" EntityType="Self.Requests_Services" />
           <EntitySet Name="Roles" EntityType="Self.Roles" />
           <EntitySet Name="Services" EntityType="Self.Services" />
-          <EntitySet Name="Status" EntityType="Self.Status" />
+          <EntitySet Name="ServiceTypes" EntityType="Self.ServiceTypes" />
+          <EntitySet Name="Statuses" EntityType="Self.Statuses" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="WriteOff_RepairParts" EntityType="Self.WriteOff_RepairParts" />
           <AssociationSet Name="FK_Requests_Clients" Association="Self.FK_Requests_Clients">
             <End Role="Clients" EntitySet="Clients" />
-            <End Role="Requests" EntitySet="Requests" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Requests_DeviseTypes" Association="Self.FK_Requests_DeviseTypes">
-            <End Role="DeviseTypes" EntitySet="DeviseTypes" />
             <End Role="Requests" EntitySet="Requests" />
           </AssociationSet>
           <AssociationSet Name="FK_Employees_Roles" Association="Self.FK_Employees_Roles">
@@ -591,13 +613,13 @@
             <End Role="Employees" EntitySet="Employees" />
             <End Role="Requests" EntitySet="Requests" />
           </AssociationSet>
-          <AssociationSet Name="FK_Requests_Employees1" Association="Self.FK_Requests_Employees1">
-            <End Role="Employees" EntitySet="Employees" />
-            <End Role="Requests" EntitySet="Requests" />
-          </AssociationSet>
           <AssociationSet Name="FK_Request_RepairParts_RepairParts" Association="Self.FK_Request_RepairParts_RepairParts">
             <End Role="RepairParts" EntitySet="RepairParts" />
             <End Role="Request_RepairParts" EntitySet="Request_RepairParts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WriteOff_RepairParts_RepairParts" Association="Self.FK_WriteOff_RepairParts_RepairParts">
+            <End Role="RepairParts" EntitySet="RepairParts" />
+            <End Role="WriteOff_RepairParts" EntitySet="WriteOff_RepairParts" />
           </AssociationSet>
           <AssociationSet Name="FK_Request_RepairParts_Requests" Association="Self.FK_Request_RepairParts_Requests">
             <End Role="Requests" EntitySet="Requests" />
@@ -608,12 +630,16 @@
             <End Role="Requests_Services" EntitySet="Requests_Services" />
           </AssociationSet>
           <AssociationSet Name="FK_Requests_Status" Association="Self.FK_Requests_Status">
-            <End Role="Status" EntitySet="Status" />
+            <End Role="Statuses" EntitySet="Statuses" />
             <End Role="Requests" EntitySet="Requests" />
           </AssociationSet>
           <AssociationSet Name="FK_Requests_Services_Services" Association="Self.FK_Requests_Services_Services">
             <End Role="Services" EntitySet="Services" />
             <End Role="Requests_Services" EntitySet="Requests_Services" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Services_ServiceType" Association="Self.FK_Services_ServiceType">
+            <End Role="ServiceTypes" EntitySet="ServiceTypes" />
+            <End Role="Services" EntitySet="Services" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -625,7 +651,7 @@
           <EntitySetMapping Name="Clients">
             <EntityTypeMapping TypeName="ServiceCenterTMCModel.Clients">
               <MappingFragment StoreEntitySet="Clients">
-                <ScalarProperty Name="IDClient" ColumnName="IDClient" />
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
@@ -636,32 +662,25 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DeviseTypes">
-            <EntityTypeMapping TypeName="ServiceCenterTMCModel.DeviseTypes">
-              <MappingFragment StoreEntitySet="DeviseTypes">
-                <ScalarProperty Name="IDtype" ColumnName="IDtype" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="ServiceCenterTMCModel.Employees">
               <MappingFragment StoreEntitySet="Employees">
-                <ScalarProperty Name="IDEmployee" ColumnName="IDEmployee" />
+                <ScalarProperty Name="IdEmployee" ColumnName="IdEmployee" />
                 <ScalarProperty Name="Surname" ColumnName="Surname" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="Telephone" ColumnName="Telephone" />
                 <ScalarProperty Name="Login" ColumnName="Login" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="RepairParts">
             <EntityTypeMapping TypeName="ServiceCenterTMCModel.RepairParts">
               <MappingFragment StoreEntitySet="RepairParts">
-                <ScalarProperty Name="IDpart" ColumnName="IDpart" />
+                <ScalarProperty Name="IdPart" ColumnName="IdPart" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
                 <ScalarProperty Name="Cost" ColumnName="Cost" />
@@ -671,8 +690,8 @@
           <EntitySetMapping Name="Request_RepairParts">
             <EntityTypeMapping TypeName="ServiceCenterTMCModel.Request_RepairParts">
               <MappingFragment StoreEntitySet="Request_RepairParts">
-                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
-                <ScalarProperty Name="RepairPartID" ColumnName="RepairPartID" />
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="RepairPartId" ColumnName="RepairPartId" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -680,30 +699,29 @@
           <EntitySetMapping Name="Requests">
             <EntityTypeMapping TypeName="ServiceCenterTMCModel.Requests">
               <MappingFragment StoreEntitySet="Requests">
-                <ScalarProperty Name="IDrequest" ColumnName="IDrequest" />
-                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
-                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="IdRequest" ColumnName="IdRequest" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
                 <ScalarProperty Name="Reason" ColumnName="Reason" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="DeviceType" ColumnName="DeviceType" />
                 <ScalarProperty Name="Cost" ColumnName="Cost" />
-                <ScalarProperty Name="ReceiverID" ColumnName="ReceiverID" />
                 <ScalarProperty Name="IMEI_SN" ColumnName="IMEI/SN" />
-                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="Device" ColumnName="Device" />
                 <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
-                <ScalarProperty Name="MasterID" ColumnName="MasterID" />
+                <ScalarProperty Name="MasterId" ColumnName="MasterId" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="DetectedMulfunction" ColumnName="DetectedMulfunction" />
                 <ScalarProperty Name="Appearance" ColumnName="Appearance" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Requests_Services">
             <EntityTypeMapping TypeName="ServiceCenterTMCModel.Requests_Services">
               <MappingFragment StoreEntitySet="Requests_Services">
-                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
-                <ScalarProperty Name="ServiceID" ColumnName="ServiceID" />
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -711,7 +729,7 @@
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="ServiceCenterTMCModel.Roles">
               <MappingFragment StoreEntitySet="Roles">
-                <ScalarProperty Name="IDRole" ColumnName="IDRole" />
+                <ScalarProperty Name="IdRole" ColumnName="IdRole" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -719,17 +737,25 @@
           <EntitySetMapping Name="Services">
             <EntityTypeMapping TypeName="ServiceCenterTMCModel.Services">
               <MappingFragment StoreEntitySet="Services">
-                <ScalarProperty Name="IDservice" ColumnName="IDservice" />
+                <ScalarProperty Name="IdService" ColumnName="IdService" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Cost" ColumnName="Cost" />
-                <ScalarProperty Name="Warranty" ColumnName="Warranty" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Status">
-            <EntityTypeMapping TypeName="ServiceCenterTMCModel.Status">
-              <MappingFragment StoreEntitySet="Status">
-                <ScalarProperty Name="IDstatus" ColumnName="IDstatus" />
+          <EntitySetMapping Name="ServiceTypes">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.ServiceTypes">
+              <MappingFragment StoreEntitySet="ServiceTypes">
+                <ScalarProperty Name="IdType" ColumnName="IdType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Statuses">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.Statuses">
+              <MappingFragment StoreEntitySet="Statuses">
+                <ScalarProperty Name="IdStatus" ColumnName="IdStatus" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -742,6 +768,17 @@
                 <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
                 <ScalarProperty Name="version" ColumnName="version" />
                 <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WriteOff_RepairParts">
+            <EntityTypeMapping TypeName="ServiceCenterTMCModel.WriteOff_RepairParts">
+              <MappingFragment StoreEntitySet="WriteOff_RepairParts">
+                <ScalarProperty Name="IdWriteOff" ColumnName="IdWriteOff" />
+                <ScalarProperty Name="RepaitPartId" ColumnName="RepaitPartId" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Reson" ColumnName="Reson" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

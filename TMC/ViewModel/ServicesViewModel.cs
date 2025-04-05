@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using TMC.Model;
 using TMC.View;
 using Xceed.Wpf.Toolkit.Primitives;
@@ -154,17 +155,26 @@ namespace TMC.ViewModel
                 {
                     try
                     {
-                        Services service = selectedItem as Services;
+                        var dataGrid = selectedItem as DataGrid;
+                        Services service = dataGrid.SelectedItem as Services;
                         if (service == null) return;
-                        ServiceWindow serviceWindow = new ServiceWindow(service);
+                        Services vm = new Services
+                        {
+                            IdService = service.IdService,
+                            Name = service.Name,
+                            Cost = service.Cost,
+                            TypeId = service.TypeId
+                        };
+                        ServiceWindow serviceWindow = new ServiceWindow(vm);
                         if (serviceWindow.ShowDialog() == true)
                         {
                             service = serviceWindow.Services;
                             context.Services.AddOrUpdate(service);
                             context.SaveChanges();
                             _services = new ObservableCollection<Services>(context.Services.ToList());
-
+                            _filteredServices = _services;
                             FilterServices();
+                            dataGrid.ItemsSource = ServicesList;
                         }
                     }
                     catch (Exception e)
@@ -268,7 +278,7 @@ namespace TMC.ViewModel
                           // Заполнение таблицы данными из списка
                           for (int i = 0; i < ServicesList.Count; i++)
                           {
-                              servicesTable.Cell(i + 2, 1).Range.Text = ServicesList[i].IDservice.ToString();
+                              servicesTable.Cell(i + 2, 1).Range.Text = ServicesList[i].IdService.ToString();
                               servicesTable.Cell(i + 2, 2).Range.Text = ServicesList[i].Name;
                               servicesTable.Cell(i + 2, 3).Range.Text = ServicesList[i].Cost.ToString();
                           }

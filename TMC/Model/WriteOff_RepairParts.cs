@@ -12,13 +12,14 @@ namespace TMC.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class Requests_Services
+    public partial class WriteOff_RepairParts
     {
-        public int RequestId { get; set; }
-        public int ServiceId { get; set; }
+        public int IdWriteOff { get; set; }
+        public int RepaitPartId { get; set; }
         public int Count { get; set; }
+        public System.DateTime Date { get; set; }
+        public string Reson { get; set; }
     
-        public virtual Requests Requests { get; set; }
-        public virtual Services Services { get; set; }
+        public virtual RepairParts RepairParts { get; set; }
     }
 }

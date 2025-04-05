@@ -30,7 +30,7 @@ namespace TMC.ViewModel
                               Employees employee = context.Employees.Where(u => u.Login == wi.loginBox.Text && u.Password == wi.passwordBox.Password).FirstOrDefault();
                               if (employee != null)
                               {
-                                  Application.Current.Properties["UserID"] = employee.IDEmployee;
+                                  Application.Current.Properties["UserID"] = employee.IdEmployee;
                                   Application.Current.Properties["Role"] = employee.Roles.Name;
                                   MainWindow mainWindow = new MainWindow();
                                   switch (employee.Roles.Name)

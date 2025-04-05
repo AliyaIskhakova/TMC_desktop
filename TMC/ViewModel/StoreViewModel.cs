@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls.WebParts;
 using System.Windows;
+using System.Windows.Controls;
 using TMC.Model;
 using TMC.View;
 
@@ -145,18 +146,30 @@ namespace TMC.ViewModel
         {
             get
             {
-                return new RelayCommand((o) =>
+                return new RelayCommand((selectedItem) =>
                 {
                     try
                     {
-                        RepairParts selectedPart = o as RepairParts;
-                        RepairPartWindow repairPartWindow = new RepairPartWindow(selectedPart);
+                        var dataGrid = selectedItem as DataGrid;
+                        RepairParts part = dataGrid.SelectedItem as RepairParts;
+                        if (part == null) return;
+                        RepairParts vm = new RepairParts
+                        {
+                            IdPart = part.IdPart,
+                            Name = part.Name,
+                            Cost = part.Cost,
+                            Count = part.Count
+                        };
+                        RepairPartWindow repairPartWindow = new RepairPartWindow(vm);
                         if (repairPartWindow.ShowDialog() == true)
                         {
-
-                            context.RepairParts.AddOrUpdate(selectedPart);
+                            part = repairPartWindow.RepairParts;
+                            context.RepairParts.AddOrUpdate(part);
                             context.SaveChanges();
-                            RepairPartsList = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
+                            _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
+                            _filteredParts = _parts;
+                            FilterParts();
+                            dataGrid.ItemsSource = RepairPartsList;
                         }
                     }
                     catch (Exception ex)

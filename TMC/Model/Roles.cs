@@ -20,7 +20,7 @@ namespace TMC.Model
             this.Employees = new HashSet<Employees>();
         }
     
-        public int IDRole { get; set; }
+        public int IdRole { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
