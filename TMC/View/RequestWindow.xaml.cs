@@ -132,10 +132,7 @@ namespace TMC.View
             Address.Visibility = Visibility.Visible;
         }
 
-        private void viezd_Checked_1(object sender, RoutedEventArgs e)
-        {
-
-        }
+        
 
         private void viezd_Unchecked(object sender, RoutedEventArgs e)
         {

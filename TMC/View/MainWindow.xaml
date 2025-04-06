@@ -245,18 +245,39 @@
                     <TextBox x:Name="SearchParts" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Button x:Name="AddReraipPart" Command="{Binding AddRepairPartCommand}" >+ Добавить</Button>
                 </StackPanel>
-                <DataGrid x:Name="StoreDG" MouseDoubleClick="StoreDG_MouseDoubleClick" ItemsSource="{Binding RepairPartsList}" Style="{StaticResource MainDataGrid}" >
-                    <DataGrid.Resources>
-                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                    </DataGrid.Resources>
+                <StackPanel DockPanel.Dock="Top" x:Name="BtnGroup" Orientation="Horizontal" Margin="20 0 ">
+                    <Button Click="StoreBtn_Click" CommandParameter="0" Style="{StaticResource DefaultCheckFilter}" Content="Склад ЗИП"/>
+                    <Button Click="StoreBtn_Click" CommandParameter="1" Style="{StaticResource Filter}" Content="Списания" />
+                </StackPanel>
+                <Grid>
+                    <DataGrid x:Name="StoreDG" MouseDoubleClick="StoreDG_MouseDoubleClick" ItemsSource="{Binding RepairPartsList}" Style="{StaticResource MainDataGrid}" >
+                        <DataGrid.Resources>
+                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                        </DataGrid.Resources>
 
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding IdPart}"/>
-                        <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="Количество" Binding="{Binding Count}"/>
-                        <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding IdPart}"/>
+                            <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="Количество" Binding="{Binding Count}"/>
+                            <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <DataGrid x:Name="WriteOffDG" Visibility="Collapsed" ItemsSource="{Binding WriteOffList}" Style="{StaticResource MainDataGrid}" >
+                        <DataGrid.Resources>
+                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                        </DataGrid.Resources>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding RepairPartId}"/>
+                            <DataGridTextColumn Header="Название" Binding="{Binding RepairParts.Name}"/>
+                            <DataGridTextColumn Header="Количество" Binding="{Binding Count}"/>
+                            <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat=dd.MM.yyyy}"/>
+                            <DataGridTextColumn Header="Комментарий" Binding="{Binding Reson}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+           
             </DockPanel>
         </Grid>
         <Grid x:Name="ClientsWindow" Visibility="Collapsed"  Grid.Column="1">
@@ -335,6 +356,7 @@
                     <Button x:Name="AddEmployee" Visibility="Collapsed" Command="{Binding AddEmployeeCommand}">+ Добавить</Button>
                     <Button x:Name="DeleteEmployee" Visibility="Collapsed" Command="{Binding DeleteEmployeeCommand}" CommandParameter="{Binding ElementName=EmployeesDG, Path=SelectedItem}">Удалить</Button>
                 </StackPanel>
+                
                 <DataGrid x:Name="EmployeesDG" MouseDoubleClick="EmployeesDG_MouseDoubleClick" ItemsSource="{Binding EmployeesList}" Style="{StaticResource MainDataGrid}">
                     <DataGrid.Resources>
                         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
@@ -352,39 +374,169 @@
             </DockPanel>
         </Grid>
         <Grid x:Name="ResultsWindow" Visibility="Collapsed" Grid.Column="1">
-            <DockPanel>
-                <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}">Отчет</Label>
-                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                    <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" Margin="20 0 0 0">За период от</Label>
-                    <DatePicker x:Name="StartDate" SelectedDate="{Binding StartDate, Mode=TwoWay}"   ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности" >
-                        <DatePicker.Resources>
-                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                        </DatePicker.Resources>
-                    </DatePicker>
-                    <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" Margin="0">до</Label>
-                    <DatePicker x:Name="EndDate" SelectedDate="{Binding EndDate, Mode=TwoWay}"   ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности" >
-                        <DatePicker.Resources>
-                            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                        </DatePicker.Resources>
-                    </DatePicker>
-                    <Button x:Name="Search" Command="{Binding LoadDataCommand}" >ОК</Button>
-                </StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Border CornerRadius="10" Margin="20 10" BorderThickness="2" BorderBrush="DarkSlateBlue">
-                        <StackPanel>
-                            <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заявки</Label>
-                            <lvc:PieChart VerticalAlignment="Center" Height="300" Series="{Binding PieSeries}">
-                                
-                            </lvc:PieChart>
-                        </StackPanel>
-                    </Border>
-                </Grid>
-            </DockPanel>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <DockPanel>
+                    <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}">Отчет</Label>
 
+                    <!-- Date Range Selector -->
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+                        <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">За период от</Label>
+                        <DatePicker x:Name="StartDate" SelectedDate="{Binding StartDate, Mode=TwoWay}" 
+                           ui:ControlsHelper.CornerRadius="5" Margin="0 5" BorderBrush="Gray" 
+                           BorderThickness="1.5" Background="White" 
+                           ui:DatePickerHelper.DropDownButtonFontSize="14" 
+                           FirstDayOfWeek="Monday" Text="Дата готовности" 
+                           ui:TextBoxHelper.Watermark="Дата готовности" Width="150">
+                            <DatePicker.Resources>
+                                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                            </DatePicker.Resources>
+                        </DatePicker>
+                        <Label Style="{StaticResource WindowTitle}" Margin="0">до</Label>
+                        <DatePicker x:Name="EndDate" SelectedDate="{Binding EndDate, Mode=TwoWay}" 
+                           ui:ControlsHelper.CornerRadius="5" Margin="0 5" BorderBrush="Gray" 
+                           BorderThickness="1.5" Background="White" 
+                           ui:DatePickerHelper.DropDownButtonFontSize="14" 
+                           FirstDayOfWeek="Monday" Text="Дата готовности" 
+                           ui:TextBoxHelper.Watermark="Дата готовности" Width="150">
+                            <DatePicker.Resources>
+                                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                            </DatePicker.Resources>
+                        </DatePicker>
+                        <Button x:Name="Search" Command="{Binding LoadDataCommand}" Margin="10,0,0,0" Width="60">ОК</Button>
+                    </StackPanel>
+
+                    <!-- Statistics Content -->
+                    <Grid MinWidth="900">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Summary Cards -->
+                        <WrapPanel Grid.Row="0" Margin="10">
+                            <Border Width="250" Height="120" Margin="5">
+                                <StackPanel>
+                                    <TextBlock Text="Всего заказов" FontWeight="Bold" Foreground="#555"/>
+                                    <TextBlock Text="{Binding TotalOrders}" FontSize="28" FontWeight="Bold" Foreground="#0078D7"/>
+                                    <TextBlock Text="{Binding CompletedOrders, StringFormat='Выполнено: {0}'}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Width="250" Height="120" Margin="5">
+                                <StackPanel>
+                                    <TextBlock Text="Общая сумма" FontWeight="Bold" Foreground="#555"/>
+                                    <TextBlock Text="{Binding TotalRevenue}" FontSize="28" FontWeight="Bold" Foreground="#107C10"/>
+                                    <TextBlock Text="за выполненные услуги"/>
+                                </StackPanel>
+                            </Border>
+                        </WrapPanel>
+
+                        <!-- Charts -->
+                        <Grid Grid.Row="1" Margin="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- First Row of Charts -->
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Orders by Status -->
+                                <Border Grid.Column="0" CornerRadius="10" Margin="10" BorderThickness="2" BorderBrush="DarkSlateBlue">
+                                    <StackPanel>
+                                        <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заявки по статусам</Label>
+                                        <lvc:PieChart VerticalAlignment="Center" Height="350" Series="{Binding PieSeries}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Orders by Employee -->
+                                <Border Grid.Column="1" CornerRadius="10" Margin="10" BorderThickness="2" BorderBrush="DarkSlateBlue">
+                                    <StackPanel>
+                                        <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заказы по сотрудникам</Label>
+                                        <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding EmployeeOrdersSeries}">
+                                            <lvc:CartesianChart.AxisX>
+                                                <lvc:Axis Labels="{Binding EmployeeFullNames}" 
+                                                  LabelsRotation="-45"
+                                                  FontSize="12"
+                                                  Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
+                                            </lvc:CartesianChart.AxisX>
+                                            <lvc:CartesianChart.AxisY>
+                                                <lvc:Axis Title="Количество заказов"/>
+                                            </lvc:CartesianChart.AxisY>
+                                        </lvc:CartesianChart>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <!-- Second Row of Charts -->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Revenue by Employee -->
+                                <Border Grid.Column="0" CornerRadius="10" Margin="10" BorderThickness="2" BorderBrush="DarkSlateBlue">
+                                    <StackPanel>
+                                        <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Выручка по сотрудникам</Label>
+                                        <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding EmployeeRevenueSeries}">
+                                            <lvc:CartesianChart.AxisX>
+                                                <lvc:Axis Labels="{Binding EmployeeFullNames}" 
+                                                  LabelsRotation="-45"
+                                                  FontSize="12"
+                                                  Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
+                                            </lvc:CartesianChart.AxisX>
+                                            <lvc:CartesianChart.AxisY>
+                                                <lvc:Axis Title="Сумма (руб)" LabelFormatter="{Binding CurrencyFormatter}"/>
+                                            </lvc:CartesianChart.AxisY>
+                                        </lvc:CartesianChart>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Employee Details -->
+                                <Border Grid.Column="1" CornerRadius="10" Margin="10" BorderThickness="2" BorderBrush="DarkSlateBlue">
+                                    <StackPanel>
+                                        <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Детализация по сотрудникам</Label>
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" Height="350">
+                                            <ListView ItemsSource="{Binding EmployeeStats}" BorderThickness="0" Width="450">
+                                                <ListView.View>
+                                                    <GridView>
+                                                        <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding FullName}" Width="200"/>
+                                                        <GridViewColumn Header="Выполнено" DisplayMemberBinding="{Binding CompletedOrders}" Width="80"/>
+                                                        <GridViewColumn Header="Всего" DisplayMemberBinding="{Binding TotalOrders}" Width="80"/>
+                                                        <GridViewColumn Header="Выручка" DisplayMemberBinding="{Binding Revenue}" Width="100"/>
+                                                        <GridViewColumn Header="Услуги" Width="300">
+                                                            <GridViewColumn.CellTemplate>
+                                                                <DataTemplate>
+                                                                    <ItemsControl ItemsSource="{Binding Services}">
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <StackPanel Orientation="Horizontal">
+                                                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                                                                    <TextBlock Text="{Binding Count, StringFormat=' (x{0})'}"/>
+                                                                                    <TextBlock Text="{Binding Cost, StringFormat=' - {0:C}'}"/>
+                                                                                </StackPanel>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                </DataTemplate>
+                                                            </GridViewColumn.CellTemplate>
+                                                        </GridViewColumn>
+                                                    </GridView>
+                                                </ListView.View>
+                                            </ListView>
+                                        </ScrollViewer>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </DockPanel>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>

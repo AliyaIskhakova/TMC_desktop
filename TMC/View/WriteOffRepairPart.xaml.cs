@@ -11,36 +11,19 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using TMC.Model;
-using TMC.ViewModel;
 
 namespace TMC.View
 {
     /// <summary>
-    /// Логика взаимодействия для RepairPartWindow.xaml
+    /// Логика взаимодействия для WriteOffRepairPart.xaml
     /// </summary>
-    public partial class RepairPartWindow : Window
+    public partial class WriteOffRepairPart : Window
     {
-        public RepairParts RepairParts { get; private set; }
-
-        public RepairPartWindow(RepairParts repairParts)
+        int _countPart;
+        public WriteOffRepairPart(int countPart)
         {
             InitializeComponent();
-            RepairParts = repairParts;
-            DataContext = repairParts;
-            WriteOffBtn.DataContext = new StoreViewModel();
-        }
-        void Accept_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(PartName.Text) && int.TryParse(PartCount.Text, out int count) && double.TryParse(PartCost.Text, out double cost) && cost >= 0 && count >= 1) DialogResult = true;
-                else MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            _countPart = countPart;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -48,9 +31,20 @@ namespace TMC.View
             this.Close();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        void Accept_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            try
+            {
+                if (int.TryParse(PartCount.Text, out int count) && count >= 1) {
+                    if (_countPart >= count) DialogResult = true;
+                    else MessageBox.Show("Вы пытаетесь списать больше ЗИП, чем есть на складе!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

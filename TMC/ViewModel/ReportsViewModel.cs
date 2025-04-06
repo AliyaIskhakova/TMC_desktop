@@ -1,8 +1,8 @@
-﻿using LiveCharts.Defaults;
+﻿using LiveCharts;
 using LiveCharts.Wpf;
-using LiveCharts;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -14,13 +14,21 @@ namespace TMC.ViewModel
 {
     public class ReportsViewModel : INotifyPropertyChanged
     {
-        private DateTime? _startDate;
-        private DateTime? _endDate;
+        private DateTime? _startDate = DateTime.Now.AddMonths(-1);
+        private DateTime? _endDate = DateTime.Now;
         private SeriesCollection _pieSeries;
+        private SeriesCollection _employeeOrdersSeries;
+        private SeriesCollection _employeeRevenueSeries;
+        private ObservableCollection<EmployeeStat> _employeeStats;
+        private int _totalOrders;
+        private int _completedOrders;
+        private decimal _totalRevenue;
+        private List<string> _employeeFullNames;
 
         public ReportsViewModel()
         {
             LoadDataCommand = new RelayCommand(LoadData, CanLoadData);
+            LoadData(null);
         }
 
         public DateTime? StartDate
@@ -58,6 +66,83 @@ namespace TMC.ViewModel
             }
         }
 
+        public SeriesCollection EmployeeOrdersSeries
+        {
+            get => _employeeOrdersSeries;
+            private set
+            {
+                if (_employeeOrdersSeries == value) return;
+                _employeeOrdersSeries = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public SeriesCollection EmployeeRevenueSeries
+        {
+            get => _employeeRevenueSeries;
+            private set
+            {
+                if (_employeeRevenueSeries == value) return;
+                _employeeRevenueSeries = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<EmployeeStat> EmployeeStats
+        {
+            get => _employeeStats;
+            private set
+            {
+                if (_employeeStats == value) return;
+                _employeeStats = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public List<string> EmployeeFullNames
+        {
+            get => _employeeFullNames;
+            private set
+            {
+                if (_employeeFullNames == value) return;
+                _employeeFullNames = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int TotalOrders
+        {
+            get => _totalOrders;
+            private set
+            {
+                if (_totalOrders == value) return;
+                _totalOrders = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int CompletedOrders
+        {
+            get => _completedOrders;
+            private set
+            {
+                if (_completedOrders == value) return;
+                _completedOrders = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public decimal TotalRevenue
+        {
+            get => _totalRevenue;
+            private set
+            {
+                if (_totalRevenue == value) return;
+                _totalRevenue = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand LoadDataCommand { get; }
 
         private bool CanLoadData(object parameter)
@@ -71,13 +156,91 @@ namespace TMC.ViewModel
 
             try
             {
-                var statistics = GetRequestStatistics(StartDate.Value, EndDate.Value);
-                PieSeries = CreatePieSeries(statistics);
+                using (var context = new ServiceCenterTMCEntities())
+                {
+                    var startDate = StartDate.Value;
+                    var endDate = EndDate.Value;
+
+                    // Load status statistics
+                    var statusStatistics = context.Statuses
+                        .Select(s => new RequestStatistics
+                        {
+                            StatusID = s.IdStatus,
+                            Count = s.Requests.Count(r => r.Date >= startDate && r.Date <= endDate)
+                        })
+                        .Where(s => s.Count > 0)
+                        .ToList();
+
+                    PieSeries = CreatePieSeries(statusStatistics);
+
+                    // Load employee statistics
+                    var requests = context.Requests
+                        .Where(r => r.Date >= startDate && r.Date <= endDate)
+                        .ToList();
+
+                    ProcessEmployeeStatistics(requests);
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка при загрузке данных: {ex.Message}");
             }
+        }
+
+        private void ProcessEmployeeStatistics(List<Requests> requests)
+        {
+            TotalOrders = requests.Count;
+            CompletedOrders = requests.Count(r => r.StatusId == 5);
+            TotalRevenue = (decimal)requests.Sum(r => r.Cost);
+
+            var employeeGroups = requests
+                .Where(r => r.MasterId.HasValue)
+                .GroupBy(r => r.Employees)
+                .Select(g => new EmployeeStat
+                {
+                    Employee = g.Key,
+                    CompletedOrders = g.Count(r => r.StatusId == 5),
+                    TotalOrders = g.Count(),
+                    Revenue = (decimal)g.Sum(r => r.Cost),
+                    Services = g.SelectMany(r => r.Requests_Services)
+                        .GroupBy(rs => rs.Services)
+                        .Select(sg => new ServiceStat
+                        {
+                            Name = sg.Key.Name,
+                            Count = sg.Sum(x => x.Count),
+                            Cost = (decimal)sg.Sum(x => x.Count * sg.Key.Cost)
+                        }).ToList()
+                })
+                .OrderByDescending(e => e.Revenue)
+                .ToList();
+
+            EmployeeStats = new ObservableCollection<EmployeeStat>(employeeGroups);
+            EmployeeFullNames = employeeGroups.Select(e => e.FullName).ToList();
+
+            // Prepare chart data with full names
+            EmployeeOrdersSeries = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Выполненные заказы",
+                    Values = new ChartValues<int>(employeeGroups.Select(e => e.CompletedOrders)),
+                    DataLabels = true,
+                    LabelPoint = point => $"{point.Y}",
+                    Fill = Brushes.DodgerBlue
+                }
+            };
+
+            EmployeeRevenueSeries = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Выручка",
+                    Values = new ChartValues<decimal>(employeeGroups.Select(e => e.Revenue)),
+                    DataLabels = true,
+                    LabelPoint = point => $"{point.Y:C}",
+                    Fill = Brushes.MediumSeaGreen
+                }
+            };
         }
 
         private SeriesCollection CreatePieSeries(List<RequestStatistics> statistics)
@@ -105,21 +268,6 @@ namespace TMC.ViewModel
             return series;
         }
 
-        public List<RequestStatistics> GetRequestStatistics(DateTime startDate, DateTime endDate)
-        {
-            using (var context = new ServiceCenterTMCEntities())
-            {
-                return context.Statuses
-                    .Select(s => new RequestStatistics
-                    {
-                        StatusID = s.IdStatus,
-                        Count = s.Requests.Count(r => r.Date >= startDate && r.Date <= endDate)
-                    })
-                    .Where(s => s.Count > 0)
-                    .ToList();
-            }
-        }
-
         private string GetStatusName(int statusId)
         {
             using (var context = new ServiceCenterTMCEntities())
@@ -132,12 +280,13 @@ namespace TMC.ViewModel
         {
             switch (statusName)
             {
-                case "Новый": return "#60B7FF";
-                case "Готов": return "#90EE90";
+                case "Новая": return "#60B7FF";
+                case "Готова": return "#90EE90";
                 case "В работе": return "#FFD700";
-                case "Завершен": return "#D3D3D3";
-                case "Отменен": return "#D3D3D3";
+                case "Завершена": return "#D3D3D3";
+                case "Отменена": return "#D3D3D3";
                 case "Ждет ЗИП": return "#FFA500";
+                case "Диагностика": return "#BDFB82";
                 default: return "#FFFFFF";
             }
         }
@@ -148,5 +297,28 @@ namespace TMC.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+
+    public class RequestStatistics
+    {
+        public int StatusID { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class EmployeeStat
+    {
+        public Employees Employee { get; set; }
+        public string FullName => $"{Employee.Surname} {Employee.Name[0]}. {Employee.Patronymic[0]}.";
+        public int CompletedOrders { get; set; }
+        public int TotalOrders { get; set; }
+        public decimal Revenue { get; set; }
+        public List<ServiceStat> Services { get; set; }
+    }
+
+    public class ServiceStat
+    {
+        public string Name { get; set; }
+        public int Count { get; set; }
+        public decimal Cost { get; set; }
     }
 }

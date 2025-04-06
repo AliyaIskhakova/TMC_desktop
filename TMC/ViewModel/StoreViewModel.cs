@@ -20,6 +20,7 @@ namespace TMC.ViewModel
     {
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
         ObservableCollection<RepairParts> _parts;
+        ObservableCollection<WriteOff_RepairParts> _writeOffParts;
         string _searchText;
         ObservableCollection<RepairParts> _filteredParts;
 
@@ -30,6 +31,7 @@ namespace TMC.ViewModel
                 // Инициализация данных
                 _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
                 _filteredParts = new ObservableCollection<RepairParts>(_parts);
+                _writeOffParts = new ObservableCollection<WriteOff_RepairParts>(context.WriteOff_RepairParts.ToList());
             }
             catch (Exception ex)
             {
@@ -59,6 +61,15 @@ namespace TMC.ViewModel
                 OnPropertyChanged();
             }
         }
+        public ObservableCollection<WriteOff_RepairParts> WriteOffList
+        {
+            get { return _writeOffParts; }
+            set
+            {
+                _writeOffParts = value;
+                OnPropertyChanged();
+            }
+        }
 
         private void FilterParts()
         {
@@ -67,11 +78,14 @@ namespace TMC.ViewModel
                 if (string.IsNullOrEmpty(_searchText))
                 {
                     RepairPartsList = new ObservableCollection<RepairParts>(_parts);
+                    WriteOffList = new ObservableCollection<WriteOff_RepairParts>(context.WriteOff_RepairParts.ToList());
                 }
                 else
                 {
                     var filtered = _parts.Where(e => e.Name.ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()));
+                    var filteredWriteOff = context.WriteOff_RepairParts.Where(e => (e.RepairParts.Name).ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()) || e.Date.ToString().Contains(_searchText)).ToList();
                     RepairPartsList = new ObservableCollection<RepairParts>(filtered);
+                    WriteOffList = new ObservableCollection<WriteOff_RepairParts>(filteredWriteOff);
                 }
             }
             catch (Exception ex)
@@ -128,7 +142,6 @@ namespace TMC.ViewModel
                         if (repairPartWindow.ShowDialog() == true)
                         {
                             RepairParts parts = repairPartWindow.RepairParts;
-                            //client.Telephone = "avae";
                             context.RepairParts.Add(parts);
                             context.SaveChanges();
                             RepairPartsList = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
@@ -170,6 +183,47 @@ namespace TMC.ViewModel
                             _filteredParts = _parts;
                             FilterParts();
                             dataGrid.ItemsSource = RepairPartsList;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+
+                });
+            }
+        }
+        public RelayCommand WriteOffCommand
+        {
+            get
+            {
+                return new RelayCommand((selectedItem) =>
+                {
+                    try
+                    {
+                        var window = selectedItem as Window;
+                        RepairParts part = window.DataContext as RepairParts;
+                        if (part == null) return;
+                        WriteOffRepairPart writeOffWindow = new WriteOffRepairPart(part.Count);
+                        if (writeOffWindow.ShowDialog() == true)
+                        {
+                            WriteOff_RepairParts writeOff = new WriteOff_RepairParts
+                            {
+                                IdWriteOff = context.WriteOff_RepairParts.Count() + 1,
+                                RepaitPartId = part.IdPart,
+                                Date = DateTime.Now,
+                                Count = Convert.ToInt16(writeOffWindow.PartCount.Text),
+                                Reson = writeOffWindow.WriteOffReason.Text
+                            };
+                            context.WriteOff_RepairParts.AddOrUpdate(writeOff);
+                            context.SaveChanges();
+                            part.Count = part.Count - writeOff.Count;
+                            var selectedPart = context.RepairParts.Find(part.IdPart);
+                            selectedPart.Count = selectedPart.Count - writeOff.Count;
+                            context.RepairParts.AddOrUpdate(selectedPart);
+                            _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
+                            _filteredParts = _parts;
+                            FilterParts();
                         }
                     }
                     catch (Exception ex)

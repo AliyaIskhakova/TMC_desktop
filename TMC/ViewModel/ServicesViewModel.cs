@@ -23,8 +23,6 @@ namespace TMC.ViewModel
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
         ObservableCollection<Services> _services;
         string _searchText;
-        RelayCommand addCommand;
-        RelayCommand editCommand;
         RelayCommand printCommand;
         ObservableCollection<Services> _filteredServices;
 

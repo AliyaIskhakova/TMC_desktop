@@ -21,8 +21,6 @@ namespace TMC.ViewModel
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
         ObservableCollection<Clients> _clients;
         string _searchText;
-        RelayCommand addCommand;
-        RelayCommand editCommand;
 
         Clients _selectedClient;
         ObservableCollection<Clients> _filteredClients;
@@ -107,7 +105,6 @@ namespace TMC.ViewModel
                     {
                         var context = new ServiceCenterTMCEntities();
                         ClientsList = new ObservableCollection<Clients>(context.Clients.ToList());
-
                     }
                     catch (Exception e)
                     {
@@ -178,6 +175,8 @@ namespace TMC.ViewModel
                               _filteredClients = _clients;
                               FilterPersons();
                               dataGrid.ItemsSource = ClientsList;
+                              var rvm = new RequestViewModel();
+                              rvm.LoadRequests();
                           }
 
                       }

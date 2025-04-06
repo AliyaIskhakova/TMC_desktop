@@ -11,8 +11,10 @@ namespace TMC.Model
 {
     using System;
     using System.Collections.Generic;
-    
-    public partial class RepairParts
+    using System.ComponentModel;
+    using System.Runtime.CompilerServices;
+
+    public partial class RepairParts: INotifyPropertyChanged
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public RepairParts()
@@ -20,15 +22,23 @@ namespace TMC.Model
             this.Request_RepairParts = new HashSet<Request_RepairParts>();
             this.WriteOff_RepairParts = new HashSet<WriteOff_RepairParts>();
         }
-    
+        private int count;
         public int IdPart { get; set; }
         public string Name { get; set; }
-        public int Count { get; set; }
+        public int Count { get { return count; } set { count = value; OnPropertyChanged(); } }
         public double Cost { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Request_RepairParts> Request_RepairParts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WriteOff_RepairParts> WriteOff_RepairParts { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+
     }
 }

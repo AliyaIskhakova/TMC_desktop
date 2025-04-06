@@ -1,0 +1,36 @@
+﻿<Window x:Class="TMC.View.WriteOffRepairPart"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TMC.View" 
+        xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Background="#E4E9FF"
+        Name="window"
+        mc:Ignorable="d"
+        Title="WriteOffRepairPart" Height="450" Width="800">
+    <DockPanel>
+        <Border DockPanel.Dock="Top">
+            <DockPanel >
+                <Label Content="Списание ЗИП" Margin="30 15 30 10" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click" Width="30" Margin="10" IsEnabled="True">
+                    <Image Source="/Image/close.png" />
+                </Button>
+            </DockPanel>
+        </Border>
+        <StackPanel>
+            <Border Padding="30 0">
+                <StackPanel>
+                    <ui:MetroHeader Content="Количество ЗИП *"/>
+                    <TextBox x:Name="PartCount" Text="{Binding Count}" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
+                    <ui:MetroHeader Content="Комментарий*"/>
+                    <TextBox x:Name="WriteOffReason" Text="{Binding Reson}" Style="{StaticResource InfoTxtBox}"/>
+                </StackPanel>
+            </Border>
+            <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Списанить" Margin="30 5" />
+        </StackPanel>
+    </DockPanel>
+</Window>
+

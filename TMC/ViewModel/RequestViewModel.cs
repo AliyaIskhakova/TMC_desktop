@@ -86,7 +86,7 @@ namespace TMC.ViewModel
         }
 
 
-        private void LoadRequests()
+        public void LoadRequests()
         {
             try
             {
@@ -121,7 +121,7 @@ namespace TMC.ViewModel
                     if (r.CompletionDate != "") r.CompletionDate = (Convert.ToDateTime(r.CompletionDate)).ToShortDateString();
                     if (r.Date != "") r.Date = (Convert.ToDateTime(r.Date)).ToString("dd.MM.yyyy \n HH:mm");
                     return r;
-                }));
+                }).OrderByDescending(n => n.IDRequest));
                 string role = App.Current.Properties["Role"] as string;
                 int id = (int)App.Current.Properties["UserID"];
                 if (role == "Мастер") RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r => r.EmployeeID == id));

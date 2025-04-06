@@ -11,7 +11,7 @@
     Background="#E4E9FF"
     Name="window"
     mc:Ignorable="d"
-    Title="ClientWindow" MinHeight="300" MinWidth="450" MaxHeight="300" MaxWidth="600">
+    Title="ClientWindow" MinHeight="330" MinWidth="450" MaxHeight="300" MaxWidth="600">
     
     <DockPanel >
         <Border DockPanel.Dock="Top">
@@ -33,6 +33,7 @@
                     <TextBox x:Name="PartCost" Text="{Binding Cost}"  ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
                 </StackPanel>
             </Border>
+            <Button x:Name="WriteOffBtn" Style="{StaticResource MainBtn}" Command="{Binding WriteOffCommand}" CommandParameter="{Binding ElementName=window}" Content="Списать ЗИП" Background="#889DFB" Margin="30 5" />
             <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Сохранить" Margin="30 5" />
         </StackPanel>
     </DockPanel>
