@@ -1,14 +1,20 @@
 ﻿using LiveCharts;
 using LiveCharts.Wpf;
+using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.ComTypes;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using TMC.Model;
+using SeriesCollection = LiveCharts.SeriesCollection;
 
 namespace TMC.ViewModel
 {
@@ -24,6 +30,9 @@ namespace TMC.ViewModel
         private int _completedOrders;
         private decimal _totalRevenue;
         private List<string> _employeeFullNames;
+        public SeriesCollection OrdersByDaySeries { get; private set; }
+        public List<string> DayLabels { get; private set; }
+        public string DaysCountText { get; private set; }
 
         public ReportsViewModel()
         {
@@ -172,7 +181,7 @@ namespace TMC.ViewModel
                         .ToList();
 
                     PieSeries = CreatePieSeries(statusStatistics);
-
+                    LoadOrdersByDayData(startDate, endDate);
                     // Load employee statistics
                     var requests = context.Requests
                         .Where(r => r.Date >= startDate && r.Date <= endDate)
@@ -241,6 +250,130 @@ namespace TMC.ViewModel
                     Fill = Brushes.MediumSeaGreen
                 }
             };
+        }
+
+
+        //private void LoadOrdersByDayData(DateTime startDate, DateTime endDate)
+        //{
+        //    using (var context = new ServiceCenterTMCEntities())
+        //    {
+        //        // Рассчитываем реальное количество дней
+        //        int totalDays = (endDate - startDate).Days + 1;
+        //        DaysCountText = $"{totalDays} дней";
+
+        //        // Получаем данные по дням
+        //        var dailyData = context.Requests
+        //            .Where(r => r.Date >= startDate && r.Date <= endDate)
+        //            .GroupBy(r => EntityFunctions.TruncateTime(r.Date))
+        //            .Select(g => new
+        //            {
+        //                Date = g.Key,
+        //                Count = g.Count()
+        //            })
+        //            .OrderBy(x => x.Date)
+        //            .ToList();
+
+        //        // Заполняем пропущенные дни нулями
+        //        var allDates = Enumerable.Range(0, totalDays)
+        //            .Select(offset => startDate.AddDays(offset).Date)
+        //            .ToList();
+
+        //        var completeData = allDates
+        //            .GroupJoin(dailyData,
+        //                date => date,
+        //                data => data.Date,
+        //                (date, data) => new
+        //                {
+        //                    Date = date,
+        //                    Count = data.Select(x => x.Count).FirstOrDefault()
+        //                })
+        //            .OrderBy(x => x.Date)
+        //            .ToList();
+
+        //        // Подготавливаем данные для графика
+        //        DayLabels = completeData.Select(x => x.Date.ToString("dd.MM.yyyy")).ToList();
+
+        //        OrdersByDaySeries = new SeriesCollection
+        //    {
+        //        new ColumnSeries
+        //        {
+        //            Title = "Заказы",
+        //            Values = new ChartValues<int>(completeData.Select(x => x.Count)),
+        //            Fill = Brushes.DodgerBlue,
+        //            DataLabels = true,
+        //            LabelPoint = point => point.Y > 0 ? point.Y.ToString() : ""
+        //        }
+        //    };
+
+        //        OnPropertyChanged(nameof(DaysCountText));
+        //        OnPropertyChanged(nameof(DayLabels));
+        //        OnPropertyChanged(nameof(OrdersByDaySeries));
+        //    }
+        //}
+
+        private void LoadOrdersByDayData(DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                using (var context = new ServiceCenterTMCEntities())
+                {
+                    // Рассчитываем реальное количество дней
+                    int totalDays = (endDate - startDate).Days + 1;
+                    DaysCountText = $"{totalDays} дней";
+
+                    // Получаем данные по дням
+                    var dailyData = context.Requests
+                        .Where(r => r.Date >= startDate && r.Date <= endDate)
+                        .AsEnumerable() // Переключаемся на клиентскую обработку
+                        .GroupBy(r => r.Date)
+                        .Select(g => new
+                        {
+                            Date = g.Key,
+                            Count = g.Count()
+                        })
+                        .OrderBy(x => x.Date)
+                        .ToList();
+
+                    // Заполняем пропущенные дни нулями
+                    var completeData = Enumerable.Range(0, totalDays)
+                        .Select(offset => new
+                        {
+                            Date = startDate.AddDays(offset).Date,
+                            Count = dailyData
+                                .Where(d => d.Date == startDate.AddDays(offset).Date)
+                                .Select(d => d.Count)
+                                .FirstOrDefault()
+                        })
+                        .ToList();
+
+                    // Подготавливаем данные для графика
+                    DayLabels = completeData.Select(x => x.Date.ToString("dd.MM.yyyy")).ToList();
+
+
+                    // Создаем серии для графика
+                    OrdersByDaySeries = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = "Заказы",
+                    Values = new ChartValues<int>(completeData.Select(x => x.Count)),
+                    PointGeometry = DefaultGeometries.Circle,
+                    PointGeometrySize = 8,
+                    Stroke = Brushes.DodgerBlue,
+                    StrokeThickness = 2,
+                    Fill = Brushes.Transparent
+                }
+            };
+
+                    OnPropertyChanged(nameof(DaysCountText));
+                    OnPropertyChanged(nameof(DayLabels));
+                    OnPropertyChanged(nameof(OrdersByDaySeries));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке данных по дням: {ex.Message}");
+            }
         }
 
         private SeriesCollection CreatePieSeries(List<RequestStatistics> statistics)

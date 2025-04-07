@@ -325,6 +325,7 @@ namespace TMC.ViewModel
                               requestWindow.ServiceAndPartsInfo.IsEnabled = false;
                               requestWindow.PrintBtns.Visibility = Visibility.Collapsed;
                           }
+                     
                           //requestWindow.Show();
                           List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestId == selectedRequest.IdRequest).ToList();
                           foreach (var item in request_services)
@@ -718,7 +719,7 @@ namespace TMC.ViewModel
         {
             get
             {
-                return  new RelayCommand((o) =>
+                return  new RelayCommand(async (o) =>
                   {
                       try
                       {
@@ -730,140 +731,140 @@ namespace TMC.ViewModel
                           if (status.Name == "Готов" || status.Name == "Завершен")
                           {
                               MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                              Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
-                              Microsoft.Office.Interop.Word.Document wordDoc = wordApp.Documents.Add();
-
-                              wordDoc.Content.ParagraphFormat.SpaceAfter = 0;
-                              wordDoc.Content.ParagraphFormat.SpaceBefore = 0;
-                              wordDoc.Content.Font.Name = "Times New Roman";
-                              wordDoc.Content.Font.Size = 12;
-                              // Добавление описания
-                              Paragraph name = wordDoc.Content.Paragraphs.Add();
-                              name.Range.Text = "Сервисный центр ТехноМедиаСоюз";
-                              name.Range.Font.Size = 12;
-                              name.Range.Font.Bold = 1;
-                              name.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
-                              name.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-                              name.Format.SpaceAfter = 0;
-                              name.Range.InsertParagraphAfter();
-
-
-                              Paragraph descriptionParagraph1 = wordDoc.Content.Paragraphs.Add();
-                              descriptionParagraph1.Range.Text = "ИП \"Сулейманов М.Р.\", г. Арск ул. Школьная 17, http://www.vk.com/servistmsouz," +
-                                                               "тел. 8(443) 248-92-60. Время работы с 9.00 до 18.00 (понедельник-пятница), без перерывов ";
-                              descriptionParagraph1.Range.Font.Size = 12;
-                              descriptionParagraph1.Range.Font.Bold = 0;
-                              descriptionParagraph1.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
-                              descriptionParagraph1.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-                              descriptionParagraph1.Format.SpaceAfter = 0;
-                              descriptionParagraph1.Range.InsertParagraphAfter();
-                              descriptionParagraph1.Range.InsertParagraphAfter();
-
-                              // Добавление заголовка
-                              Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
-                              titleParagraph.Range.Text = $"Акт о выполненных рвбот №{request.IdRequest} от {DateTime.Now.ToShortDateString()}";
-                              titleParagraph.Range.Font.Size = 13;
-                              titleParagraph.Range.Font.Bold = 1;
-                              titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-                              titleParagraph.Range.InsertParagraphAfter();
-
-                              // Создание таблицы с 5 строками и 2 колонками
-                              Table table = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 8, 2);
-                              table.Borders.Enable = 1;
-                              table.Range.Bold = 0;
-                              table.Range.Font.Size = 12;
-                              table.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
-
-                              // Настройка ширины столбцов
-                              table.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(5);
-                              table.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(12);
-
-                              // Заполнение таблицы данными
-                              table.Cell(1, 1).Range.Text = "Номер заказа";
-                              table.Cell(2, 1).Range.Text = "ФИО клиента";
-                              table.Cell(3, 1).Range.Text = "Телефон клиента";
-                              table.Cell(4, 1).Range.Text = "Устройство";
-                              table.Cell(5, 1).Range.Text = "Серийный номер";
-                              table.Cell(6, 1).Range.Text = "Дата приёма";
-                              table.Cell(7, 1).Range.Text = "Дата выдачи";
-                              table.Cell(8, 1).Range.Text = "Гарантия";
-
-                              table.Cell(1, 2).Range.Text = $"{request.IdRequest}";
-                              table.Cell(2, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
-                              table.Cell(3, 2).Range.Text = $"{client.telephone}";
-                              table.Cell(4, 2).Range.Text = $" {request.Device}";
-                              table.Cell(5, 2).Range.Text = $"{request.IMEI_SN}";
-                              table.Cell(6, 2).Range.Text = $"{request.Date}";
-                              table.Cell(7, 2).Range.Text = $"{DateTime.Now.ToShortDateString()}";
-                              table.Cell(8, 2).Range.Text = $"{request.Notes}";
-
-                              for (int i = 1; i <= 8; i++)
+                              await System.Threading.Tasks.Task.Run(() =>
                               {
-                                  table.Cell(i, 1).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
-                                  table.Cell(i, 1).Range.Font.Bold = 1; // Жирный шрифт
-                              }
+                                  Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
+                                  Microsoft.Office.Interop.Word.Document wordDoc = wordApp.Documents.Add();
 
-                              // Выравнивание текста во втором столбце по левому краю
-                              for (int i = 1; i <= 8; i++)
-                              {
-                                  table.Cell(i, 2).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
-                              }
-                              Paragraph complitedWork = wordDoc.Content.Paragraphs.Add();
-                              complitedWork.Range.Text = $"Выполненнные работы";
-                              complitedWork.Range.Font.Size = 13;
-                              complitedWork.Range.Font.Bold = 1;
-                              complitedWork.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-                              complitedWork.Range.InsertParagraphAfter();
-                              List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestId == request.IdRequest).ToList();
-                              //requestWindow.Show();
-                              foreach (var item in request_services)
-                              {
-                                  Services service = context.Services.Find(item.ServiceId);
-                                  SelectedServicesView serviceView = new SelectedServicesView
+                                  wordDoc.Content.ParagraphFormat.SpaceAfter = 0;
+                                  wordDoc.Content.ParagraphFormat.SpaceBefore = 0;
+                                  wordDoc.Content.Font.Name = "Times New Roman";
+                                  wordDoc.Content.Font.Size = 12;
+                                  // Добавление описания
+                                  Paragraph name = wordDoc.Content.Paragraphs.Add();
+                                  name.Range.Text = "Сервисный центр ТехноМедиаСоюз";
+                                  name.Range.Font.Size = 12;
+                                  name.Range.Font.Bold = 1;
+                                  name.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                                  name.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                                  name.Format.SpaceAfter = 0;
+                                  name.Range.InsertParagraphAfter();
+
+
+                                  Paragraph descriptionParagraph1 = wordDoc.Content.Paragraphs.Add();
+                                  descriptionParagraph1.Range.Text = "ИП \"Сулейманов М.Р.\", г. Арск ул. Школьная 17, http://www.vk.com/servistmsouz," +
+                                                                   "тел. 8(443) 248-92-60. Время работы с 9.00 до 18.00 (понедельник-пятница), без перерывов ";
+                                  descriptionParagraph1.Range.Font.Size = 12;
+                                  descriptionParagraph1.Range.Font.Bold = 0;
+                                  descriptionParagraph1.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                                  descriptionParagraph1.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                                  descriptionParagraph1.Format.SpaceAfter = 0;
+                                  descriptionParagraph1.Range.InsertParagraphAfter();
+                                  descriptionParagraph1.Range.InsertParagraphAfter();
+
+                                  // Добавление заголовка
+                                  Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
+                                  titleParagraph.Range.Text = $"Акт о выполненных рвбот №{request.IdRequest} от {DateTime.Now.ToShortDateString()}";
+                                  titleParagraph.Range.Font.Size = 13;
+                                  titleParagraph.Range.Font.Bold = 1;
+                                  titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                                  titleParagraph.Range.InsertParagraphAfter();
+
+                                  // Создание таблицы с 5 строками и 2 колонками
+                                  Table table = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 8, 2);
+                                  table.Borders.Enable = 1;
+                                  table.Range.Bold = 0;
+                                  table.Range.Font.Size = 12;
+                                  table.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+
+                                  // Настройка ширины столбцов
+                                  table.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(5);
+                                  table.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(12);
+
+                                  // Заполнение таблицы данными
+                                  table.Cell(1, 1).Range.Text = "Номер заказа";
+                                  table.Cell(2, 1).Range.Text = "ФИО клиента";
+                                  table.Cell(3, 1).Range.Text = "Телефон клиента";
+                                  table.Cell(4, 1).Range.Text = "Устройство";
+                                  table.Cell(5, 1).Range.Text = "Серийный номер";
+                                  table.Cell(6, 1).Range.Text = "Дата приёма";
+                                  table.Cell(7, 1).Range.Text = "Дата выдачи";
+
+                                  table.Cell(1, 2).Range.Text = $"{request.IdRequest}";
+                                  table.Cell(2, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
+                                  table.Cell(3, 2).Range.Text = $"{client.telephone}";
+                                  table.Cell(4, 2).Range.Text = $"{request.Device}";
+                                  table.Cell(5, 2).Range.Text = $"{request.IMEI_SN}";
+                                  table.Cell(6, 2).Range.Text = $"{request.Date}";
+                                  table.Cell(7, 2).Range.Text = $"{DateTime.Now.ToShortDateString()}";
+
+                                  for (int i = 1; i <= 8; i++)
                                   {
-                                      IDService = service.IdService,
-                                      Name = service.Name,
-                                      Cost = service.Cost,
-                                      Count = (int)item.Count
-                                  };
-                                  SelectedServices.Add(serviceView);
-                              }
-                              // Создание таблицы с услугами
-                              Table servicesTable = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, request_services.Count + 1, 3);
-                              servicesTable.Borders.Enable = 1;
-                              servicesTable.Range.Font.Size = 11;
-                              servicesTable.Range.Font.Bold = 0;
-                              servicesTable.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                                      table.Cell(i, 1).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
+                                      table.Cell(i, 1).Range.Font.Bold = 1; // Жирный шрифт
+                                  }
 
-                              // Настройка ширины столбцов
-                              servicesTable.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(10);
-                              servicesTable.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(3);
-                              servicesTable.Columns[3].PreferredWidth = wordApp.CentimetersToPoints(3);
+                                  // Выравнивание текста во втором столбце по левому краю
+                                  for (int i = 1; i <= 8; i++)
+                                  {
+                                      table.Cell(i, 2).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
+                                  }
+                                  Paragraph complitedWork = wordDoc.Content.Paragraphs.Add();
+                                  complitedWork.Range.Text = $"Выполненнные работы";
+                                  complitedWork.Range.Font.Size = 13;
+                                  complitedWork.Range.Font.Bold = 1;
+                                  complitedWork.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                                  complitedWork.Range.InsertParagraphAfter();
+                                  List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestId == request.IdRequest).ToList();
+                            
+                                  foreach (var item in request_services)
+                                  {
+                                      Services service = context.Services.Find(item.ServiceId);
+                                      SelectedServicesView serviceView = new SelectedServicesView
+                                      {
+                                          IDService = service.IdService,
+                                          Name = service.Name,
+                                          Cost = service.Cost,
+                                          Count = (int)item.Count
+                                      };
+                                      SelectedServices.Add(serviceView);
+                                  }
+                                  // Создание таблицы с услугами
+                                  Table servicesTable = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, request_services.Count + 1, 3);
+                                  servicesTable.Borders.Enable = 1;
+                                  servicesTable.Range.Font.Size = 11;
+                                  servicesTable.Range.Font.Bold = 0;
+                                  servicesTable.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
 
-                              // Заполнение заголовков таблицы
-                              servicesTable.Cell(1, 1).Range.Text = "Наименование";
-                              servicesTable.Cell(1, 2).Range.Text = "Кол-во";
-                              servicesTable.Cell(1, 3).Range.Text = "Цена, руб.";
+                                  // Настройка ширины столбцов
+                                  servicesTable.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(10);
+                                  servicesTable.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(3);
+                                  servicesTable.Columns[3].PreferredWidth = wordApp.CentimetersToPoints(3);
 
-                              // Заполнение таблицы данными из списка
-                              for (int i = 0; i < request_services.Count; i++)
-                              {
-                                  servicesTable.Cell(i + 2, 1).Range.Text = context.Services.Find(request_services[i].ServiceId).Name;
-                                  servicesTable.Cell(i + 2, 2).Range.Text = request_services[i].Count.ToString();
-                                  servicesTable.Cell(i + 2, 3).Range.Text = context.Services.Find(request_services[i].ServiceId).Cost.ToString();
-                              }
-                              Paragraph costParagraph = wordDoc.Content.Paragraphs.Add();
-                              costParagraph.Range.Text = $"ИТОГ: {request.Cost} руб";
-                              costParagraph.Range.Font.Bold = 1;
-                              costParagraph.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
-                              costParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
-                              costParagraph.Format.SpaceAfter = 0;
-                              costParagraph.Range.InsertParagraphAfter();
+                                  // Заполнение заголовков таблицы
+                                  servicesTable.Cell(1, 1).Range.Text = "Наименование";
+                                  servicesTable.Cell(1, 2).Range.Text = "Кол-во";
+                                  servicesTable.Cell(1, 3).Range.Text = "Цена, руб.";
 
-                              wordApp.Visible = true;
+                                  // Заполнение таблицы данными из списка
+                                  for (int i = 0; i < request_services.Count; i++)
+                                  {
+                                      servicesTable.Cell(i + 2, 1).Range.Text = context.Services.Find(request_services[i].ServiceId).Name;
+                                      servicesTable.Cell(i + 2, 2).Range.Text = request_services[i].Count.ToString();
+                                      servicesTable.Cell(i + 2, 3).Range.Text = context.Services.Find(request_services[i].ServiceId).Cost.ToString();
+                                  }
+                                  Paragraph costParagraph = wordDoc.Content.Paragraphs.Add();
+                                  costParagraph.Range.Text = $"ИТОГ: {request.Cost} руб";
+                                  costParagraph.Range.Font.Bold = 1;
+                                  costParagraph.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                                  costParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
+                                  costParagraph.Format.SpaceAfter = 0;
+                                  costParagraph.Range.InsertParagraphAfter();
 
-                              wordDoc.PrintPreview();
+                                  wordApp.Visible = true;
+
+                                  wordDoc.PrintPreview();
+                              });
                           }
                           else MessageBox.Show("Чтобы сформировать акт выполненных работ статус заявки должен быть Готов или Завершен", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
 

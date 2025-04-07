@@ -375,7 +375,7 @@
         </Grid>
         <Grid x:Name="ResultsWindow" Visibility="Collapsed" Grid.Column="1">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                <DockPanel>
+                <StackPanel>
                     <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}">Отчет</Label>
 
                     <!-- Date Range Selector -->
@@ -406,15 +406,15 @@
                     </StackPanel>
 
                     <!-- Statistics Content -->
-                    <Grid MinWidth="900">
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
                         <!-- Summary Cards -->
-                        <WrapPanel Grid.Row="0" Margin="10">
-                            <Border Width="250" Height="120" Margin="5">
+                        <WrapPanel Grid.Row="0" Margin="20">
+                            <Border Margin="5">
                                 <StackPanel>
                                     <TextBlock Text="Всего заказов" FontWeight="Bold" Foreground="#555"/>
                                     <TextBlock Text="{Binding TotalOrders}" FontSize="28" FontWeight="Bold" Foreground="#0078D7"/>
@@ -422,7 +422,7 @@
                                 </StackPanel>
                             </Border>
 
-                            <Border Width="250" Height="120" Margin="5">
+                            <Border Margin="5">
                                 <StackPanel>
                                     <TextBlock Text="Общая сумма" FontWeight="Bold" Foreground="#555"/>
                                     <TextBlock Text="{Binding TotalRevenue}" FontSize="28" FontWeight="Bold" Foreground="#107C10"/>
@@ -432,55 +432,82 @@
                         </WrapPanel>
 
                         <!-- Charts -->
-                        <Grid Grid.Row="1" Margin="10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <!-- First Row of Charts -->
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!-- Orders by Status -->
-                                <Border Grid.Column="0" CornerRadius="10" Margin="10" BorderThickness="2" BorderBrush="DarkSlateBlue">
+                        <UniformGrid Columns="2" Grid.Row="1" Margin="10">
+                                                  <!-- Orders by Status -->
+                                <Border Grid.Column="0" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
                                     <StackPanel>
                                         <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заявки по статусам</Label>
                                         <lvc:PieChart VerticalAlignment="Center" Height="350" Series="{Binding PieSeries}"/>
                                     </StackPanel>
                                 </Border>
-
-                                <!-- Orders by Employee -->
-                                <Border Grid.Column="1" CornerRadius="10" Margin="10" BorderThickness="2" BorderBrush="DarkSlateBlue">
-                                    <StackPanel>
-                                        <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заказы по сотрудникам</Label>
-                                        <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding EmployeeOrdersSeries}">
-                                            <lvc:CartesianChart.AxisX>
-                                                <lvc:Axis Labels="{Binding EmployeeFullNames}" 
+                            <!-- Orders by Day -->
+                            <!-- Orders by Day --><!--
+                            <Border Grid.Column="0" CornerRadius="10" Margin="10" BorderThickness="2" BorderBrush="DarkSlateBlue" Grid.Row="1">
+                                <StackPanel>
+                                    <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заказы по дням</Label>
+                                    <TextBlock Text="{Binding DaysCountText}" HorizontalAlignment="Center" FontStyle="Italic" Margin="0 0 0 10"/>
+                                    <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding OrdersByDaySeries}">
+                                        <lvc:CartesianChart.AxisX>
+                                            <lvc:Axis Labels="{Binding DayLabels}" 
+                          LabelsRotation="-45"
+                          FontSize="10"
+                          Separator="{x:Static lvc:DefaultAxes.CleanSeparator}">
+                                            </lvc:Axis>
+                                        </lvc:CartesianChart.AxisX>
+                                        <lvc:CartesianChart.AxisY>
+                                            <lvc:Axis Title="Количество заказов" MinValue="0"/>
+                                        </lvc:CartesianChart.AxisY>
+                                    </lvc:CartesianChart>
+                                </StackPanel>
+                            </Border>-->
+                            <!-- Orders by Day -->
+                            <Border Grid.Column="0" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
+                                <StackPanel>
+                                    <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заказы по дням</Label>
+                                    <TextBlock Text="{Binding DaysCountText}" HorizontalAlignment="Center" FontStyle="Italic" Margin="0 0 0 10"/>
+                                    <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding OrdersByDaySeries}">
+                                        <lvc:CartesianChart.AxisX>
+                                            <lvc:Axis Labels="{Binding DayLabels}" 
+                          LabelsRotation="-45"
+                          FontSize="10">
+                                                <lvc:Axis.Separator>
+                                                    <lvc:Separator StrokeThickness="0.5" Step="1"/>
+                                                </lvc:Axis.Separator>
+                                            </lvc:Axis>
+                                        </lvc:CartesianChart.AxisX>
+                                        <lvc:CartesianChart.AxisY>
+                                            <lvc:Axis Title="Количество заказов" MinValue="0">
+                                                <lvc:Axis.Separator>
+                                                    <lvc:Separator StrokeThickness="0.5"/>
+                                                </lvc:Axis.Separator>
+                                            </lvc:Axis>
+                                        </lvc:CartesianChart.AxisY>
+                                    </lvc:CartesianChart>
+                                </StackPanel>
+                            </Border>
+                            <!-- Orders by Employee -->
+                            <Border Grid.Column="1" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
+                                <StackPanel>
+                                    <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заказы по сотрудникам</Label>
+                                    <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding EmployeeOrdersSeries}">
+                                        <lvc:CartesianChart.AxisX>
+                                            <lvc:Axis Labels="{Binding EmployeeFullNames}" 
                                                   LabelsRotation="-45"
                                                   FontSize="12"
                                                   Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
-                                            </lvc:CartesianChart.AxisX>
-                                            <lvc:CartesianChart.AxisY>
-                                                <lvc:Axis Title="Количество заказов"/>
-                                            </lvc:CartesianChart.AxisY>
-                                        </lvc:CartesianChart>
-                                    </StackPanel>
-                                </Border>
-                            </Grid>
+                                        </lvc:CartesianChart.AxisX>
+                                        <lvc:CartesianChart.AxisY>
+                                            <lvc:Axis Title="Количество заказов"/>
+                                        </lvc:CartesianChart.AxisY>
+                                    </lvc:CartesianChart>
+                                </StackPanel>
+                            </Border>
 
                             <!-- Second Row of Charts -->
-                            <Grid Grid.Row="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+                            
 
                                 <!-- Revenue by Employee -->
-                                <Border Grid.Column="0" CornerRadius="10" Margin="10" BorderThickness="2" BorderBrush="DarkSlateBlue">
+                            <Border Grid.Column="0" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
                                     <StackPanel>
                                         <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Выручка по сотрудникам</Label>
                                         <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding EmployeeRevenueSeries}">
@@ -497,45 +524,51 @@
                                     </StackPanel>
                                 </Border>
 
-                                <!-- Employee Details -->
-                                <Border Grid.Column="1" CornerRadius="10" Margin="10" BorderThickness="2" BorderBrush="DarkSlateBlue">
-                                    <StackPanel>
-                                        <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Детализация по сотрудникам</Label>
-                                        <ScrollViewer VerticalScrollBarVisibility="Auto" Height="350">
-                                            <ListView ItemsSource="{Binding EmployeeStats}" BorderThickness="0" Width="450">
-                                                <ListView.View>
-                                                    <GridView>
-                                                        <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding FullName}" Width="200"/>
-                                                        <GridViewColumn Header="Выполнено" DisplayMemberBinding="{Binding CompletedOrders}" Width="80"/>
-                                                        <GridViewColumn Header="Всего" DisplayMemberBinding="{Binding TotalOrders}" Width="80"/>
-                                                        <GridViewColumn Header="Выручка" DisplayMemberBinding="{Binding Revenue}" Width="100"/>
-                                                        <GridViewColumn Header="Услуги" Width="300">
-                                                            <GridViewColumn.CellTemplate>
-                                                                <DataTemplate>
-                                                                    <ItemsControl ItemsSource="{Binding Services}">
-                                                                        <ItemsControl.ItemTemplate>
-                                                                            <DataTemplate>
-                                                                                <StackPanel Orientation="Horizontal">
-                                                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                                                                                    <TextBlock Text="{Binding Count, StringFormat=' (x{0})'}"/>
-                                                                                    <TextBlock Text="{Binding Cost, StringFormat=' - {0:C}'}"/>
-                                                                                </StackPanel>
-                                                                            </DataTemplate>
-                                                                        </ItemsControl.ItemTemplate>
-                                                                    </ItemsControl>
-                                                                </DataTemplate>
-                                                            </GridViewColumn.CellTemplate>
-                                                        </GridViewColumn>
-                                                    </GridView>
-                                                </ListView.View>
-                                            </ListView>
-                                        </ScrollViewer>
-                                    </StackPanel>
-                                </Border>
-                            </Grid>
-                        </Grid>
+                            
+                        </UniformGrid>
                     </Grid>
-                </DockPanel>
+                    <!-- Employee Details -->
+                    <Border CornerRadius="5" Margin="20, 10" BorderThickness="1" BorderBrush="Gray">
+                        <StackPanel>
+                            <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Детализация по сотрудникам</Label>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ListView ItemsSource="{Binding EmployeeStats}" BorderThickness="0" FontSize="15">
+                                    <ListView.Resources>
+                                        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+                                    </ListView.Resources>
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Header="Сотрудник" DisplayMemberBinding="{Binding FullName}" Width="Auto"/>
+                                            <GridViewColumn Header="Выполнено" DisplayMemberBinding="{Binding CompletedOrders}" Width="Auto"/>
+                                            <GridViewColumn Header="Всего" DisplayMemberBinding="{Binding TotalOrders}" Width="Auto"/>
+                                            <GridViewColumn Header="Выручка" DisplayMemberBinding="{Binding Revenue, StringFormat={}{0:N2} руб.}" Width="Auto"/>
+                                            <GridViewColumn Header="Услуги" Width="Auto">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <ItemsControl ItemsSource="{Binding Services}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel Orientation="Horizontal">
+                                                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                                                        <TextBlock Text="{Binding Count, StringFormat=' (x{0})'}" Margin="5,0,0,0"/>
+                                                                        <TextBlock Text="{Binding Cost, StringFormat=' - {0:N2} руб.'}" Margin="5,0,0,0"/>
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+
+
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
             </ScrollViewer>
         </Grid>
     </Grid>
