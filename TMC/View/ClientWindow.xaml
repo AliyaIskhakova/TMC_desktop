@@ -11,14 +11,14 @@
         Background="#E4E9FF"
         Name="window"
         mc:Ignorable="d"
-        Title="ClientWindow" MaxHeight="400" MaxWidth="450" MinHeight="300" MinWidth="400" >
-  
+        Title="ClientWindow" MaxHeight="600" MaxWidth="450" MinHeight="400" MinWidth="400" >
+    
     <DockPanel>
         <Border DockPanel.Dock="Top">
             <DockPanel >
                 <Label Content="Клиент" Margin="30 15 30 10" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                 <RadioButton x:Name="fiz" Content="Физ.лицо" />
-                <RadioButton x:Name="ur" IsChecked="{Binding type}" Content="Юр.лицо" Checked="RadioButton_Checked" Unchecked="RadioButton_Unchecked"/>
+                <RadioButton x:Name="ur" IsChecked="{Binding Type}" Content="Юр.лицо" Checked="RadioButton_Checked" Unchecked="RadioButton_Unchecked"/>
                 <Button Click="Button_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Width="30" Margin="10">
                     <Image Source="/Image/close.png" />
                 </Button>
@@ -27,13 +27,23 @@
         <StackPanel>
             <Border Padding="30 0">
                 <StackPanel>
-                    <TextBox x:Name="surnameTextBox" Text="{Binding surname,  ValidatesOnDataErrors=True}" ui:TextBoxHelper.Watermark="Фамилия*" Style="{StaticResource InfoTxtBox}" />
-                    <!--<TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=surnameTextBox}" FontSize="7" Foreground="Red" Visibility="{Binding (Validation.HasError), ElementName=surnameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" />-->
-                    <TextBox Text="{Binding name,ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Имя*" Style="{StaticResource InfoTxtBox}"/>
-                    <TextBox Text="{Binding patronymic, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
-                    <toolkit:MaskedTextBox Mask="+7(000)000-00-00" Text="{Binding telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
-                    <TextBox Text="{Binding email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"   ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
-                    <TextBox Text="{Binding companyname, ValidatesOnDataErrors=True}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания*" Style="{StaticResource InfoTxtBox}"/>
+                    <ui:MetroHeader Content="Фамилия*"/>
+                    <TextBox x:Name="surnameTextBox" Text="{Binding Surname,  ValidatesOnDataErrors=True}" ui:TextBoxHelper.Watermark="Фамилия*" Style="{StaticResource InfoTxtBox}" />
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=surnameTextBox}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=surnameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <ui:MetroHeader Content="Имя*"/>
+                    <TextBox x:Name="nameTextBox" Text="{Binding Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Имя*" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=nameTextBox}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=nameTextBox, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <ui:MetroHeader Content="Отчество"/>
+                    <TextBox Text="{Binding Patronymic, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
+                    <ui:MetroHeader Content="Телефон*"/>
+                    <toolkit:MaskedTextBox x:Name="phoneTxtBox" Mask="+7(000)000-00-00" Text="{Binding Telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=phoneTxtBox}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=phoneTxtBox, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <ui:MetroHeader Content="Почта*"/>
+                    <TextBox x:Name="emailTxtBox" Text="{Binding Email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"   ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=emailTxtBox}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=emailTxtBox, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <ui:MetroHeader Content="Компания*" Visibility="{Binding Visibility, ElementName=CompanyTxt}"/>
+                    <TextBox Text="{Binding CompanyName, ValidatesOnDataErrors=True}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания*" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=CompanyTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=CompanyTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 </StackPanel>
             </Border>
             <Button Style="{StaticResource MainBtn}" Content="Сохранить" IsDefault="True" Click="Accept_Click" Margin="30 5" />

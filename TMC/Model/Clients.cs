@@ -24,77 +24,77 @@ namespace TMC.Model
         }
     
         public int IdClient { get; set; }
-        public string Surname { get; set; }
-        public string Name { get; set; }
-        public string Patronymic { get; set; }
-        public string Telephone { get; set; }
-        public bool Type { get; set; }
-        public string CompanyName { get; set; }
-        public string Email { get; set; }
+        private string surname { get; set; }
+        private string name { get; set; }
+        private string patronymic { get; set; }
+        private string telephone { get; set; }
+        private bool type { get; set; }
+        private string companyName { get; set; }
+        private string email { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests> Requests { get; set; }
-        public string name
+        public string Name
         {
-            get { return Name; }
+            get { return name; }
             set
             {
-                Name = value;
+                name = value;
                 OnPropertyChanged("name");
             }
         }
-        public string surname
+        public string Surname
         {
-            get { return Surname; }
+            get { return surname; }
             set
             {
-                Surname = value;
+                surname = value;
                 OnPropertyChanged("surname");
             }
         }
-        public string patronymic
+        public string Patronymic
         {
-            get { return Patronymic; }
+            get { return patronymic; }
             set
             {
-                Patronymic = value;
+                patronymic = value;
                 OnPropertyChanged("patronymic");
             }
         }
-        public string telephone
+        public string Telephone
         {
-            get { return Telephone; }
+            get { return telephone; }
             set
             {
-                Telephone = value;
+                telephone = value;
                 OnPropertyChanged("telephone");
             }
         }
-        public string email
+        public string Email
         {
-            get { return Email; }
+            get { return email; }
             set
             {
-                Email = value;
+                email = value;
                 OnPropertyChanged("email");
             }
         }
 
-        public string companyname
+        public string CompanyName
         {
-            get { return CompanyName; }
+            get { return companyName; }
             set
             {
-                CompanyName = value;
+                companyName = value;
                 OnPropertyChanged();
             }
         }
-        public bool type
+        public bool Type
         {
-            get { return Type; }
+            get { return type; }
             set
             {
-                Type = value;
+                type = value;
                 OnPropertyChanged("type");
             }
         }
@@ -107,35 +107,35 @@ namespace TMC.Model
                 switch (columnName)
                 {
 
-                    case nameof(surname):
-                        if (string.IsNullOrWhiteSpace(surname))
+                    case nameof(Surname):
+                        if (string.IsNullOrWhiteSpace(Surname))
                             error = "Поле не может быть пустым";
                         break;
-                    case nameof(name):
-                        if (string.IsNullOrWhiteSpace(name))
+                    case nameof(Name):
+                        if (string.IsNullOrWhiteSpace(Name))
                             error = "Поле не может быть пустым";
                         break;
-                    case nameof(telephone):
-                        if (string.IsNullOrWhiteSpace(telephone))
+                    case nameof(Telephone):
+                        if (string.IsNullOrWhiteSpace(Telephone))
                             error = "Поле не может быть пустым";
-                        else if (!Regex.IsMatch(telephone, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
-                            error = "неверный формат номера телефона";
+                        else if (!Regex.IsMatch(Telephone, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
+                            error = "Неверный формат номера телефона";
                         break;
-                    case nameof(email):
+                    case nameof(Email):
 
-                        if (!string.IsNullOrWhiteSpace(email))
+                        if (!string.IsNullOrWhiteSpace(Email))
                         {
-                            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                            if (!Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
                             {
                                 error = "Неверный формат почты";
                             }
                         }
                         break;
-                    case nameof(companyname):
+                    case nameof(CompanyName):
 
-                        if (type)
+                        if (Type)
                         {
-                            if (string.IsNullOrWhiteSpace(companyname))
+                            if (string.IsNullOrWhiteSpace(CompanyName))
                             {
                                 error = "Поле не может быть пустым для юр.лиц";
                             }
@@ -147,9 +147,9 @@ namespace TMC.Model
         }
         public bool HasValidationErrors()
         {
-            return !string.IsNullOrEmpty(this[nameof(surname)]) || !string.IsNullOrEmpty(this[nameof(name)])
-                || !string.IsNullOrEmpty(this[nameof(telephone)]) || !string.IsNullOrEmpty(this[nameof(email)])
-                || !string.IsNullOrEmpty(this[nameof(companyname)]);
+            return !string.IsNullOrEmpty(this[nameof(Surname)]) || !string.IsNullOrEmpty(this[nameof(Name)])
+                || !string.IsNullOrEmpty(this[nameof(Telephone)]) || !string.IsNullOrEmpty(this[nameof(Email)])
+                || !string.IsNullOrEmpty(this[nameof(CompanyName)]);
         }
         public string Error
         {

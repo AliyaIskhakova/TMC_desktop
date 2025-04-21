@@ -363,11 +363,11 @@
                     </DataGrid.Resources>
 
                     <DataGrid.Columns >
-                        <DataGridTextColumn Header="Фамилия" Binding="{Binding surname}"/>
-                        <DataGridTextColumn Header="Имя" Binding="{Binding name}"/>
-                        <DataGridTextColumn Header="Отчество" Binding="{Binding patronymic}"/>
-                        <DataGridTextColumn Header="Телефон" Binding="{Binding telephone}"/>
-                        <DataGridTextColumn Header="Почта" Binding="{Binding email}"/>
+                        <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}"/>
+                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}"/>
+                        <DataGridTextColumn Header="Телефон" Binding="{Binding Telephone}"/>
+                        <DataGridTextColumn Header="Почта" Binding="{Binding Email}"/>
                         <DataGridTextColumn Header="Должность" Binding="{Binding Roles.Name}"/>
                     </DataGrid.Columns>
                 </DataGrid>
@@ -463,7 +463,7 @@
                             <!-- Orders by Day -->
                             <Border Grid.Column="0" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
                                 <StackPanel>
-                                    <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заказы по дням</Label>
+                                    <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заявки по дням</Label>
                                     <TextBlock Text="{Binding DaysCountText}" HorizontalAlignment="Center" FontStyle="Italic" Margin="0 0 0 10"/>
                                     <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding OrdersByDaySeries}">
                                         <lvc:CartesianChart.AxisX>
@@ -488,7 +488,7 @@
                             <!-- Orders by Employee -->
                             <Border Grid.Column="1" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
                                 <StackPanel>
-                                    <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заказы по сотрудникам</Label>
+                                    <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заявки по сотрудникам</Label>
                                     <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding EmployeeOrdersSeries}">
                                         <lvc:CartesianChart.AxisX>
                                             <lvc:Axis Labels="{Binding EmployeeFullNames}" 

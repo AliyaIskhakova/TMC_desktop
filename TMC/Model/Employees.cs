@@ -23,78 +23,78 @@ namespace TMC.Model
         }
     
         public int IdEmployee { get; set; }
-        public string Surname { get; set; }
-        public string Name { get; set; }
-        public string Patronymic { get; set; }
+        private string surname { get; set; }
+        private string name { get; set; }
+        private string patronymic { get; set; }
         public int RoleId { get; set; }
-        public string Telephone { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
+        private string telephone { get; set; }
+        private string login { get; set; }
+        private string password { get; set; }
+        private string email { get; set; }
     
         public virtual Roles Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests> Requests { get; set; }
-        public string name
+        public string Name
         {
-            get { return Name; }
+            get { return name; }
             set
             {
-                Name = value;
+                name = value;
                 OnPropertyChanged("name");
             }
         }
-        public string surname
+        public string Surname
         {
-            get { return Surname; }
+            get { return surname; }
             set
             {
-                Surname = value;
+                surname = value;
                 OnPropertyChanged("surname");
             }
         }
-        public string patronymic
+        public string Patronymic
         {
-            get { return Patronymic; }
+            get { return patronymic; }
             set
             {
-                Patronymic = value;
+                patronymic = value;
                 OnPropertyChanged("patronymic");
             }
         }
-        public string telephone
+        public string Telephone
         {
-            get { return Telephone; }
+            get { return telephone; }
             set
             {
-                Telephone = value;
+                telephone = value;
                 OnPropertyChanged("telephone");
             }
         }
-        public string login
+        public string Login
         {
-            get { return Login; }
+            get { return login; }
             set
             {
-                Login = value;
+                login = value;
                 OnPropertyChanged("login");
             }
         }
-        public string password
+        public string Password
         {
             get { return password; }
             set
             {
-                Password = value;
+                password = value;
                 OnPropertyChanged("password");
             }
         }
-        public string email
+        public string Email
         {
-            get { return Email; }
+            get { return email; }
             set
             {
-                Email = value;
+                email = value;
                 OnPropertyChanged("email");
             }
         }

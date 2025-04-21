@@ -200,15 +200,9 @@ namespace TMC.ViewModel
             const string chars = "abcdefghijklmnopqrstuvwxyz" +
                                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                                  "0123456789" +
-                                 "!@#$%^&*_";
-
-            // Генерируем случайную длину от 6 до 12 символов
-            int length = random.Next(6, 20);
-
-            // Создаём массив символов для пароля
+                                 "!@#$%&_";
+            int length = random.Next(6, 16);
             char[] password = new char[length];
-
-            // Заполняем массив случайными символами
             for (int i = 0; i < length; i++)
             {
                 password[i] = chars[random.Next(chars.Length)];
@@ -218,21 +212,28 @@ namespace TMC.ViewModel
         }
         public void SendPassword(Employees employee, string password)
         {
-            MailAddress from = new MailAddress("aliya_iskhakova12@mail.ru", "Сервисный центр ТехноМедиаСоюз");
-            MailAddress to = new MailAddress(employee.Email);
-            MailMessage m = new MailMessage(from, to);
-            m.Subject = "Тест";
-            m.Body = "<h1>Пароль: " + password + "</h1>";
-            //user.Password = GetHashString(newPasword);
+            try
+            {
+                MailAddress from = new MailAddress("aliya_iskhakova12@mail.ru", "Сервисный центр ТехноМедиаСоюз");
+                MailAddress to = new MailAddress(employee.Email);
+                MailMessage m = new MailMessage(from, to);
+                m.Subject = "Тест";
+                m.Body = "<p>Пароль: " + password + "</p>";
+                //user.Password = GetHashString(newPasword);
 
-            m.IsBodyHtml = true;
-            SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
-            smtp.Credentials = new NetworkCredential("aliya_iskhakova12@mail.ru", "HKqzZM2FQTJC3v09cmZd");
-            smtp.EnableSsl = true;
-            smtp.Send(m);
+                m.IsBodyHtml = true;
+                SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
+                smtp.Credentials = new NetworkCredential("aliya_iskhakova12@mail.ru", "HKqzZM2FQTJC3v09cmZd");
+                smtp.EnableSsl = true;
+                smtp.Send(m);
 
-            MessageBox.Show($"Пароль сотрудника {employee.Surname} {employee.Name} {employee.Patronymic} отправлен на почту {employee.Email}",
-                "Изменение пароля", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Пароль сотрудника {employee.Surname} {employee.Name} {employee.Patronymic} отправлен на почту {employee.Email}",
+                    "Изменение пароля", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка при отправки пароля: {ex.Message} ", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

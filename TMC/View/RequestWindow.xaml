@@ -80,12 +80,12 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                         <Border Padding="30 0">
                             <StackPanel x:Name="Info2">
 
-                                <TextBox Text="{Binding surname,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  ui:TextBoxHelper.Watermark="Фамилия*" Style="{StaticResource InfoTxtBox}" />
-                                <TextBox Text="{Binding name,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Имя*" Style="{StaticResource InfoTxtBox}"/>
-                                <TextBox Text="{Binding patronymic,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
-                                <toolkit:MaskedTextBox Mask="+7(000)000-00-00" Text="{Binding telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
-                                <TextBox Text="{Binding email,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
-                                <TextBox Text="{Binding companynаme,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox Text="{Binding Surname,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  ui:TextBoxHelper.Watermark="Фамилия*" Style="{StaticResource InfoTxtBox}" />
+                                <TextBox Text="{Binding Name,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Имя*" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox Text="{Binding Patronymic,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
+                                <toolkit:MaskedTextBox Mask="+7(000)000-00-00" Text="{Binding Telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
+                                <TextBox Text="{Binding Email,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox Text="{Binding CompanyNаme,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -132,7 +132,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                                 </ComboBox.Resources>
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock Text="{Binding Name}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -149,13 +149,13 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
 
                                 <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Устройство:" />
                                 <UniformGrid Columns="2" >
-                                    <TextBox Text="{Binding Model}" ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}"/>
+                                    <TextBox Text="{Binding Device}" ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}" Margin="0 5 10 5"/>
                                     <TextBox Text="{Binding IMEI_SN}" ui:TextBoxHelper.Watermark="IMEI/SN" Style="{StaticResource InfoTxtBox}"/>
                                 </UniformGrid>
                                 <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Внешний вид устройства при приёмке::" />
                                 <TextBox Text="{Binding Appearance}" ui:TextBoxHelper.Watermark="Внешний вид" Style="{StaticResource InfoTxtBox}"/>
                                 <TextBox Text="{Binding Notes}" ui:TextBoxHelper.Watermark="Заметки" Style="{StaticResource InfoTxtBox}"/>
-                                <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Адресс выезда:" Visibility="{Binding Visibility, ElementName=Address}"/>
+                                <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Адрес выезда:" Visibility="{Binding Visibility, ElementName=Address}"/>
                                 <TextBox  x:Name="Address" Text="{Binding Address}" Visibility="Collapsed" ui:TextBoxHelper.Watermark="Адрес" Style="{StaticResource InfoTxtBox}"/>
                                 <Label Margin="0" FontSize="19" Content="Итоговая цена:" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                                 <TextBox x:Name="RequestCost" Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>

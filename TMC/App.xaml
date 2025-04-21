@@ -136,7 +136,11 @@
                 <Setter Property="BorderBrush" Value="#EEF1FF"/>
                 <Setter Property="BorderThickness" Value=" 0 2"/>
             </Style>
-
+            <Style TargetType="TextBlock" x:Key="ErrorBlock">
+                <Setter Property="FontSize" Value="10"/>
+                <Setter Property="Foreground" Value="Red"/>
+                <Setter Property="Margin" Value="5 0 0 5"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

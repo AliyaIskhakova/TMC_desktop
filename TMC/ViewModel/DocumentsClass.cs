@@ -75,7 +75,7 @@ namespace TMC.ViewModel
             table.Cell(4, 1).Range.Text = "Проблема со слов клиента";
             table.Cell(5, 1).Range.Text = "Примечание";
 
-            table.Cell(1, 2).Range.Text = $"{client.surname} {client.name} {client.patronymic}";
+            table.Cell(1, 2).Range.Text = $"{client.Surname} {client.Name} {client.Patronymic}";
             //есть случай с нуливым 
             table.Cell(2, 2).Range.Text = $"{request.Device}";
             table.Cell(3, 2).Range.Text = $"{request.IMEI_SN}";
@@ -112,7 +112,7 @@ namespace TMC.ViewModel
             signatureTable.Range.Font.Size = 12;
 
             // Заполнение таблицы подписей
-            signatureTable.Cell(1, 1).Range.Text = $"Оборудование в ремонт сдал: {client.surname} {client.name[0]}. {client.patronymic[0]}.";
+            signatureTable.Cell(1, 1).Range.Text = $"Оборудование в ремонт сдал: {client.Surname} {client.Name[0]}. {client.Patronymic[0]}.";
             signatureTable.Cell(1, 2).Range.Text = "_____________________";
             signatureTable.Cell(2, 1).Range.Text = $"Оборудование в ремонт принял: инженер приемщик {request.MasterId}";
             signatureTable.Cell(2, 2).Range.Text = "_____________________";

@@ -170,7 +170,7 @@ namespace TMC.ViewModel
                     var startDate = StartDate.Value;
                     var endDate = EndDate.Value;
 
-                    // Load status statistics
+                    
                     var statusStatistics = context.Statuses
                         .Select(s => new RequestStatistics
                         {
@@ -182,7 +182,7 @@ namespace TMC.ViewModel
 
                     PieSeries = CreatePieSeries(statusStatistics);
                     LoadOrdersByDayData(startDate, endDate);
-                    // Load employee statistics
+                   
                     var requests = context.Requests
                         .Where(r => r.Date >= startDate && r.Date <= endDate)
                         .ToList();
@@ -317,15 +317,14 @@ namespace TMC.ViewModel
             {
                 using (var context = new ServiceCenterTMCEntities())
                 {
-                    // Рассчитываем реальное количество дней
-                    int totalDays = (endDate - startDate).Days + 1;
+                    //Рассчитываем реальное количество дней
+                            int totalDays = (endDate - startDate).Days + 1;
                     DaysCountText = $"{totalDays} дней";
 
                     // Получаем данные по дням
                     var dailyData = context.Requests
                         .Where(r => r.Date >= startDate && r.Date <= endDate)
-                        .AsEnumerable() // Переключаемся на клиентскую обработку
-                        .GroupBy(r => r.Date)
+                        .GroupBy(r => EntityFunctions.TruncateTime(r.Date))
                         .Select(g => new
                         {
                             Date = g.Key,
@@ -334,21 +333,24 @@ namespace TMC.ViewModel
                         .OrderBy(x => x.Date)
                         .ToList();
 
-                    // Заполняем пропущенные дни нулями
-                    var completeData = Enumerable.Range(0, totalDays)
-                        .Select(offset => new
-                        {
-                            Date = startDate.AddDays(offset).Date,
-                            Count = dailyData
-                                .Where(d => d.Date == startDate.AddDays(offset).Date)
-                                .Select(d => d.Count)
-                                .FirstOrDefault()
-                        })
+                    var allDates = Enumerable.Range(0, totalDays)
+                    .Select(offset => startDate.AddDays(offset).Date)
+                    .ToList();
+
+                    var completeData = allDates
+                        .GroupJoin(dailyData,
+                            date => date,
+                            data => data.Date,
+                            (date, data) => new
+                            {
+                                Date = date,
+                                Count = data.Select(x => x.Count).FirstOrDefault()
+                            })
+                        .OrderBy(x => x.Date)
                         .ToList();
 
                     // Подготавливаем данные для графика
                     DayLabels = completeData.Select(x => x.Date.ToString("dd.MM.yyyy")).ToList();
-
 
                     // Создаем серии для графика
                     OrdersByDaySeries = new SeriesCollection

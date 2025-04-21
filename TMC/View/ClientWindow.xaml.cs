@@ -29,7 +29,7 @@ namespace TMC.View
                 InitializeComponent();
                 Clients = client;
                 DataContext = Clients;
-                if (Clients.type == true) ur.IsChecked = true;
+                if (Clients.Type == true) ur.IsChecked = true;
                 else fiz.IsChecked = true;
             }
             catch (Exception ex)

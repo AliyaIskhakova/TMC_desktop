@@ -126,7 +126,7 @@ namespace TMC.ViewModel
                           if (clientWindow.ShowDialog() == true)
                           {
                               Clients client = clientWindow.Clients;
-                              if (!client.Type) client.companyname = null; 
+                              if (!client.Type) client.CompanyName = null; 
                               context.Clients.Add(client);
                               context.SaveChanges();
                               ClientsList = new ObservableCollection<Clients>(context.Clients.ToList());

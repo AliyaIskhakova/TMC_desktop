@@ -127,9 +127,11 @@ namespace TMC.ViewModel
                     try
                     {
                         ServiceWindow serviceWindow = new ServiceWindow(new Services());
+                        serviceWindow.TypeBox.ItemsSource = context.ServiceTypes.ToList();
                         if (serviceWindow.ShowDialog() == true)
                         {
                             Services service = serviceWindow.Services;
+                            service.ServiceTypes = serviceWindow.TypeBox.SelectedItem as ServiceTypes;
                             context.Services.Add(service);
                             context.SaveChanges();
                             _services = new ObservableCollection<Services>(context.Services.ToList());
@@ -164,9 +166,12 @@ namespace TMC.ViewModel
                             TypeId = service.TypeId
                         };
                         ServiceWindow serviceWindow = new ServiceWindow(vm);
+                        serviceWindow.TypeBox.ItemsSource = context.ServiceTypes.ToList();
+                        serviceWindow.TypeBox.SelectedItem = context.ServiceTypes.Find(vm.TypeId);
                         if (serviceWindow.ShowDialog() == true)
                         {
                             service = serviceWindow.Services;
+                            service.ServiceTypes = serviceWindow.TypeBox.SelectedItem as ServiceTypes;
                             context.Services.AddOrUpdate(service);
                             context.SaveChanges();
                             _services = new ObservableCollection<Services>(context.Services.ToList());

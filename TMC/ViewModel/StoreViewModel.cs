@@ -82,9 +82,11 @@ namespace TMC.ViewModel
                 }
                 else
                 {
-                    var filtered = _parts.Where(e => e.Name.ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()));
-                    var filteredWriteOff = context.WriteOff_RepairParts.Where(e => (e.RepairParts.Name).ToLowerInvariant().Contains(_searchText.ToLowerInvariant().Trim()) || e.Date.ToString().Contains(_searchText)).ToList();
-                    RepairPartsList = new ObservableCollection<RepairParts>(filtered);
+                    _searchText = _searchText.ToLowerInvariant().Trim();
+                    var filtered = _parts.Where(e => e.Name.ToLowerInvariant().Contains(_searchText));
+                    var filteredWriteOff = context.WriteOff_RepairParts.AsEnumerable().Where(e =>  e.RepairParts.Name.Contains(_searchText) ||
+                            e.Date.ToString("dd.MM.yyyy").Contains(_searchText))
+                        .ToList(); RepairPartsList = new ObservableCollection<RepairParts>(filtered);
                     WriteOffList = new ObservableCollection<WriteOff_RepairParts>(filteredWriteOff);
                 }
             }
