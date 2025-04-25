@@ -40,7 +40,7 @@
                             <Label Content="Клиент" Margin="30 0" FontSize="19"  VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
                             <StackPanel x:Name="Info" Orientation="Horizontal">
                                 <RadioButton Content="Физ.лицо" IsChecked="True" Margin="0"/>
-                                <RadioButton Content="Юр.лицо" Checked="RadioButton_Checked" Unchecked="RadioButton_Unchecked" IsChecked="{Binding type}" />
+                                <RadioButton Content="Юр.лицо" Checked="RadioButton_Checked" Unchecked="RadioButton_Unchecked" IsChecked="{Binding Type}" />
                             </StackPanel>
                             <!--<Button >
                                 <Image Width="25" Source="/Image/clients.png" />

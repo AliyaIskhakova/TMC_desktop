@@ -25,7 +25,7 @@ namespace TMC.Model
         public int ClientId { get; set; }
         public int StatusId { get; set; }
         public string Reason { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public System.DateTime Date { get; set; }
         public double Cost { get; set; }
         public string IMEI_SN { get; set; }
         public string Device { get; set; }

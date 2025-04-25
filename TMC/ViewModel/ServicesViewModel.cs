@@ -196,9 +196,13 @@ namespace TMC.ViewModel
                     try
                     {
                         Services service = selectedItem as Services;
-                        if (service == null) return;
-                        
-                            context.Services.Remove(service);
+                        if (service == null) {
+                            MessageBox.Show("Выберите услугу для удаления", "Удаление услуги", MessageBoxButton.OK, MessageBoxImage.Information);
+                            return; 
+                        }
+                        var result = MessageBox.Show($"Вы действительно хотите удалить услугу: {service.Name}", "Удаление услуги", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        if (result == MessageBoxResult.No) return;
+                        context.Services.Remove(service);
                             context.SaveChanges();
                         _services = new ObservableCollection<Services>(context.Services.ToList());
 

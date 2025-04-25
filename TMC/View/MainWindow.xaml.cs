@@ -26,17 +26,22 @@ namespace TMC
     {
         
         RequestViewModel requestVM = new RequestViewModel();
+        StoreViewModel storeVM = new StoreViewModel();
+        ClientsViewModel clientsVM = new ClientsViewModel();
+        ServicesViewModel servicesVM = new ServicesViewModel();
+        EmployeesViewModel employeesVM = new EmployeesViewModel();
+        ReportsViewModel reportsVM = new ReportsViewModel();
         public MainWindow()
         {
             try
             {
                 InitializeComponent();
                 RequestsWindow.DataContext = requestVM;
-                ClientsWindow.DataContext = new ClientsViewModel();
-                StoreWindow.DataContext = new StoreViewModel();
-                ServicesWindow.DataContext = new ServicesViewModel();
-                EmployeesWindow.DataContext = new EmployeesViewModel();
-                ResultsWindow.DataContext = new ReportsViewModel();
+                ClientsWindow.DataContext = clientsVM;
+                StoreWindow.DataContext = storeVM;
+                ServicesWindow.DataContext = servicesVM;
+                EmployeesWindow.DataContext = employeesVM;
+                ResultsWindow.DataContext = reportsVM;
             }
             catch (Exception ex)
             {
@@ -101,8 +106,7 @@ namespace TMC
                     if (row != null)
                     {
                         var selectedItem = sender as DataGrid;
-                        var viewModel = new ClientsViewModel();
-                        viewModel.EditClientCommand.Execute(selectedItem);
+                        clientsVM.EditClientCommand.Execute(selectedItem);
                     }
                 }
             }
@@ -125,8 +129,7 @@ namespace TMC
                     if (row != null)
                     {
                         var selectedItem = sender as DataGrid;
-                        var viewModel = new ServicesViewModel();
-                        viewModel.EditServicesCommand.Execute(selectedItem);
+                        servicesVM.EditServicesCommand.Execute(selectedItem);
                     }
                 }
             }
@@ -148,8 +151,7 @@ namespace TMC
                     if (row != null)
                     {
                         var selectedItem = sender as DataGrid;
-                        var viewModel = new EmployeesViewModel();
-                        viewModel.EditEmployeeCommand.Execute(selectedItem);
+                        employeesVM.EditEmployeeCommand.Execute(selectedItem);
                     }
                 }
             }
@@ -171,8 +173,7 @@ namespace TMC
                     if (row != null)
                     {
                         var selectedItem = sender as DataGrid;
-                        var viewModel = new StoreViewModel();
-                        viewModel.EditRepairPartCommand.Execute(selectedItem);
+                        storeVM.EditRepairPartCommand.Execute(selectedItem);
                     }
                 }
             }

@@ -44,9 +44,6 @@
                 <Setter Property="Foreground" Value="White"/>
             </Style>
 
-            
-            
-
             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}" x:Key="InfoTxtBox">
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="ui:ControlsHelper.CornerRadius" Value="5"/>

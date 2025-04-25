@@ -160,8 +160,8 @@ namespace TMC.ViewModel
                           string status_name = status as string;
                           _currentFilterStatus = status_name;
                           RequestsList.Clear();
-                          LoadRequests();
-                          if (status_name == "Все") LoadRequests();
+                          RefreshRequests();
+                          if (status_name == "Все") RefreshRequests();
                           else RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r => r.StatusName == status_name).ToList());
                           
                       }
@@ -277,7 +277,7 @@ namespace TMC.ViewModel
                               SelectedServices.Clear();
                               SelectedParts.Clear();
                               RequestsList.Clear();
-                              LoadRequests();
+                              RefreshRequests();
 
                           }
                   }
@@ -295,19 +295,47 @@ namespace TMC.ViewModel
                 MailAddress from = new MailAddress("aliya_iskhakova12@mail.ru", "Сервисный центр ТехноМедиаСоюз");
                 MailAddress to = new MailAddress(client.Email);
                 MailMessage m = new MailMessage(from, to);
-                m.Subject = "Сервисный центр ТехноМедиаСоюз";
-                m.Body = "<h1>Ваша заявка №" + requests.IdRequest + ":" + status + "</h1>";
-                //user.Password = GetHashString(newPasword);
+                m.Subject = "Изменение статуса заявки в сервисном центре ТехноМедиаСоюз";
+
+                string htmlBody = $@"
+        <div style='font-family: Arial; max-width: 600px; margin: 0 auto; border: 1px solid #DFE4FB; border-radius: 5px; overflow: hidden;'>
+            <div style='background-color: #0A1C6F; padding: 15px; color: white;'>
+                <h2 style='margin: 0;'>Сервисный центр ТехноМедиаСоюз</h2>
+            </div>
+            
+            <div style='padding: 20px; background-color: #DFE4FB;'>
+                <h3 style='color: #0E2280;'>Статус заявки №{requests.IdRequest} от {requests.Date.ToString("dd.MM.yyyy")} изменен</h3>
+                
+                <div style='background-color: white; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #889DFB;'>
+                    <p style='font-weight: bold; color: #162774; margin: 0 0 5px 0;'>Новый статус заявки:</p>
+                    <p style='font-size: 18px; color: #0E2280; margin: 0;'>{status}</p>
+                </div>
+                
+                <p style='color: #162774;'>Для получения подробной информации о вашей заявке вы можете обратиться в наш сервисный центр.</p>
+                
+                <p style='color: #162774;'>Спасибо, что выбрали нас!</p>
+            </div>
+            
+            <div style='background-color: #0A1C6F; padding: 10px; color: white; text-align: center; font-size: 12px;'>
+                <p style='margin: 0;'>С уважением, команда ТехноМедиаСоюз</p>
+            </div>
+        </div>";
+
+                m.Body = htmlBody;
                 m.IsBodyHtml = true;
+
                 SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
                 smtp.Credentials = new NetworkCredential("aliya_iskhakova12@mail.ru", "HKqzZM2FQTJC3v09cmZd");
                 smtp.EnableSsl = true;
                 smtp.Send(m);
-                MessageBox.Show($"Cтатус заявки был изменен. Уведомление отправлено клиенту",
-                                "Изменение пароля", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                MessageBox.Show($"Статус заявки был изменен. Уведомление отправлено клиенту",
+                               "Изменение статуса", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-            catch {
-                MessageBox.Show($"Произошла ошибка при отправки уведомления клиенту. Свяжитесь с клиентом по номеру телефона {client.Telephone}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); 
+            catch
+            {
+                MessageBox.Show($"Произошла ошибка при отправке уведомления клиенту. Свяжитесь с клиентом по номеру телефона {client.Telephone}",
+                                "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         // команда редактирования
@@ -442,7 +470,7 @@ namespace TMC.ViewModel
                               SelectedServices.Clear();
                               SelectedParts.Clear();
                           }
-                          LoadRequests();
+                          RefreshRequests();
                       }
                       catch (Exception ex)
                       {
@@ -540,7 +568,23 @@ namespace TMC.ViewModel
                 OnPropertyChanged();
             }
         }
-
+        public RelayCommand UpdateListCommand
+        {
+            get
+            {
+                return new RelayCommand((o) =>
+                {
+                    try
+                    {
+                        RefreshRequests();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
+            }
+        }
         public RelayCommand AddPartsCommand
         {
             get

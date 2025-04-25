@@ -174,9 +174,6 @@ namespace TMC.ViewModel
                               _clients = new ObservableCollection<Clients>(context.Clients.ToList());
                               _filteredClients = _clients;
                               FilterPersons();
-                              dataGrid.ItemsSource = ClientsList;
-                              var rvm = new RequestViewModel();
-                              rvm.LoadRequests();
                           }
 
                       }
@@ -185,6 +182,25 @@ namespace TMC.ViewModel
                           MessageBox.Show($"Произошла ошибка: {e.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                       }
                   });
+            }
+        }
+        public RelayCommand UpdateListCommand
+        {
+            get
+            {
+                return new RelayCommand((o) =>
+                {
+                    try
+                    {
+                        _clients = new ObservableCollection<Clients>(context.Clients.ToList());
+                        _filteredClients = _clients;
+                        FilterPersons();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                });
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;

@@ -23,12 +23,12 @@ namespace TMC.View
     {
         public RepairParts RepairParts { get; private set; }
 
-        public RepairPartWindow(RepairParts repairParts)
+        public RepairPartWindow(RepairParts repairParts, StoreViewModel vm)
         {
             InitializeComponent();
             RepairParts = repairParts;
             DataContext = repairParts;
-            WriteOffBtn.DataContext = new StoreViewModel();
+            WriteOffBtn.DataContext = vm;
         }
         void Accept_Click(object sender, RoutedEventArgs e)
         {

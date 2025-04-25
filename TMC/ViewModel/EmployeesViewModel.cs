@@ -83,10 +83,9 @@ namespace TMC.ViewModel
                           employee.Roles = employeeWindow.RoleBox.SelectedItem as Roles;
                           string password = GeneratePassword();
                           employee.Password = password;
-                          SendPassword(employee, password);
+                          SendCredentials(employee, employee.Login, password);
                           context.Employees.AddOrUpdate(employee);
                           context.SaveChanges();
-                          EmployeesList.Clear();
                           _employees = new ObservableCollection<Employees>(context.Employees.ToList());
                           _filteredEmployees = new ObservableCollection<Employees>(_employees);
                           FilterPersons();
@@ -130,7 +129,6 @@ namespace TMC.ViewModel
                             _employees = new ObservableCollection<Employees>(context.Employees);
                             _filteredEmployees = _employees;
                             FilterPersons();
-                            dataGrid.ItemsSource = EmployeesList;
                         }
                     }
                     catch (Exception ex)
@@ -149,10 +147,14 @@ namespace TMC.ViewModel
                     try
                     {
                         Employees employee = selectedItem as Employees;
-                        if (employee == null) return;
+                        if (employee == null) {
+                            MessageBox.Show("Выберите сотрудника для удаления", "Удаление сотрудника", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                            }
+                        var result = MessageBox.Show($"Вы действительно хотите удалить сотрудника: {employee.Surname} {employee.Name} {employee.Patronymic}", "Удаление сотрудника", MessageBoxButton.YesNo, MessageBoxImage.Question ) ;
+                        if (result == MessageBoxResult.No) return;
                         context.Employees.Remove(employee);
                         context.SaveChanges();
-                        EmployeesList.Clear();
                         _employees = new ObservableCollection<Employees>(context.Employees.ToList());
                         _filteredEmployees = new ObservableCollection<Employees>(_employees);
                         FilterPersons();
@@ -178,7 +180,7 @@ namespace TMC.ViewModel
 
                         Employees employee = employeeWindow.Employees;
                         string password = GeneratePassword();
-                        SendPassword(employee, password);
+                        SendCredentials(employee, employee.Login, password);
                         employee.Password = password;
                         context.Employees.AddOrUpdate(employee);
                         context.SaveChanges();
@@ -210,29 +212,61 @@ namespace TMC.ViewModel
 
             return new string(password);
         }
-        public void SendPassword(Employees employee, string password)
+        public void SendCredentials(Employees employee, string login, string password)
         {
             try
             {
                 MailAddress from = new MailAddress("aliya_iskhakova12@mail.ru", "Сервисный центр ТехноМедиаСоюз");
                 MailAddress to = new MailAddress(employee.Email);
                 MailMessage m = new MailMessage(from, to);
-                m.Subject = "Тест";
-                m.Body = "<p>Пароль: " + password + "</p>";
-                //user.Password = GetHashString(newPasword);
+                m.Subject = "Ваши учетные данные для доступа в систему";
 
+                string htmlBody = $@"
+        <div style='font-family: Arial; max-width: 600px; margin: 0 auto; border: 1px solid #DFE4FB; border-radius: 5px; overflow: hidden;'>
+            <div style='background-color: #0A1C6F; padding: 15px; color: white;'>
+                <h2 style='margin: 0;'>Сервисный центр ТехноМедиаСоюз</h2>
+            </div>
+            
+            <div style='padding: 20px; background-color: #DFE4FB;'>
+                <h3 style='color: #0E2280;'>Ваши данные для входа в систему</h3>
+                
+                <div style='background-color: white; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #889DFB;'>
+                    <p style='font-weight: bold; color: #162774; margin: 0 0 5px 0;'>Логин:</p>
+                    <p style='font-size: 16px; color: #0E2280; margin: 0; padding: 8px; background-color: #f5f5f5; border-radius: 3px;'>{login}</p>
+                    
+                    <p style='font-weight: bold; color: #162774; margin: 15px 0 5px 0;'>Пароль:</p>
+                    <p style='font-size: 16px; color: #0E2280; margin: 0; padding: 8px; background-color: #f5f5f5; border-radius: 3px;'>{password}</p>
+                </div>
+                
+                <p style='color: #162774;'>Используйте эти данные для входа в систему.</p>
+                
+                <div style='margin-top: 20px; padding: 10px; background-color: #FFEEEE; border-radius: 5px; border: 1px solid #FFCCCC;'>
+                    <p style='color: #990000; margin: 0; font-size: 13px;'>
+                        <b>Важно:</b> Не передавайте эти данные третьим лицам.
+                    </p>
+                </div>
+            </div>
+            
+            <div style='background-color: #0A1C6F; padding: 10px; color: white; text-align: center; font-size: 12px;'>
+                <p style='margin: 0;'>С уважением, администрация ТехноМедиаСоюз</p>
+            </div>
+        </div>";
+
+                m.Body = htmlBody;
                 m.IsBodyHtml = true;
+
                 SmtpClient smtp = new SmtpClient("smtp.mail.ru", 587);
                 smtp.Credentials = new NetworkCredential("aliya_iskhakova12@mail.ru", "HKqzZM2FQTJC3v09cmZd");
                 smtp.EnableSsl = true;
                 smtp.Send(m);
 
-                MessageBox.Show($"Пароль сотрудника {employee.Surname} {employee.Name} {employee.Patronymic} отправлен на почту {employee.Email}",
-                    "Изменение пароля", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Учетные данные отправлены на почту {employee.Email}",
+                    "Отправка учетных данных", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Произошла ошибка при отправки пароля: {ex.Message} ", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Произошла ошибка при отправке учетных данных: {ex.Message}",
+                               "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

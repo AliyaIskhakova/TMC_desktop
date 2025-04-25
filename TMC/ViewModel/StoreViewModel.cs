@@ -77,13 +77,13 @@ namespace TMC.ViewModel
             {
                 if (string.IsNullOrEmpty(_searchText))
                 {
-                    RepairPartsList = new ObservableCollection<RepairParts>(_parts);
+                    RepairPartsList = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
                     WriteOffList = new ObservableCollection<WriteOff_RepairParts>(context.WriteOff_RepairParts.ToList());
                 }
                 else
                 {
                     _searchText = _searchText.ToLowerInvariant().Trim();
-                    var filtered = _parts.Where(e => e.Name.ToLowerInvariant().Contains(_searchText));
+                    var filtered = context.RepairParts.AsEnumerable().Where(e => e.Name.ToLowerInvariant().Contains(_searchText));
                     var filteredWriteOff = context.WriteOff_RepairParts.AsEnumerable().Where(e =>  e.RepairParts.Name.Contains(_searchText) ||
                             e.Date.ToString("dd.MM.yyyy").Contains(_searchText))
                         .ToList(); RepairPartsList = new ObservableCollection<RepairParts>(filtered);
@@ -140,13 +140,17 @@ namespace TMC.ViewModel
                 {
                     try
                     {
-                        RepairPartWindow repairPartWindow = new RepairPartWindow(new RepairParts());
+                        MessageBox.Show(_searchText);
+                        RepairPartWindow repairPartWindow = new RepairPartWindow(new RepairParts(), this);
+                        MessageBox.Show(_searchText);
                         if (repairPartWindow.ShowDialog() == true)
                         {
                             RepairParts parts = repairPartWindow.RepairParts;
                             context.RepairParts.Add(parts);
                             context.SaveChanges();
-                            RepairPartsList = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
+                            MessageBox.Show(_searchText);
+                            FilterParts();
+
                         }
 
                     }
@@ -163,9 +167,11 @@ namespace TMC.ViewModel
             {
                 return new RelayCommand((selectedItem) =>
                 {
-                    try
-                    {
-                        var dataGrid = selectedItem as DataGrid;
+                    //try
+                    //{
+
+                    MessageBox.Show(_searchText);
+                    var dataGrid = selectedItem as DataGrid;
                         RepairParts part = dataGrid.SelectedItem as RepairParts;
                         if (part == null) return;
                         RepairParts vm = new RepairParts
@@ -175,7 +181,9 @@ namespace TMC.ViewModel
                             Cost = part.Cost,
                             Count = part.Count
                         };
-                        RepairPartWindow repairPartWindow = new RepairPartWindow(vm);
+
+                    MessageBox.Show(_searchText);
+                    RepairPartWindow repairPartWindow = new RepairPartWindow(vm, this);
                         if (repairPartWindow.ShowDialog() == true)
                         {
                             part = repairPartWindow.RepairParts;
@@ -184,13 +192,12 @@ namespace TMC.ViewModel
                             _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
                             _filteredParts = _parts;
                             FilterParts();
-                            dataGrid.ItemsSource = RepairPartsList;
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    //}
 
                 });
             }

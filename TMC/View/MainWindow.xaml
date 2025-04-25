@@ -77,6 +77,13 @@
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="MinWidth" Value="130"/>
         </Style>
+        <Style TargetType="Button" x:Key="DeleteBtn" BasedOn="{StaticResource MainBtn}">
+            <Setter Property="Margin" Value="5 0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="MinWidth" Value="130"/>
+            <Setter Property="Background" Value="#FFD64040"/>
+            <Setter Property="BorderBrush" Value="#FFD64040"/>
+        </Style>
         <Style TargetType="Border" x:Key="BtnBorder">
             <!--<Setter Property="Background" Value="{TemplateBinding Background}"/>-->
             <Setter Property="Padding" Value="0 5"/>
@@ -197,8 +204,11 @@
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Заявки</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchRequest" Style="{StaticResource SearchBox}"></TextBox>
-                    <Button x:Name="FilterBtn" >Фильтр</Button>
+                    
                     <Button x:Name="AddRequest" Command="{Binding AddRequestCommand}" >+ Добавить заявку</Button>
+                    <Button MaxWidth="30" Command="{Binding UpdateListCommand}"  >
+                        <Image Height="15" Source="/Image/Update.png" />
+                    </Button>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Top" x:Name="FilterBtnGroup" Orientation="Horizontal" Margin="20 0 ">
                     <Button Click="ButtonFilter_Click" CommandParameter="Все" Style="{StaticResource DefaultCheckFilter}" Content="Все"/>
@@ -286,7 +296,9 @@
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchClient" Style="{StaticResource SearchBox}"  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Button x:Name="AddClient"  Command="{Binding AddClientCommand}">+ Добавить</Button>
-
+                    <Button MaxWidth="30" Command="{Binding UpdateListCommand}"  >
+                        <Image Height="15" Source="/Image/Update.png" />
+                    </Button>
                 </StackPanel>
 
                 <DataGrid x:Name="ClientsDG"  MouseDoubleClick="ClientsDG_MouseDoubleClick"  ItemsSource="{Binding ClientsList}" Style="{StaticResource MainDataGrid}">
@@ -332,7 +344,7 @@
                     <TextBox x:Name="SearchServices" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     <Button x:Name="PrintPriceList" Command="{Binding PrintPriceListCommand}" >Печать</Button>
                     <Button x:Name="AddService" Visibility="Collapsed" Command="{Binding AddServicesCommand}">+ Добавить</Button>
-                    <Button x:Name="DeleteService" Visibility="Collapsed" Command="{Binding DeleteServicesCommand}" CommandParameter="{Binding ElementName=ServicesDG, Path=SelectedItem}">Удалить</Button>
+                    <Button x:Name="DeleteService" Visibility="Collapsed" Command="{Binding DeleteServicesCommand}" Style="{StaticResource DeleteBtn}" CommandParameter="{Binding ElementName=ServicesDG, Path=SelectedItem}" >Удалить</Button>
 
                 </StackPanel>
                 <DataGrid x:Name="ServicesDG" ItemsSource="{Binding ServicesList}" MouseDoubleClick="ServicesDG_MouseDoubleClick" Style="{StaticResource MainDataGrid}" >
@@ -354,7 +366,7 @@
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                     <TextBox x:Name="SearchEmployee" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBox}" MinWidth="400" ></TextBox>
                     <Button x:Name="AddEmployee" Visibility="Collapsed" Command="{Binding AddEmployeeCommand}">+ Добавить</Button>
-                    <Button x:Name="DeleteEmployee" Visibility="Collapsed" Command="{Binding DeleteEmployeeCommand}" CommandParameter="{Binding ElementName=EmployeesDG, Path=SelectedItem}">Удалить</Button>
+                    <Button x:Name="DeleteEmployee" Visibility="Collapsed" Command="{Binding DeleteEmployeeCommand}" CommandParameter="{Binding ElementName=EmployeesDG, Path=SelectedItem}" Style="{StaticResource DeleteBtn}">Удалить</Button>
                 </StackPanel>
                 
                 <DataGrid x:Name="EmployeesDG" MouseDoubleClick="EmployeesDG_MouseDoubleClick" ItemsSource="{Binding EmployeesList}" Style="{StaticResource MainDataGrid}">
