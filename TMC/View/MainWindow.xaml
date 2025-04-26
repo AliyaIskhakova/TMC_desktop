@@ -260,15 +260,22 @@
                     <Button Click="StoreBtn_Click" CommandParameter="1" Style="{StaticResource Filter}" Content="Списания" />
                 </StackPanel>
                 <Grid>
-                    <DataGrid x:Name="StoreDG" MouseDoubleClick="StoreDG_MouseDoubleClick" ItemsSource="{Binding RepairPartsList}" Style="{StaticResource MainDataGrid}" >
+                    <DataGrid x:Name="StoreDG" MouseDoubleClick="StoreDG_MouseDoubleClick" ItemsSource="{Binding RepairPartsListVm}" Style="{StaticResource MainDataGrid}" >
                         <DataGrid.Resources>
                             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                         </DataGrid.Resources>
-
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ID" Binding="{Binding IdPart}"/>
                             <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="Количество" Binding="{Binding Count}"/>
+                            <DataGridTextColumn Header="Количество" Binding="{Binding Count}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Center"/>
+                                        <Setter Property="Background" Value="{Binding StockStatusColor}"/>
+                                        <Setter Property="ToolTip" Value="{Binding StockToolTip}" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
                         </DataGrid.Columns>
                     </DataGrid>

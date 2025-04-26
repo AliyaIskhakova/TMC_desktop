@@ -11,7 +11,7 @@
     Background="#E4E9FF"
     Name="window"
     mc:Ignorable="d"
-    Title="ClientWindow" MinHeight="330" MinWidth="450" MaxHeight="300" MaxWidth="600">
+    Title="ClientWindow" MinHeight="330" MinWidth="450" MaxHeight="400" MaxWidth="600">
     
     <DockPanel >
         <Border DockPanel.Dock="Top">
@@ -29,6 +29,8 @@
                     <TextBox x:Name="PartName" Text="{Binding Name}" ui:TextBoxHelper.Watermark="Название" Style="{StaticResource InfoTxtBox}"/>
                     <ui:MetroHeader Content="Количество ЗИП на складе*"/>
                     <TextBox x:Name="PartCount" Text="{Binding Count}" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
+                    <ui:MetroHeader Content="Минимальный остаток*"/>
+                    <TextBox x:Name="PartMinStock" Text="{Binding MinStock}" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
                     <ui:MetroHeader Content="Цена за ед.*"/>
                     <TextBox x:Name="PartCost" Text="{Binding Cost}"  ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
                 </StackPanel>

@@ -277,6 +277,7 @@
     <Compile Include="ViewModel\DocumentsClass.cs" />
     <Compile Include="ViewModel\EmployeesViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="ViewModel\RepairPartViewModel.cs" />
     <Compile Include="ViewModel\ReportsViewModel.cs" />
     <Compile Include="ViewModel\RequestViewModel.cs" />
     <Compile Include="ViewModel\ServicesViewModel.cs" />

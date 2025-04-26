@@ -15,7 +15,7 @@
             <TextBox x:Name="SearchServices" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             <Button Style="{StaticResource MainBtn}" Command="{Binding AddSelectedPartsCommand}" CommandParameter="{Binding ElementName=addParts}" >Добавить к заявке</Button>
         </StackPanel>
-        <DataGrid x:Name="RepairPartsDG"  SelectionMode="Extended" ItemsSource="{Binding RepairPartsList}" Margin="10,20,10,10" Style="{StaticResource MainDataGrid}" >
+        <DataGrid x:Name="RepairPartsDG"  SelectionMode="Extended" ItemsSource="{Binding RepairPartsListVm}" Margin="10,20,10,10" Style="{StaticResource MainDataGrid}" >
             <DataGrid.Resources>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
             </DataGrid.Resources>
