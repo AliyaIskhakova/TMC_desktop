@@ -4,10 +4,10 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="be6ca7578fb34c44835b77ef8a324c85" Name="Diagram1">
+      <Diagram DiagramId="54c07a31ec9c402d90ee3eafaa3ebb72" Name="Diagram1">
         <EntityTypeShape EntityType="ServiceCenterTMCModel.Clients" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
         <EntityTypeShape EntityType="ServiceCenterTMCModel.Employees" Width="1.5" PointX="3" PointY="3.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ServiceCenterTMCModel.RepairParts" Width="1.5" PointX="5.25" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.RepairParts" Width="1.5" PointX="5.25" PointY="15.625" IsExpanded="true" />
         <EntityTypeShape EntityType="ServiceCenterTMCModel.Request_RepairParts" Width="1.5" PointX="7.5" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ServiceCenterTMCModel.Requests" Width="1.5" PointX="5.25" PointY="2.375" IsExpanded="true" />
         <EntityTypeShape EntityType="ServiceCenterTMCModel.Requests_Services" Width="1.5" PointX="7.5" PointY="0.75" IsExpanded="true" />
@@ -15,8 +15,8 @@
         <EntityTypeShape EntityType="ServiceCenterTMCModel.Services" Width="1.5" PointX="5.25" PointY="11.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ServiceCenterTMCModel.ServiceTypes" Width="1.5" PointX="3" PointY="12" IsExpanded="true" />
         <EntityTypeShape EntityType="ServiceCenterTMCModel.Statuses" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ServiceCenterTMCModel.sysdiagrams" Width="1.5" PointX="9.75" PointY="2" IsExpanded="true" />
-        <EntityTypeShape EntityType="ServiceCenterTMCModel.WriteOff_RepairParts" Width="1.5" PointX="7.5" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.sysdiagrams" Width="1.5" PointX="5.75" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="ServiceCenterTMCModel.WriteOff_RepairParts" Width="1.5" PointX="7.5" PointY="15.75" IsExpanded="true" />
         <AssociationConnector Association="ServiceCenterTMCModel.FK_Requests_Clients" ManuallyRouted="false" />
         <AssociationConnector Association="ServiceCenterTMCModel.FK_Employees_Roles" ManuallyRouted="false" />
         <AssociationConnector Association="ServiceCenterTMCModel.FK_Requests_Employees" ManuallyRouted="false" />

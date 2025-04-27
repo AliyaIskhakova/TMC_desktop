@@ -25,7 +25,7 @@ namespace TMC.ViewModel
         public double Cost => _part.Cost;
         public int Count => _part.Count;
 
-        public int MinStock { get; set; } = 3;
+        public int MinStock => (int)_part.MinStock;
 
         // Средние продажи в день (рассчитывается отдельно)
         public double AvgSalesPerDay
@@ -61,7 +61,8 @@ namespace TMC.ViewModel
         }
 
         public string StockToolTip =>
-            $"Текущий остаток: {Count} шт.\n"  +
+            $"Текущий остаток: {Count} шт.\n" +
+            $"Минимальный запас: {MinStock} шт.\n" +
             (AvgSalesPerDay > 0
                 ? $"Средний расход: {AvgSalesPerDay:0.0} шт./день\n" +
                   $"Остаток на: {DaysOfStockLeft:0.0} дней"

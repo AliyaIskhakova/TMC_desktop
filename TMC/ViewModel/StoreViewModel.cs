@@ -202,11 +202,13 @@ namespace TMC.ViewModel
                     try
                     {
                         RepairPartWindow repairPartWindow = new RepairPartWindow(new RepairParts(), this);
+                        repairPartWindow.WriteOffBtn.Visibility = Visibility.Collapsed;
                         if (repairPartWindow.ShowDialog() == true)
                         {
                             RepairParts parts = repairPartWindow.RepairParts;
                             context.RepairParts.Add(parts);
                             context.SaveChanges();
+                            _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
                             FilterParts();
 
                         }

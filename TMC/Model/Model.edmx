@@ -14,9 +14,9 @@
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Patronymic" Type="nvarchar(max)" />
           <Property Name="Telephone" Type="nvarchar" MaxLength="17" Nullable="false" />
+          <Property Name="Email" Type="nvarchar(max)" />
           <Property Name="Type" Type="bit" Nullable="false" />
           <Property Name="CompanyName" Type="nvarchar(max)" />
-          <Property Name="Email" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Employees">
           <Key>
@@ -28,9 +28,9 @@
           <Property Name="Patronymic" Type="nvarchar(max)" />
           <Property Name="RoleId" Type="int" Nullable="false" />
           <Property Name="Telephone" Type="nvarchar" MaxLength="17" Nullable="false" />
+          <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Login" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Email" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="RepairParts">
           <Key>
@@ -40,6 +40,7 @@
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Count" Type="int" Nullable="false" />
           <Property Name="Cost" Type="float" Nullable="false" />
+          <Property Name="MinStock" Type="int" />
         </EntityType>
         <EntityType Name="Request_RepairParts">
           <Key>
@@ -58,17 +59,17 @@
           <Property Name="ClientId" Type="int" Nullable="false" />
           <Property Name="StatusId" Type="int" Nullable="false" />
           <Property Name="Reason" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Date" Type="datetime" />
-          <Property Name="Cost" Type="float" Nullable="false" />
-          <Property Name="IMEI/SN" Type="nvarchar(max)" />
-          <Property Name="Device" Type="nvarchar(max)" />
-          <Property Name="CompletionDate" Type="datetime" />
-          <Property Name="MasterId" Type="int" />
-          <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="DetectedMulfunction" Type="nvarchar(max)" />
+          <Property Name="MasterId" Type="int" />
+          <Property Name="CompletionDate" Type="datetime" />
+          <Property Name="Cost" Type="float" Nullable="false" />
+          <Property Name="Device" Type="nvarchar(max)" />
+          <Property Name="IMEI/SN" Type="nvarchar(max)" />
           <Property Name="Appearance" Type="nvarchar(max)" />
+          <Property Name="Type" Type="bit" Nullable="false" />
           <Property Name="Address" Type="nvarchar(max)" />
-          <Property Name="Type" Type="bit" />
+          <Property Name="Notes" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Requests_Services">
           <Key>
@@ -91,7 +92,7 @@
             <PropertyRef Name="IdService" />
           </Key>
           <Property Name="IdService" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="Cost" Type="float" Nullable="false" />
           <Property Name="TypeId" Type="int" />
         </EntityType>
@@ -208,7 +209,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Requests_Services_Services">
-          <End Role="Services" Type="Self.Services" Multiplicity="1" />
+          <End Role="Services" Type="Self.Services" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Requests_Services" Type="Self.Requests_Services" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Services">
@@ -325,9 +328,9 @@
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Patronymic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Telephone" Type="String" MaxLength="17" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Type" Type="Boolean" Nullable="false" />
           <Property Name="CompanyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Clients" FromRole="Clients" ToRole="Requests" />
         </EntityType>
         <EntityType Name="Employees">
@@ -340,9 +343,9 @@
           <Property Name="Patronymic" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="RoleId" Type="Int32" Nullable="false" />
           <Property Name="Telephone" Type="String" MaxLength="17" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Login" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Roles" Relationship="Self.FK_Employees_Roles" FromRole="Employees" ToRole="Roles" />
           <NavigationProperty Name="Requests" Relationship="Self.FK_Requests_Employees" FromRole="Employees" ToRole="Requests" />
         </EntityType>
@@ -354,6 +357,7 @@
           <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Count" Type="Int32" Nullable="false" />
           <Property Name="Cost" Type="Double" Nullable="false" />
+          <Property Name="MinStock" Type="Int32" />
           <NavigationProperty Name="Request_RepairParts" Relationship="Self.FK_Request_RepairParts_RepairParts" FromRole="RepairParts" ToRole="Request_RepairParts" />
           <NavigationProperty Name="WriteOff_RepairParts" Relationship="Self.FK_WriteOff_RepairParts_RepairParts" FromRole="RepairParts" ToRole="WriteOff_RepairParts" />
         </EntityType>
@@ -376,17 +380,17 @@
           <Property Name="ClientId" Type="Int32" Nullable="false" />
           <Property Name="StatusId" Type="Int32" Nullable="false" />
           <Property Name="Reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <Property Name="Cost" Type="Double" Nullable="false" />
-          <Property Name="IMEI_SN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Device" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CompletionDate" Type="DateTime" Precision="3" />
-          <Property Name="MasterId" Type="Int32" />
-          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DetectedMulfunction" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MasterId" Type="Int32" />
+          <Property Name="CompletionDate" Type="DateTime" Precision="3" />
+          <Property Name="Cost" Type="Double" Nullable="false" />
+          <Property Name="Device" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IMEI_SN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Appearance" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="Boolean" Nullable="false" />
           <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Type" Type="Boolean" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Clients" Relationship="Self.FK_Requests_Clients" FromRole="Requests" ToRole="Clients" />
           <NavigationProperty Name="Employees" Relationship="Self.FK_Requests_Employees" FromRole="Requests" ToRole="Employees" />
           <NavigationProperty Name="Request_RepairParts" Relationship="Self.FK_Request_RepairParts_Requests" FromRole="Requests" ToRole="Request_RepairParts" />
@@ -417,7 +421,7 @@
             <PropertyRef Name="IdService" />
           </Key>
           <Property Name="IdService" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Cost" Type="Double" Nullable="false" />
           <Property Name="TypeId" Type="Int32" />
           <NavigationProperty Name="Requests_Services" Relationship="Self.FK_Requests_Services_Services" FromRole="Services" ToRole="Requests_Services" />
@@ -565,7 +569,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Requests_Services_Services">
-          <End Role="Services" Type="Self.Services" Multiplicity="1" />
+          <End Role="Services" Type="Self.Services" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Requests_Services" Type="Self.Requests_Services" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Services">
@@ -656,9 +662,9 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
                 <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -671,9 +677,9 @@
                 <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Login" ColumnName="Login" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -684,6 +690,7 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
                 <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="MinStock" ColumnName="MinStock" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -704,16 +711,16 @@
                 <ScalarProperty Name="StatusId" ColumnName="StatusId" />
                 <ScalarProperty Name="Reason" ColumnName="Reason" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Cost" ColumnName="Cost" />
-                <ScalarProperty Name="IMEI_SN" ColumnName="IMEI/SN" />
-                <ScalarProperty Name="Device" ColumnName="Device" />
-                <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
-                <ScalarProperty Name="MasterId" ColumnName="MasterId" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="DetectedMulfunction" ColumnName="DetectedMulfunction" />
+                <ScalarProperty Name="MasterId" ColumnName="MasterId" />
+                <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="Device" ColumnName="Device" />
+                <ScalarProperty Name="IMEI_SN" ColumnName="IMEI/SN" />
                 <ScalarProperty Name="Appearance" ColumnName="Appearance" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

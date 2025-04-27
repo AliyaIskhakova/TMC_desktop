@@ -28,10 +28,9 @@ namespace TMC.Model
         private string patronymic { get; set; }
         public int RoleId { get; set; }
         private string telephone { get; set; }
+        private string email { get; set; }
         private string login { get; set; }
         private string password { get; set; }
-        private string email { get; set; }
-    
         public virtual Roles Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests> Requests { get; set; }

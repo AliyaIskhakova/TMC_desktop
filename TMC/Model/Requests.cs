@@ -26,16 +26,16 @@ namespace TMC.Model
         public int StatusId { get; set; }
         public string Reason { get; set; }
         public System.DateTime Date { get; set; }
-        public double Cost { get; set; }
-        public string IMEI_SN { get; set; }
-        public string Device { get; set; }
-        public Nullable<System.DateTime> CompletionDate { get; set; }
-        public Nullable<int> MasterId { get; set; }
-        public string Notes { get; set; }
         public string DetectedMulfunction { get; set; }
+        public Nullable<int> MasterId { get; set; }
+        public Nullable<System.DateTime> CompletionDate { get; set; }
+        public double Cost { get; set; }
+        public string Device { get; set; }
+        public string IMEI_SN { get; set; }
         public string Appearance { get; set; }
+        public bool Type { get; set; }
         public string Address { get; set; }
-        public Nullable<bool> Type { get; set; }
+        public string Notes { get; set; }
     
         public virtual Clients Clients { get; set; }
         public virtual Employees Employees { get; set; }

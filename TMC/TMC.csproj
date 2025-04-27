@@ -443,6 +443,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Image\Update.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Model\Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model.edmx</DependentUpon>

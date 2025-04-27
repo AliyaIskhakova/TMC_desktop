@@ -286,7 +286,7 @@
                         </DataGrid.Resources>
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding RepairPartId}"/>
+                            <DataGridTextColumn Header="ID" Binding="{Binding RepaitPartId}"/>
                             <DataGridTextColumn Header="Название" Binding="{Binding RepairParts.Name}"/>
                             <DataGridTextColumn Header="Количество" Binding="{Binding Count}"/>
                             <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat=dd.MM.yyyy}"/>

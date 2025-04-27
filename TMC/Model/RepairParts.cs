@@ -23,24 +23,21 @@ namespace TMC.Model
             this.WriteOff_RepairParts = new HashSet<WriteOff_RepairParts>();
         }
         private int count;
-        private int minStock;
         public int IdPart { get; set; }
         public string Name { get; set; }
         public int Count { get { return count; } set { count = value; OnPropertyChanged(); } }
-        public int MinStock { get; set; }
         public double Cost { get; set; }
+        public Nullable<int> MinStock { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Request_RepairParts> Request_RepairParts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WriteOff_RepairParts> WriteOff_RepairParts { get; set; }
-
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-
     }
 }

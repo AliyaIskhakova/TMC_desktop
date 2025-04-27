@@ -24,16 +24,18 @@ namespace TMC.Model
         }
     
         public int IdClient { get; set; }
-        private string surname { get; set; }
+private string surname { get; set; }
         private string name { get; set; }
         private string patronymic { get; set; }
         private string telephone { get; set; }
         private bool type { get; set; }
-        private string companyName { get; set; }
         private string email { get; set; }
-    
+
+        private string companyName { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Requests> Requests { get; set; }
+
         public string Name
         {
             get { return name; }
