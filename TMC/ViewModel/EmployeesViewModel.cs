@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity.Migrations;
@@ -7,13 +6,9 @@ using System.Linq;
 using System.Net.Mail;
 using System.Net;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using TMC.Model;
 using TMC.View;
-using Xceed.Wpf.Toolkit.Primitives;
-using System.Windows.Resources;
 using System.Windows.Controls;
 
 namespace TMC.ViewModel
@@ -151,7 +146,7 @@ namespace TMC.ViewModel
                             MessageBox.Show("Выберите сотрудника для удаления", "Удаление сотрудника", MessageBoxButton.OK, MessageBoxImage.Information);
                         return;
                             }
-                        var result = MessageBox.Show($"Вы действительно хотите удалить сотрудника: {employee.Surname} {employee.Name} {employee.Patronymic}", "Удаление сотрудника", MessageBoxButton.YesNo, MessageBoxImage.Question ) ;
+                        var result = MessageBox.Show($"Вы действительно хотите удалить сотрудника: {employee.Surname} {employee.Name} {employee.Patronymic}?", "Удаление сотрудника", MessageBoxButton.YesNo, MessageBoxImage.Question ) ;
                         if (result == MessageBoxResult.No) return;
                         context.Employees.Remove(employee);
                         context.SaveChanges();
@@ -198,11 +193,10 @@ namespace TMC.ViewModel
         public static string GeneratePassword()
         {
             Random random = new Random();
-            // Символы, которые могут использоваться в пароле
             const string chars = "abcdefghijklmnopqrstuvwxyz" +
                                  "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                                  "0123456789" +
-                                 "!@#$%&_";
+                                 "!#$&_";
             int length = random.Next(6, 16);
             char[] password = new char[length];
             for (int i = 0; i < length; i++)

@@ -1,18 +1,6 @@
-﻿using Microsoft.Office.Interop.Word;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using TMC.Model;
 using TMC.ViewModel;
 using Window = System.Windows.Window;
@@ -26,7 +14,7 @@ namespace TMC.View
     {
         public Requests Requests { get; private set; }
         public RequestView RequestView { get; private set; }
-        public RequestWindow(Requests request, RequestViewModel vm)
+        public RequestWindow(Requests request, RequestViewModel vm, ClientsViewModel clientVM)
         {
             try
             {
@@ -39,7 +27,7 @@ namespace TMC.View
                 SaveBtn.DataContext = vm;
                 PrintBtns.DataContext = vm;
                 RequestRepairParts.DataContext = vm;
-                ClientComboBox.DataContext = new ClientsViewModel();
+                ClientComboBox.DataContext = clientVM;
                 ClientInfo.DataContext = new Clients();
             }
             catch (Exception ex)
@@ -56,11 +44,15 @@ namespace TMC.View
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() && int.TryParse(RequestCost.Text, out int cost) && cost >= 0)
+                if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() 
+                    && int.TryParse(RequestCost.Text, out int cost) && cost >= 0)
                 {
-                    DialogResult = true;
+                    if ((RequestRepairParts.DataContext as RequestViewModel).CheckSelectedParts())
+                    {
+                        DialogResult = true;
+                    }
                 }
-                else MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                else MessageBox.Show("Заполните обязательные поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
             {

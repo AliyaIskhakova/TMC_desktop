@@ -26,27 +26,6 @@
                     <Setter Property="Background" Value="#B4C3FF"/>
                 </Trigger>
             </Style.Triggers>
-            <!--<Style.Triggers>
-                <EventTrigger RoutedEvent="MouseEnter">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" To="#B4C3FF" AutoReverse="True" Duration="0:0:0"    />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="MouseLeave">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)" To="#B4C3FF" AutoReverse="True" Duration="0:0:0"    />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-            </Style.Triggers>-->
-
         </Style>
         
          <Style TargetType="Image" x:Key="MenuImg">

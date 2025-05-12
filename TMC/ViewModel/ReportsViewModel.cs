@@ -1,15 +1,12 @@
 ﻿using LiveCharts;
 using LiveCharts.Wpf;
-using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.ComTypes;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -226,7 +223,6 @@ namespace TMC.ViewModel
             EmployeeStats = new ObservableCollection<EmployeeStat>(employeeGroups);
             EmployeeFullNames = employeeGroups.Select(e => e.FullName).ToList();
 
-            // Prepare chart data with full names
             EmployeeOrdersSeries = new SeriesCollection
             {
                 new ColumnSeries

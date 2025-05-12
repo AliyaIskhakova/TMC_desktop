@@ -5,10 +5,6 @@ using System.ComponentModel;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography.Xml;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI.WebControls.WebParts;
 using System.Windows;
 using System.Windows.Controls;
 using TMC.Model;
@@ -39,10 +35,8 @@ namespace TMC.ViewModel
         {
             try
             {
-                // Получаем данные о продажах
                 _avgSalesData = CalculateAvgSales();
 
-                // Загружаем запчасти и преобразуем в ViewModel
                 var parts = context.RepairParts.ToList();
                 _partsVm = new ObservableCollection<RepairPartViewModel>(
                     parts.Select(p => new RepairPartViewModel(p)
@@ -66,12 +60,10 @@ namespace TMC.ViewModel
             var tenDaysAgo = DateTime.Now.AddDays(-14);
             var today = DateTime.Now;
 
-            // Получаем количество рабочих дней (исключаем выходные)
             int totalDays = Enumerable.Range(0, (today - tenDaysAgo).Days)
                 .Select(d => tenDaysAgo.AddDays(d))
                 .Count(d => d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday);
 
-            // Если нет рабочих дней, используем календарные (но минимум 1 день)
             totalDays = Math.Max(totalDays, 1);
 
             return context.Request_RepairParts
@@ -79,7 +71,7 @@ namespace TMC.ViewModel
                 .GroupBy(r => r.RepairPartId)
                 .ToDictionary(
                     g => g.Key,
-                    g => g.Sum(r => r.Count) / (double)totalDays // Среднее в рабочие дни
+                    g => g.Sum(r => r.Count) / (double)totalDays 
                 );
         }
 
@@ -180,9 +172,9 @@ namespace TMC.ViewModel
                         var selectedItems = window.RepairPartsDG.SelectedItems.Cast<RepairPartViewModel>().ToList();
                         foreach (var item in selectedItems)
                         {
-                            SelectedParts.Add(item);
+                            if (item.Count < 1) MessageBox.Show($"Недостаточно ЗИП \"{item.Name}\" на складе", "Склад ЗИП", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            else SelectedParts.Add(item);
                         }
-                     // Закрываем окно после добавления услуг
                      (o as Window).DialogResult = true;
                     }
                     catch (Exception ex)
@@ -242,7 +234,6 @@ namespace TMC.ViewModel
                             Count = part.Count
                         };
 
-                    MessageBox.Show(_searchText);
                     RepairPartWindow repairPartWindow = new RepairPartWindow(vm, this);
                         if (repairPartWindow.ShowDialog() == true)
                         {

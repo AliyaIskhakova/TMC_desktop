@@ -1,31 +1,21 @@
-﻿using iText.Kernel.Pdf;
-using PdfSharpCore.Drawing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Entity.Migrations;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Xps.Packaging;
 using TMC.Model;
 using TMC.View;
 using Microsoft.Office.Interop.Word;
 using Application = Microsoft.Office.Interop.Word.Application;
-using System.Runtime.Remoting.Messaging;
 using Table = Microsoft.Office.Interop.Word.Table;
 using Paragraph = Microsoft.Office.Interop.Word.Paragraph;
-using System.Web.UI.WebControls.WebParts;
-using App = System.Windows.Application;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 using System.Net.Mail;
 using System.Net;
 using MailMessage = System.Net.Mail.MailMessage;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TMC.ViewModel
 {
@@ -37,6 +27,8 @@ namespace TMC.ViewModel
         private string _currentFilterStatus = "Все"; // По умолчанию "Все"
         ObservableCollection<Employees> _mastersList;
         private ObservableCollection<RequestView> _requests;
+        ClientsViewModel _clientVM;
+        StoreViewModel _storeVM;
         public ObservableCollection<RequestView> RequestsList
         {
             get { return _requests; }
@@ -48,14 +40,15 @@ namespace TMC.ViewModel
         }
         
 
-        public RequestViewModel()
+        public RequestViewModel(ClientsViewModel clientVM, StoreViewModel storeVM)
         {
             try
             {
                 LoadRequests();
                 _mastersList = new ObservableCollection<Employees>(context.Employees.Where(e => e.RoleId == 3).ToList());
-                // Инициализация таймера для обновления каждую минуту
-                _refreshTimer = new System.Timers.Timer(30000); // 60000 мс = 1 минута
+                _clientVM = clientVM;
+                _storeVM = storeVM;
+                _refreshTimer = new System.Timers.Timer(60000); 
                 _refreshTimer.Elapsed += (sender, e) => RefreshRequests();
                 _refreshTimer.AutoReset = true;
                 _refreshTimer.Enabled = true;
@@ -69,12 +62,8 @@ namespace TMC.ViewModel
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                // Сохраняем текущую позицию прокрутки (если нужно)
-                // var scrollPosition = ...;
-
                 LoadRequests();
 
-                // Применяем сохраненный фильтр
                 if (_currentFilterStatus != "Все")
                 {
                     RequestsList = new ObservableCollection<RequestView>(
@@ -108,21 +97,21 @@ namespace TMC.ViewModel
             {
                 var result = (from r in context.Requests
                               join c in context.Clients on r.ClientId equals c.IdClient into clientGroup
-                              from c in clientGroup.DefaultIfEmpty() // LEFT JOIN для Clients
+                              from c in clientGroup.DefaultIfEmpty() 
                               join e in context.Employees on r.MasterId equals e.IdEmployee into employeeGroup
-                              from e in employeeGroup.DefaultIfEmpty() // LEFT JOIN для Employees
+                              from e in employeeGroup.DefaultIfEmpty() 
                               join s in context.Statuses on r.StatusId equals s.IdStatus 
                               select new RequestView
                               {
                                   IDRequest = r.IdRequest,
-                                  EmployeeID = e.IdEmployee, // Добавьте ID для последующего соединения
+                                  EmployeeID = e.IdEmployee, 
                                   EmployeeSurname = e.Surname,
                                   EmployeeName = e.Name,
                                   EmployeePatronymic = e.Patronymic,
                                   EmployeeTelephone = e.Telephone,
                                   StatusID = s.IdStatus,
                                   StatusName = s.Name,
-                                  ClientID = c.IdClient, // Добавьте ID для последующего соединения
+                                  ClientID = c.IdClient, 
                                   ClientSurname = c.Surname,
                                   ClientName = c.Name,
                                   ClientPatronymic = c.Patronymic,
@@ -224,12 +213,12 @@ namespace TMC.ViewModel
                       {
                           SelectedServices.Clear();
                           SelectedParts.Clear();
-                          RequestWindow requestWindow = new RequestWindow(new Requests(), this);
+                          RequestWindow requestWindow = new RequestWindow(new Requests(), this, _clientVM);
                           
                           requestWindow.MastersBox.ItemsSource = MastersList;
                           requestWindow.StatusBox.ItemsSource = context.Statuses.Where(s => s.Name != "Завершен" && s.Name != "Отменен").ToList();
                           requestWindow.EndDocuument.Visibility = Visibility.Collapsed;
-                          _costTimer = new System.Timers.Timer(100); // 60000 мс = 1 минута
+                          _costTimer = new System.Timers.Timer(100);
                           _costTimer.Elapsed += (sender, e) => RefreshCost(requestWindow);
                           _costTimer.AutoReset = true;
                           _costTimer.Enabled = true;
@@ -356,7 +345,7 @@ namespace TMC.ViewModel
                           RequestView request = selectedItem as RequestView;
                           if (request == null) return;
                           Requests selectedRequest = context.Requests.Find(request.IDRequest);
-                          RequestWindow requestWindow = new RequestWindow(selectedRequest, this);
+                          RequestWindow requestWindow = new RequestWindow(selectedRequest, this, _clientVM);
                           _costTimer = new System.Timers.Timer(100); // 60000 мс = 1 минута
                           _costTimer.Elapsed += (sender, e) => RefreshCost(requestWindow);
                           _costTimer.AutoReset = true;
@@ -387,7 +376,6 @@ namespace TMC.ViewModel
                               requestWindow.PrintBtns.Visibility = Visibility.Collapsed;
                           }
                      
-                          //requestWindow.Show();
                           List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestId == selectedRequest.IdRequest).ToList();
                           foreach (var item in request_services)
                           {
@@ -427,6 +415,7 @@ namespace TMC.ViewModel
                               {
                                   SendEmail(selectedRequest.Clients, selectedRequest, selectedStatus.Name);
                               }
+                              if (selectedStatus.Name == "Готова") selectedRequest.CompletionDate = DateTime.Now;
                               var selectedMaster = requestWindow.MastersBox.SelectedItem as Employees;
                               if (selectedMaster != null) selectedRequest.MasterId = selectedMaster.IdEmployee;
                               selectedRequest.Cost = (int)requestWindow.Requests.Cost;
@@ -454,17 +443,15 @@ namespace TMC.ViewModel
                               }
                               foreach (var part in SelectedParts)
                               {
-                                  
                                   Request_RepairParts request_RepairParts = new Request_RepairParts
                                   {
                                       RequestId = selectedRequest.IdRequest,
                                       RepairPartId = part.IDPart,
-                                      Count = part.Count 
+                                      Count = part.Count
                                   };
                                   context.Request_RepairParts.Add(request_RepairParts);
-                                  
-                              }
 
+                              }
                               _costTimer.Enabled = false;
                               context.SaveChanges();
                               SelectedServices.Clear();
@@ -593,14 +580,12 @@ namespace TMC.ViewModel
                   {
                       try
                       {
-                          AddPartsWindow partsWindow = new AddPartsWindow();
+                          AddPartsWindow partsWindow = new AddPartsWindow(_storeVM);
                           var vm = partsWindow.DataContext as StoreViewModel;
                           RequestWindow requestWindow = o as RequestWindow;
 
                           if (partsWindow.ShowDialog() == true)
                           {
-
-                              // Добавляем выбранные услуги к заявке
                               foreach (var part in vm.SelectedParts)
                               {
                                   bool exists = SelectedParts.Any(rs => rs.IDPart == part.IdPart);
@@ -647,9 +632,10 @@ namespace TMC.ViewModel
 
                     }
                     catch (Exception ex)
-            {
-                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }               });
+                    {
+                        MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }               
+                });
             }
         }
 
@@ -671,10 +657,8 @@ namespace TMC.ViewModel
                         }
                         var request = requestWindow.Requests;
                         var client = requestWindow.ClientInfo.DataContext as Clients;
-                        // Показываем MessageBox в основном потоке
                         MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                        // Запускаем формирование документа в отдельном потоке
                         await System.Threading.Tasks.Task.Run(() =>
                         {
                             Application wordApp = new Microsoft.Office.Interop.Word.Application();
@@ -685,7 +669,6 @@ namespace TMC.ViewModel
                             wordDoc.Content.Font.Name = "Times New Roman";
                             wordDoc.Content.Font.Size = 12;
 
-                            // Добавление описания
                             Paragraph name = wordDoc.Content.Paragraphs.Add();
                             name.Range.Text = "Сервисный центр ТехноМедиаСоюз";
                             name.Range.Font.Size = 13;
@@ -695,7 +678,7 @@ namespace TMC.ViewModel
                             name.Range.InsertParagraphAfter();
 
                             Paragraph descriptionParagraph1 = wordDoc.Content.Paragraphs.Add();
-                            descriptionParagraph1.Range.Text = "ИП \"Сулейманов М.Р.\", г. Арск ул. Школьная 17, http://www.vk.com/servistmsouz," +
+                            descriptionParagraph1.Range.Text = "ИП Сулейманов М.Р., г. Арск Советская площадь 22 " +
                                                              "тел. 8(443) 248-92-60. Время работы с 9.00 до 18.00 (понедельник-пятница), без перерывов ";
                             descriptionParagraph1.Range.Font.Bold = 0;
                             descriptionParagraph1.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
@@ -704,7 +687,6 @@ namespace TMC.ViewModel
                             descriptionParagraph1.Range.InsertParagraphAfter();
                             descriptionParagraph1.Range.InsertParagraphAfter();
 
-                            // Добавление заголовка
                             Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
                             titleParagraph.Range.Text = $"Акт о приеме на ремонт №{request.IdRequest}";
                             titleParagraph.Range.Font.Size = 13;
@@ -712,17 +694,14 @@ namespace TMC.ViewModel
                             titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
                             titleParagraph.Range.InsertParagraphAfter();
 
-                            // Создание таблицы с 5 строками и 2 колонками
                             Table table = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 5, 2);
                             table.Borders.Enable = 1;
                             table.Range.Bold = 0;
                             table.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
 
-                            // Настройка ширины столбцов
                             table.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(5);
                             table.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(12);
 
-                            // Заполнение таблицы данными
                             table.Cell(1, 1).Range.Text = "Клиент";
                             table.Cell(2, 1).Range.Text = "Устройство";
                             table.Cell(3, 1).Range.Text = "Серийный номер";
@@ -737,16 +716,14 @@ namespace TMC.ViewModel
                             for (int i = 1; i <= 5; i++)
                             {
                                 table.Cell(i, 1).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
-                                table.Cell(i, 1).Range.Font.Bold = 1; // Жирный шрифт
+                                table.Cell(i, 1).Range.Font.Bold = 1;
                             }
 
-                            // Выравнивание текста во втором столбце по левому краю
                             for (int i = 1; i <= 5; i++)
                             {
                                 table.Cell(i, 2).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
                             }
 
-                            // Добавление дополнительного описания
                             Paragraph descriptionParagraph = wordDoc.Content.Paragraphs.Add();
                             descriptionParagraph.Range.Text = "Клиент согласен, что все неисправности и внутренние повреждения, которые могут быть обнаружены в оборудовании при техническом обслуживании, " +
                             "возникли до приема оборудования по данной квитанции. В случае утери акта о приеме оборудования на ремонт выдача аппарата производится при предъявлении паспорта лица сдававшего аппарат " +
@@ -761,27 +738,27 @@ namespace TMC.ViewModel
                             descriptionParagraph.Range.InsertParagraphAfter();
                             descriptionParagraph.Range.InsertParagraphAfter();
 
+
                             // Создание таблицы для подписей
                             Table signatureTable = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 2, 2);
                             signatureTable.Borders.Enable = 0;
-
-                            // Заполнение таблицы подписей
                             signatureTable.Cell(1, 1).Range.Text = $"Оборудование в ремонт сдал: {client.Surname} {client.Name[0]}.{client.Patronymic[0]}.";
-                            signatureTable.Cell(1, 2).Range.Text = "_____________________";
+                            signatureTable.Cell(1, 2).Range.Text = "_______________";
                             var receiver = context.Employees.Find((int)App.Current.Properties["UserID"]);
-                            signatureTable.Cell(2, 1).Range.Text = $"Оборудование в ремонт принял: инженер приемщик {receiver.Surname} {receiver.Name[0]}.{receiver.Patronymic[0]}.";
-                            signatureTable.Cell(2, 2).Range.Text = "_____________________";
+                            signatureTable.Cell(2, 1).Range.Text = $"Оборудование в ремонт принял: инженер-приемщик {receiver.Surname} {receiver.Name[0]}.{receiver.Patronymic[0]}.";
+                            signatureTable.Cell(2, 2).Range.Text = "_______________";
 
-                            // Выравнивание текста в таблице подписей
+
+                            signatureTable.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(15);
+                            signatureTable.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(2);
+
                             signatureTable.Rows[1].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
                             signatureTable.Rows[1].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
                             signatureTable.Rows[2].Cells[1].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
                             signatureTable.Rows[2].Cells[2].Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
 
-                            // Отображение документа
                             wordApp.Visible = true;
 
-                            // Предварительный просмотр документа
                             wordDoc.PrintPreview();
                         });
                     }
@@ -818,10 +795,10 @@ namespace TMC.ViewModel
                                 wordDoc.Content.ParagraphFormat.SpaceBefore = 0;
                                 wordDoc.Content.Font.Name = "Times New Roman";
                                 wordDoc.Content.Font.Size = 12;
-                                // Добавление описания
+
                                 Paragraph name = wordDoc.Content.Paragraphs.Add();
                                 name.Range.Text = "Сервисный центр ТехноМедиаСоюз";
-                                name.Range.Font.Size = 12;
+                                name.Range.Font.Size = 13;
                                 name.Range.Font.Bold = 1;
                                 name.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
                                 name.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
@@ -830,9 +807,8 @@ namespace TMC.ViewModel
 
 
                                 Paragraph descriptionParagraph1 = wordDoc.Content.Paragraphs.Add();
-                                descriptionParagraph1.Range.Text = "ИП \"Сулейманов М.Р.\", г. Арск Советская пл. 22" +
+                                descriptionParagraph1.Range.Text = "ИП Сулейманов М.Р., г. Арск Советская площадь 22" +
                                                                  "тел. 8(443) 248-92-60. Время работы с 9.00 до 18.00 (понедельник-пятница), без перерывов ";
-                                descriptionParagraph1.Range.Font.Size = 12;
                                 descriptionParagraph1.Range.Font.Bold = 0;
                                 descriptionParagraph1.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
                                 descriptionParagraph1.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
@@ -840,7 +816,6 @@ namespace TMC.ViewModel
                                 descriptionParagraph1.Range.InsertParagraphAfter();
                                 descriptionParagraph1.Range.InsertParagraphAfter();
 
-                                // Добавление заголовка
                                 Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
                                 titleParagraph.Range.Text = $"Акт о диагностики №{request.IdRequest} от {DateTime.Now.ToShortDateString()}";
                                 titleParagraph.Range.Font.Size = 13;
@@ -849,8 +824,7 @@ namespace TMC.ViewModel
                                 titleParagraph.Range.InsertParagraphAfter();
 
                                 Paragraph detected = wordDoc.Content.Paragraphs.Add();
-                                detected.Range.Text = $"При осмотре {request.Device} выявлены дефекты: {request.DetectedMulfunction}.";
-                                detected.Range.Font.Size = 12;
+                                detected.Range.Text = $"При осмотре устройства: {request.Device} выявлены дефекты: {request.DetectedMulfunction}.";
                                 detected.Range.Font.Bold = 0;
                                 detected.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
                                 detected.Format.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
@@ -859,7 +833,6 @@ namespace TMC.ViewModel
 
                                 Paragraph information = wordDoc.Content.Paragraphs.Add();
                                 information.Range.Text = $"Для устранения выявленных дефектов необходимы следующие запасные засти и работы.";
-                                information.Range.Font.Size = 12;
                                 information.Range.Font.Bold = 0;
                                 information.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
                                 information.Format.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
@@ -872,8 +845,6 @@ namespace TMC.ViewModel
                                 complitedWork.Range.Font.Bold = 1;
                                 complitedWork.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
                                 complitedWork.Range.InsertParagraphAfter();
-                                //List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestId == request.IdRequest).ToList();
-
                                
                                 // Создание таблицы с услугами
                                 Table servicesTable = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, SelectedServices.Count + 1, 2);
@@ -882,15 +853,12 @@ namespace TMC.ViewModel
                                 servicesTable.Range.Font.Bold = 0;
                                 servicesTable.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
 
-                                // Настройка ширины столбцов
                                 servicesTable.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(10);
                                 servicesTable.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(3);
 
-                                // Заполнение заголовков таблицы
                                 servicesTable.Cell(1, 1).Range.Text = "Наименование";
                                 servicesTable.Cell(1, 2).Range.Text = "Кол-во";
 
-                                // Заполнение таблицы данными из списка
                                 for (int i = 0; i < SelectedServices.Count; i++)
                                 {
                                     servicesTable.Cell(i + 2, 1).Range.Text = SelectedServices[i].Name;
@@ -904,22 +872,18 @@ namespace TMC.ViewModel
                                 needZIP.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
                                 needZIP.Range.InsertParagraphAfter();
 
-                                // Создание таблицы с услугами
+                                // Создание таблицы с ЗИП
                                 Table partsTable = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, SelectedParts.Count + 1, 2);
                                 partsTable.Borders.Enable = 1;
                                 partsTable.Range.Font.Size = 11;
                                 partsTable.Range.Font.Bold = 0;
                                 partsTable.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
 
-                                // Настройка ширины столбцов
                                 partsTable.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(10);
                                 partsTable.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(3);
 
-                                // Заполнение заголовков таблицы
                                 partsTable.Cell(1, 1).Range.Text = "Наименование";
                                 partsTable.Cell(1, 2).Range.Text = "Кол-во";
-
-                                // Заполнение таблицы данными из списка
                                 for (int i = 0; i < SelectedParts.Count; i++)
                                 {
                                     partsTable.Cell(i + 2, 1).Range.Text = SelectedParts[i].Name;
@@ -967,10 +931,10 @@ namespace TMC.ViewModel
                                   wordDoc.Content.ParagraphFormat.SpaceBefore = 0;
                                   wordDoc.Content.Font.Name = "Times New Roman";
                                   wordDoc.Content.Font.Size = 12;
-                                  // Добавление описания
+
                                   Paragraph name = wordDoc.Content.Paragraphs.Add();
                                   name.Range.Text = "Сервисный центр ТехноМедиаСоюз";
-                                  name.Range.Font.Size = 12;
+                                  name.Range.Font.Size = 13;
                                   name.Range.Font.Bold = 1;
                                   name.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
                                   name.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
@@ -979,9 +943,8 @@ namespace TMC.ViewModel
 
 
                                   Paragraph descriptionParagraph1 = wordDoc.Content.Paragraphs.Add();
-                                  descriptionParagraph1.Range.Text = "ИП \"Сулейманов М.Р.\", г. Арск ул. Школьная 17, http://www.vk.com/servistmsouz," +
+                                  descriptionParagraph1.Range.Text = "ИП Сулейманов М.Р., г. Арск Советская площадь 22," +
                                                                    "тел. 8(443) 248-92-60. Время работы с 9.00 до 18.00 (понедельник-пятница), без перерывов ";
-                                  descriptionParagraph1.Range.Font.Size = 12;
                                   descriptionParagraph1.Range.Font.Bold = 0;
                                   descriptionParagraph1.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
                                   descriptionParagraph1.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
@@ -989,26 +952,23 @@ namespace TMC.ViewModel
                                   descriptionParagraph1.Range.InsertParagraphAfter();
                                   descriptionParagraph1.Range.InsertParagraphAfter();
 
-                                  // Добавление заголовка
                                   Paragraph titleParagraph = wordDoc.Content.Paragraphs.Add();
-                                  titleParagraph.Range.Text = $"Акт о выполненных рвбот №{request.IdRequest} от {DateTime.Now.ToShortDateString()}";
+                                  titleParagraph.Range.Text = $"Акт о выполненных работах №{request.IdRequest} от {DateTime.Now.ToShortDateString()}";
                                   titleParagraph.Range.Font.Size = 13;
                                   titleParagraph.Range.Font.Bold = 1;
                                   titleParagraph.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
                                   titleParagraph.Range.InsertParagraphAfter();
 
-                                  // Создание таблицы с 5 строками и 2 колонками
                                   Table table = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, 8, 2);
                                   table.Borders.Enable = 1;
                                   table.Range.Bold = 0;
                                   table.Range.Font.Size = 12;
                                   table.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
 
-                                  // Настройка ширины столбцов
                                   table.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(5);
                                   table.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(12);
 
-                                  // Заполнение таблицы данными
+                               
                                   table.Cell(1, 1).Range.Text = "Номер заказа";
                                   table.Cell(2, 1).Range.Text = "ФИО клиента";
                                   table.Cell(3, 1).Range.Text = "Телефон клиента";
@@ -1028,16 +988,15 @@ namespace TMC.ViewModel
                                   for (int i = 1; i <= 8; i++)
                                   {
                                       table.Cell(i, 1).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphRight;
-                                      table.Cell(i, 1).Range.Font.Bold = 1; // Жирный шрифт
+                                      table.Cell(i, 1).Range.Font.Bold = 1; 
                                   }
 
-                                  // Выравнивание текста во втором столбце по левому краю
                                   for (int i = 1; i <= 8; i++)
                                   {
                                       table.Cell(i, 2).Range.ParagraphFormat.Alignment = WdParagraphAlignment.wdAlignParagraphLeft;
                                   }
                                   Paragraph complitedWork = wordDoc.Content.Paragraphs.Add();
-                                  complitedWork.Range.Text = $"Выполненнные работы";
+                                  complitedWork.Range.Text = $"Выполненные работы";
                                   complitedWork.Range.Font.Size = 13;
                                   complitedWork.Range.Font.Bold = 1;
                                   complitedWork.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
@@ -1050,19 +1009,15 @@ namespace TMC.ViewModel
                                   servicesTable.Range.Font.Size = 11;
                                   servicesTable.Range.Font.Bold = 0;
                                   servicesTable.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
-
-                                  // Настройка ширины столбцов
                                   servicesTable.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(10);
                                   servicesTable.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(3);
                                   servicesTable.Columns[3].PreferredWidth = wordApp.CentimetersToPoints(3);
 
-                                  // Заполнение заголовков таблицы
                                   servicesTable.Cell(1, 1).Range.Text = "Наименование";
                                   servicesTable.Cell(1, 2).Range.Text = "Кол-во";
                                   servicesTable.Cell(1, 3).Range.Text = "Цена, руб.";
 
                                   double cost = 0;
-                                  // Заполнение таблицы данными из списка
                                   for (int i = 0; i < SelectedServices.Count; i++)
                                   {
                                       servicesTable.Cell(i + 2, 1).Range.Text = SelectedServices[i].Name;
@@ -1070,6 +1025,38 @@ namespace TMC.ViewModel
                                       servicesTable.Cell(i + 2, 3).Range.Text = SelectedServices[i].Cost.ToString();
                                       cost += SelectedServices[i].Cost;
                                   }
+                                  if (SelectedParts.Count > 0)
+                                  {
+                                      Paragraph part = wordDoc.Content.Paragraphs.Add();
+                                      part.Range.Text = $"Использованные запасные чаасти и принадлежности";
+                                      part.Range.Font.Size = 13;
+                                      part.Range.Font.Bold = 1;
+                                      part.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
+                                      part.Range.InsertParagraphAfter();
+                                      // Создание таблицы с ЗИП
+                                      Table partsTable = wordDoc.Tables.Add(wordDoc.Content.Paragraphs.Add().Range, SelectedParts.Count + 1, 3);
+                                      partsTable.Borders.Enable = 1;
+                                      partsTable.Range.Font.Size = 11;
+                                      partsTable.Range.Font.Bold = 0;
+                                      partsTable.Range.ParagraphFormat.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
+                                      partsTable.Columns[1].PreferredWidth = wordApp.CentimetersToPoints(10);
+                                      partsTable.Columns[2].PreferredWidth = wordApp.CentimetersToPoints(3);
+                                      partsTable.Columns[3].PreferredWidth = wordApp.CentimetersToPoints(3);
+
+                                      partsTable.Cell(1, 1).Range.Text = "Наименование";
+                                      partsTable.Cell(1, 2).Range.Text = "Кол-во";
+                                      partsTable.Cell(1, 3).Range.Text = "Цена, руб.";
+
+                                      for (int i = 0; i < SelectedParts.Count; i++)
+                                      {
+                                          partsTable.Cell(i + 2, 1).Range.Text = SelectedParts[i].Name;
+                                          partsTable.Cell(i + 2, 2).Range.Text = SelectedParts[i].Count.ToString();
+                                          partsTable.Cell(i + 2, 3).Range.Text = SelectedParts[i].Cost.ToString();
+                                          cost += SelectedParts[i].Cost;
+                                      }
+                                  }
+
+
                                   Paragraph costParagraph = wordDoc.Content.Paragraphs.Add();
                                   costParagraph.Range.Text = $"ИТОГ: {cost} руб";
                                   costParagraph.Range.Font.Bold = 1;
@@ -1094,7 +1081,27 @@ namespace TMC.ViewModel
             }
         }
 
-
+        public bool CheckSelectedParts()
+        {
+            try
+            {   
+                foreach (var part in SelectedParts)
+                {
+                    RepairParts selectedPart = context.RepairParts.Find(part.IDPart);
+                    if (selectedPart.Count < part.Count)
+                    {
+                        MessageBox.Show($"Недостаточно ЗИП \"{part.Name}\" на складе. \n На складе доступно: {selectedPart.Count} шт.", "Склад ЗИП", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return false;
+                    }
+                    else return true;
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

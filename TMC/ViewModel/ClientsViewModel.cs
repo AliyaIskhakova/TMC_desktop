@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using TMC.Model;
@@ -27,7 +22,6 @@ namespace TMC.ViewModel
 
         public ClientsViewModel()
         {
-            // Инициализация данных
             try
             {
                 _clients = new ObservableCollection<Clients>(context.Clients.ToList());
@@ -38,9 +32,6 @@ namespace TMC.ViewModel
                 MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-
-
         public string SearchText
         {
             get { return _searchText; }
@@ -147,7 +138,6 @@ namespace TMC.ViewModel
             {
                 return new RelayCommand((selectedItem) =>
                   {
-                      // получаем выделенный объект
                       try
                       {
                           var dataGrid = selectedItem as DataGrid;

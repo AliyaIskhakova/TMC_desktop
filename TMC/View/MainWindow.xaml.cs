@@ -1,21 +1,9 @@
-﻿using Microsoft.Office.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Configuration;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using TMC.Model;
 using TMC.ViewModel;
-using Xceed.Wpf.Toolkit.Primitives;
 
 namespace TMC
 {
@@ -25,17 +13,19 @@ namespace TMC
     public partial class MainWindow : Window
     {
         
-        RequestViewModel requestVM = new RequestViewModel();
+        
         StoreViewModel storeVM = new StoreViewModel();
         ClientsViewModel clientsVM = new ClientsViewModel();
         ServicesViewModel servicesVM = new ServicesViewModel();
         EmployeesViewModel employeesVM = new EmployeesViewModel();
         ReportsViewModel reportsVM = new ReportsViewModel();
+        RequestViewModel requestVM;
         public MainWindow()
         {
             try
             {
                 InitializeComponent();
+                requestVM = new RequestViewModel(clientsVM, storeVM);
                 RequestsWindow.DataContext = requestVM;
                 ClientsWindow.DataContext = clientsVM;
                 StoreWindow.DataContext = storeVM;
