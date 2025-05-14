@@ -182,7 +182,7 @@
             <DockPanel>
                 <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Заявки</Label>
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                    <TextBox x:Name="SearchRequest" Style="{StaticResource SearchBox}"></TextBox>
+                    <TextBox x:Name="SearchRequest" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                     
                     <Button x:Name="AddRequest" Command="{Binding AddRequestCommand}" >+ Добавить заявку</Button>
                     <Button MaxWidth="30" Command="{Binding UpdateListCommand}"  >

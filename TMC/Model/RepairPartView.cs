@@ -1,27 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using TMC.Model;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace TMC.ViewModel
+namespace TMC.Model
 {
-    public class RepairPartViewModel : INotifyPropertyChanged
+    public class RepairPartView: INotifyPropertyChanged
     {
         private readonly RepairParts _part;
         private double _avgSalesPerDay;
+        private int count;
+        private double cost;
+        private int minStock;
+        public int IdPart { get; set; }
+        public string Name { get; set; }
+        public int Count { get { return count; } set { count = value; OnPropertyChanged(); } }
+        public double Cost { get { return cost; } set { cost = value; OnPropertyChanged(); } }
+        public int MinStock { get { return minStock; } set { minStock = value; OnPropertyChanged(); } }
 
-        public RepairPartViewModel(RepairParts part)
-        {
-            _part = part ?? throw new ArgumentNullException(nameof(part));
-        }
-
-        // Основные свойства запчасти
-        public int IdPart => _part.IdPart;
-        public string Name => _part.Name;
-        public double Cost => _part.Cost;
-        public int Count => _part.Count;
-
-        public int MinStock => _part.MinStock;
 
         // Средние продажи в день (рассчитывается отдельно)
         public double AvgSalesPerDay
@@ -63,25 +62,12 @@ namespace TMC.ViewModel
                 ? $"Средний расход: {AvgSalesPerDay:0.0} шт./день\n" +
                   $"Остаток на: {DaysOfStockLeft:0.0} дней"
                 : "Нет данных о продажах за период");
-
+  
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        // Для обновления данных из модели
-        public void UpdateFromModel(RepairParts part)
-        {
-            _part.Name = part.Name;
-            _part.Cost = part.Cost;
-            _part.Count = part.Count;
-            OnPropertyChanged(nameof(Name));
-            OnPropertyChanged(nameof(Cost));
-            OnPropertyChanged(nameof(Count));
-            OnPropertyChanged(nameof(StockStatusColor));
-            OnPropertyChanged(nameof(StockToolTip));
         }
     }
 }

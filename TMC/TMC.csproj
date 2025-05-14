@@ -220,6 +220,7 @@
     <Compile Include="Model\Clients.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\EditSelectedPartView.cs" />
     <Compile Include="Model\Employees.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -241,6 +242,7 @@
     <Compile Include="Model\RepairParts.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\RepairPartView.cs" />
     <Compile Include="Model\Requests.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -274,7 +276,6 @@
     </Compile>
     <Compile Include="ViewModel\AuthorizationViewModel.cs" />
     <Compile Include="ViewModel\ClientsViewModel.cs" />
-    <Compile Include="ViewModel\DocumentsClass.cs" />
     <Compile Include="ViewModel\EmployeesViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\RepairPartViewModel.cs" />

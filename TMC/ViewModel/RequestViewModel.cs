@@ -15,7 +15,6 @@ using Paragraph = Microsoft.Office.Interop.Word.Paragraph;
 using System.Net.Mail;
 using System.Net;
 using MailMessage = System.Net.Mail.MailMessage;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TMC.ViewModel
 {
@@ -29,6 +28,10 @@ namespace TMC.ViewModel
         private ObservableCollection<RequestView> _requests;
         ClientsViewModel _clientVM;
         StoreViewModel _storeVM;
+        private string _searchText;
+        private ObservableCollection<RequestView> _filteredRequests;
+        private List<EditSelectedPartView> _editSelectedParts = new List<EditSelectedPartView>();
+
         public ObservableCollection<RequestView> RequestsList
         {
             get { return _requests; }
@@ -38,7 +41,6 @@ namespace TMC.ViewModel
                 OnPropertyChanged();
             }
         }
-        
 
         public RequestViewModel(ClientsViewModel clientVM, StoreViewModel storeVM)
         {
@@ -58,18 +60,62 @@ namespace TMC.ViewModel
                 MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        public string SearchText
+        {
+            get { return _searchText; }
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+                FilterRequests();
+            }
+        }
+
+        private void FilterRequests()
+        {
+            LoadRequests();
+            var filtered = RequestsList;
+
+            if (_currentFilterStatus != "Все")
+            {
+                filtered = new ObservableCollection<RequestView>(
+                    filtered.Where(r => r.StatusName == _currentFilterStatus).ToList());
+            }
+
+            if (!string.IsNullOrEmpty(SearchText))
+            {
+                var searchTextLower = SearchText.ToLowerInvariant().Trim();
+                filtered = new ObservableCollection<RequestView>(
+                    filtered.Where(r =>
+                    // Поиск по полному ФИО клиента (в любом порядке)
+                ($"{r.ClientSurname} {r.ClientName} {r.ClientPatronymic}".ToLowerInvariant().Contains(searchTextLower)) ||
+                ($"{r.ClientName} {r.ClientSurname} {r.ClientPatronymic}".ToLowerInvariant().Contains(searchTextLower)) ||
+                ($"{r.ClientSurname} {r.ClientPatronymic} {r.ClientName}".ToLowerInvariant().Contains(searchTextLower))||
+
+                // Поиск по полному ФИО мастера (в любом порядке)
+                ($"{r.EmployeeSurname} {r.EmployeeName} {r.EmployeePatronymic}".ToLowerInvariant().Contains(searchTextLower))||
+                ($"{r.EmployeeName} {r.EmployeeSurname} {r.EmployeePatronymic}".ToLowerInvariant().Contains(searchTextLower)) ||
+                ($"{r.EmployeeSurname} {r.EmployeePatronymic} {r.EmployeeName}".ToLowerInvariant().Contains(searchTextLower))||
+                        (r.ClientSurname != null && r.ClientSurname.ToLowerInvariant().Contains(searchTextLower)) ||
+                        (r.ClientName != null && r.ClientName.ToLowerInvariant().Contains(searchTextLower)) ||
+                        (r.ClientPatronymic != null && r.ClientPatronymic.ToLowerInvariant().Contains(searchTextLower)) ||
+                        (r.EmployeeSurname != null && r.EmployeeSurname.ToLowerInvariant().Contains(searchTextLower)) ||
+                        (r.EmployeeName != null && r.EmployeeName.ToLowerInvariant().Contains(searchTextLower)) ||
+                        (r.EmployeePatronymic != null && r.EmployeePatronymic.ToLowerInvariant().Contains(searchTextLower)) ||
+                        (r.Device != null && r.Device.ToLowerInvariant().Contains(searchTextLower)) ||
+                        (r.IMEI_SN != null && r.IMEI_SN.ToLowerInvariant().Contains(searchTextLower)) ||
+                        (r.Reason != null && r.Reason.ToLowerInvariant().Contains(searchTextLower)) ||
+                        r.IDRequest.ToString().Contains(searchTextLower)).ToList());
+            }
+
+            RequestsList = filtered;
+        }
         private void RefreshRequests()
         {
             App.Current.Dispatcher.Invoke(() =>
             {
                 LoadRequests();
-
-                if (_currentFilterStatus != "Все")
-                {
-                    RequestsList = new ObservableCollection<RequestView>(
-                        RequestsList.Where(r => r.StatusName == _currentFilterStatus).ToList());
-                }
-
+                FilterRequests();
             });
         }
         private void RefreshCost(RequestWindow requestWindow)
@@ -119,6 +165,8 @@ namespace TMC.ViewModel
                                   CompletionDate = r.CompletionDate.ToString(),
                                   Reason = r.Reason,
                                   Date = r.Date.ToString(),
+                                  Device = r.Device,
+                                  IMEI_SN = r.IMEI_SN
                               }).ToList();
                 RequestsList = new ObservableCollection<RequestView>(result.Select(r =>
                 {
@@ -149,10 +197,7 @@ namespace TMC.ViewModel
                           string status_name = status as string;
                           _currentFilterStatus = status_name;
                           RequestsList.Clear();
-                          RefreshRequests();
-                          if (status_name == "Все") RefreshRequests();
-                          else RequestsList = new ObservableCollection<RequestView>(RequestsList.Where(r => r.StatusName == status_name).ToList());
-                          
+                          RefreshRequests();                          
                       }
                       catch (Exception ex)
                       {
@@ -402,6 +447,7 @@ namespace TMC.ViewModel
                                   Cost = part.Cost,
                                   Count =item.Count
                               };
+                              _editSelectedParts.Add(new EditSelectedPartView { IdPart = part.IdPart, Count = item.Count });
                               SelectedParts.Add(partsView);
                           }
                           requestWindow.selectedServices.ItemsSource = SelectedServices;
@@ -456,7 +502,10 @@ namespace TMC.ViewModel
                               context.SaveChanges();
                               SelectedServices.Clear();
                               SelectedParts.Clear();
+                              _editSelectedParts.Clear();
                           }
+                          _storeVM.LoadParts();
+                          _storeVM.FilterParts();
                           RefreshRequests();
                       }
                       catch (Exception ex)
@@ -555,6 +604,7 @@ namespace TMC.ViewModel
                 OnPropertyChanged();
             }
         }
+
         public RelayCommand UpdateListCommand
         {
             get
@@ -1084,18 +1134,34 @@ namespace TMC.ViewModel
         public bool CheckSelectedParts()
         {
             try
-            {   
+            {
+                bool result = true;
+                int addCount = 0;
                 foreach (var part in SelectedParts)
                 {
                     RepairParts selectedPart = context.RepairParts.Find(part.IDPart);
-                    if (selectedPart.Count < part.Count)
+                    addCount = part.Count;
+                    MessageBox.Show(addCount.ToString());
+                    var editPart = _editSelectedParts.Where(p=> p.IdPart == part.IDPart).FirstOrDefault();
+                    
+                    if (editPart != null)
+                    {
+                        MessageBox.Show(editPart.Count.ToString());
+
+                        if (part.Count > editPart.Count) { addCount = part.Count - editPart.Count;
+                            MessageBox.Show(addCount.ToString(), $"Добавилось {part.Name}");
+                        }
+                        if (part.Count == editPart.Count) { addCount = 0; MessageBox.Show(addCount.ToString(), $"Такое же{part.Name}"); }
+                        if (part.Count < editPart.Count) result = true;
+                    }
+                    if (selectedPart.Count < addCount)
                     {
                         MessageBox.Show($"Недостаточно ЗИП \"{part.Name}\" на складе. \n На складе доступно: {selectedPart.Count} шт.", "Склад ЗИП", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return false;
                     }
-                    else return true;
+                    result = true;
                 }
-                return true;
+                return result;
             }
             catch
             {

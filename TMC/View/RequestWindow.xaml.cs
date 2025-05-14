@@ -47,7 +47,7 @@ namespace TMC.View
                 if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() 
                     && int.TryParse(RequestCost.Text, out int cost) && cost >= 0)
                 {
-                    if ((RequestRepairParts.DataContext as RequestViewModel).CheckSelectedParts())
+                    if ((RequestRepairParts.DataContext as RequestViewModel).CheckSelectedParts()==true)
                     {
                         DialogResult = true;
                     }

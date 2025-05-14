@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using TMC.Model;
 using TMC.View;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TMC.ViewModel
 {
@@ -19,10 +20,10 @@ namespace TMC.ViewModel
         ObservableCollection<WriteOff_RepairParts> _writeOffParts;
         string _searchText;
         ObservableCollection<RepairParts> _filteredParts;
-        private ObservableCollection<RepairPartViewModel> _partsVm;
+        public ObservableCollection<RepairPartView> _partsVm;
         private Dictionary<int, double> _avgSalesData;
 
-        public ObservableCollection<RepairPartViewModel> RepairPartsListVm
+        public ObservableCollection<RepairPartView> RepairPartsListVm
         {
             get => _partsVm;
             set
@@ -37,15 +38,9 @@ namespace TMC.ViewModel
             {
                 _avgSalesData = CalculateAvgSales();
 
-                var parts = context.RepairParts.ToList();
-                _partsVm = new ObservableCollection<RepairPartViewModel>(
-                    parts.Select(p => new RepairPartViewModel(p)
-                    {
-                        AvgSalesPerDay = _avgSalesData.TryGetValue(p.IdPart, out var avg) ? avg : 0
-                    })
-                );
 
-                _parts = new ObservableCollection<RepairParts>(parts);
+                LoadParts();
+                _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
                 
                 _writeOffParts = new ObservableCollection<WriteOff_RepairParts>(context.WriteOff_RepairParts.ToList());
             }
@@ -53,6 +48,25 @@ namespace TMC.ViewModel
             {
                 MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+        public void LoadParts()
+        {
+            var result = (from item in context.RepairParts
+                          select new RepairPartView
+                          {
+                              IdPart = item.IdPart,
+                              Name = item.Name,
+                              Count = item.Count,
+                              Cost = item.Cost,
+                              MinStock = item.MinStock
+                          }).ToList();
+            RepairPartsListVm = new ObservableCollection<RepairPartView>(
+                result.Select(p =>
+                {
+                    p.AvgSalesPerDay = _avgSalesData.TryGetValue(p.IdPart, out var avg) ? avg : 0;
+                    return p;
+                })
+            );
         }
 
         private Dictionary<int, double> CalculateAvgSales()
@@ -83,6 +97,7 @@ namespace TMC.ViewModel
             {
                 _searchText = value;
                 OnPropertyChanged();
+                LoadParts();
                 FilterParts();
             }
         }
@@ -106,33 +121,24 @@ namespace TMC.ViewModel
             }
         }
 
-        private void FilterParts()
+        public void FilterParts()
         {
             try
             {
                 if (string.IsNullOrEmpty(_searchText))
                 {
-                    RepairPartsListVm = new ObservableCollection<RepairPartViewModel>(
-                        _parts.Select(p => new RepairPartViewModel(p)
-                        {
-                            AvgSalesPerDay = _avgSalesData.TryGetValue(p.IdPart, out var avg) ? avg : 0
-                        })
-                    );
+                    LoadParts();
                     WriteOffList = new ObservableCollection<WriteOff_RepairParts>(context.WriteOff_RepairParts.ToList());
                 }
                 else
                 {
                     _searchText = _searchText.ToLowerInvariant().Trim();
-                    var filtered = context.RepairParts
-                        .AsEnumerable()
+                    LoadParts();
+                    var filtered = RepairPartsListVm
                         .Where(e => e.Name.ToLowerInvariant().Contains(_searchText))
-                        .Select(p => new RepairPartViewModel(p)
-                        {
-                            AvgSalesPerDay = _avgSalesData.TryGetValue(p.IdPart, out var avg) ? avg : 0
-                        })
                         .ToList();
 
-                    RepairPartsListVm = new ObservableCollection<RepairPartViewModel>(filtered);
+                    RepairPartsListVm = new ObservableCollection<RepairPartView>(filtered);
 
                     var filteredWriteOff = context.WriteOff_RepairParts
                         .AsEnumerable()
@@ -149,8 +155,8 @@ namespace TMC.ViewModel
             }
         }
 
-        private ObservableCollection<RepairPartViewModel> _selectedParts = new ObservableCollection<RepairPartViewModel>();
-        public ObservableCollection<RepairPartViewModel> SelectedParts
+        private ObservableCollection<RepairPartView> _selectedParts = new ObservableCollection<RepairPartView>();
+        public ObservableCollection<RepairPartView> SelectedParts
         {
             get { return _selectedParts; }
             set
@@ -169,7 +175,7 @@ namespace TMC.ViewModel
                     try
                     {
                         AddPartsWindow window = o as AddPartsWindow;
-                        var selectedItems = window.RepairPartsDG.SelectedItems.Cast<RepairPartViewModel>().ToList();
+                        var selectedItems = window.RepairPartsDG.SelectedItems.Cast<RepairPartView>().ToList();
                         foreach (var item in selectedItems)
                         {
                             if (item.Count < 1) MessageBox.Show($"Недостаточно ЗИП \"{item.Name}\" на складе", "Склад ЗИП", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -200,9 +206,8 @@ namespace TMC.ViewModel
                             RepairParts parts = repairPartWindow.RepairParts;
                             context.RepairParts.Add(parts);
                             context.SaveChanges();
-                            _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
+                            LoadParts();
                             FilterParts();
-
                         }
 
                     }
@@ -223,7 +228,7 @@ namespace TMC.ViewModel
                     {
 
                     var dataGrid = selectedItem as DataGrid;
-                        var partVM = dataGrid.SelectedItem as RepairPartViewModel;
+                        var partVM = dataGrid.SelectedItem as RepairPartView;
                         RepairParts part = context.RepairParts.Find(partVM.IdPart);
                         if (part == null) return;
                         RepairParts vm = new RepairParts
@@ -240,8 +245,7 @@ namespace TMC.ViewModel
                             part = repairPartWindow.RepairParts;
                             context.RepairParts.AddOrUpdate(part);
                             context.SaveChanges();
-                            _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
-                            _filteredParts = _parts;
+                            LoadParts();
                             FilterParts();
                         }
                 }
@@ -281,8 +285,7 @@ namespace TMC.ViewModel
                             var selectedPart = context.RepairParts.Find(part.IdPart);
                             selectedPart.Count = selectedPart.Count - writeOff.Count;
                             context.RepairParts.AddOrUpdate(selectedPart);
-                            _parts = new ObservableCollection<RepairParts>(context.RepairParts.ToList());
-                            _filteredParts = _parts;
+                            LoadParts();
                             FilterParts();
                         }
                     }

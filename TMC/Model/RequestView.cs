@@ -26,9 +26,9 @@
         private string _reason;
         private string _date;
         //private int _deviceID;
-        //private string _deviceTypeName;
+        private string _device;
         //private double _cost;
-        //private string _imeiSN;
+        private string _imeiSN;
         //private string _model;
         //private string _notes;
         private string _detectedMulfunction;
@@ -255,15 +255,15 @@
         //    }
         //}
 
-        //public string DeviceTypeName
-        //{
-        //    get { return _deviceTypeName; }
-        //    set
-        //    {
-        //        _deviceTypeName = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
+        public string Device
+        {
+            get { return _device; }
+            set
+            {
+                _device = value;
+                OnPropertyChanged();
+            }
+        }
 
         //public double Cost
         //{
@@ -275,15 +275,15 @@
         //    }
         //}
 
-        //public string IMEI_SN
-        //{
-        //    get { return _imeiSN; }
-        //    set
-        //    {
-        //        _imeiSN = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
+        public string IMEI_SN
+        {
+            get { return _imeiSN; }
+            set
+            {
+                _imeiSN = value;
+                OnPropertyChanged();
+            }
+        }
 
         //public string Model
         //{

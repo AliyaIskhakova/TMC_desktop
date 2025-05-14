@@ -1,24 +1,20 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using TMC.Model;
 
 namespace TMC.ViewModel
 {
-    public class AuthorizationViewModel: INotifyPropertyChanged
+    public class AuthorizationViewModel
     {
         ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
-        RelayCommand authCommand;
         public ObservableCollection<Employees> Employees { get; set; }
-        // команда авторизации
         public RelayCommand AuthorizationCommand
         {
             get
             {
-                return authCommand ??= new RelayCommand(( w) =>
+                return new RelayCommand(( w) =>
                   {
                       try
                       {
@@ -73,13 +69,6 @@ namespace TMC.ViewModel
 
                   });
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

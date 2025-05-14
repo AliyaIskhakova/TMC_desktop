@@ -23,7 +23,7 @@ namespace TMC.View
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(PartName.Text) && int.TryParse(PartCount.Text, out int count) && double.TryParse(PartCost.Text, out double cost) && cost >= 0 && count >= 1) DialogResult = true;
+                if (!string.IsNullOrWhiteSpace(PartName.Text) && int.TryParse(PartCount.Text, out int count) && int.TryParse(PartMinStock.Text, out int minCount) && double.TryParse(PartCost.Text, out double cost) && cost >= 0 && count >= 1 && minCount >= 1) DialogResult = true;
                 else MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
