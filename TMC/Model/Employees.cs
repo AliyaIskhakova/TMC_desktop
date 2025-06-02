@@ -13,8 +13,9 @@ namespace TMC.Model
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
+    using System.Text.RegularExpressions;
 
-    public partial class Employees: INotifyPropertyChanged
+    public partial class Employees: INotifyPropertyChanged, IDataErrorInfo
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Employees()
@@ -96,6 +97,49 @@ namespace TMC.Model
                 email = value;
                 OnPropertyChanged("email");
             }
+        }
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = String.Empty;
+                switch (columnName)
+                {
+                    case nameof(Telephone):
+                        if (!Regex.IsMatch(Telephone, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
+                            error = "Неверный формат номера телефона";
+                        break;
+                    case nameof(Email):
+
+                        if (!string.IsNullOrWhiteSpace(Email))
+                        {
+                            if (!Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                            {
+                                error = "Неверный формат почты";
+                            }
+                        }
+                        break;
+                    case nameof(Login):
+
+                        if (!string.IsNullOrWhiteSpace(Login))
+                        {
+                            if (!Login.Contains(" "))
+                            {
+                                error = "Неверный формат логина";
+                            }
+                        }
+                        break;
+                }
+                return error;
+            }
+        }
+        public bool HasValidationErrors()
+        {
+            return (!string.IsNullOrEmpty(this[nameof(Telephone)]) || !string.IsNullOrEmpty(this[nameof(Email)]));
+        }
+        public string Error
+        {
+            get { throw new NotImplementedException(); }
         }
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

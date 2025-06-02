@@ -10,7 +10,7 @@
         Background="#E4E9FF"
         Name="window"
         mc:Ignorable="d"
-        Title="WriteOffRepairPart" Height="450" Width="800">
+        Title="WriteOffRepairPart" Height="250" Width="400">
     <DockPanel>
         <Border DockPanel.Dock="Top">
             <DockPanel >

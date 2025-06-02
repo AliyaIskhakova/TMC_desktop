@@ -10,6 +10,8 @@ using System.Windows;
 using TMC.Model;
 using TMC.View;
 using System.Windows.Controls;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace TMC.ViewModel
 {
@@ -23,7 +25,6 @@ namespace TMC.ViewModel
 
         public EmployeesViewModel()
         {
-            // Инициализация данных
             _employees = new ObservableCollection<Employees>(context.Employees.ToList()); 
             _filteredEmployees = new ObservableCollection<Employees>(_employees);
         }
@@ -87,6 +88,18 @@ namespace TMC.ViewModel
                       }
                   });
             }
+        }
+        private string GetHashString(string s)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(s);
+            MD5CryptoServiceProvider CSP = new MD5CryptoServiceProvider();
+            byte[] byteHash = CSP.ComputeHash(bytes);
+            string hash = "";
+            foreach (byte b in byteHash)
+            {
+                hash += string.Format("{0:x2}", b);
+            }
+            return hash;
         }
         public RelayCommand EditEmployeeCommand
         {
@@ -176,7 +189,7 @@ namespace TMC.ViewModel
                         Employees employee = employeeWindow.Employees;
                         string password = GeneratePassword();
                         SendCredentials(employee, employee.Login, password);
-                        employee.Password = password;
+                        employee.Password = GetHashString(password);
                         context.Employees.AddOrUpdate(employee);
                         context.SaveChanges();
                         _employees = new ObservableCollection<Employees>(context.Employees.ToList());

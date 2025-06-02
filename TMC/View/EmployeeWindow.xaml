@@ -33,8 +33,10 @@
                     <TextBox Text="{Binding Patronymic}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}" />
                     <ui:MetroHeader Content="Телефон*"/>
                     <toolkit:MaskedTextBox x:Name="TelephoneTxt" Mask="+7(000)000-00-00" Text="{Binding Telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TelephoneTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=TelephoneTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <ui:MetroHeader Content="Почта*"/>
-                    <TextBox x:Name="EmailTxt" Text="{Binding Email}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox x:Name="EmailTxt" Text="{Binding Email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"   ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=EmailTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=EmailTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <ui:MetroHeader Content="Должность*"/>
                     <ComboBox x:Name="RoleBox" ui:ControlsHelper.CornerRadius="5" Background="White" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5">
                         <ComboBox.Resources>

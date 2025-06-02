@@ -236,7 +236,8 @@ namespace TMC.ViewModel
                             IdPart = part.IdPart,
                             Name = part.Name,
                             Cost = part.Cost,
-                            Count = part.Count
+                            Count = part.Count,
+                            MinStock = part.MinStock
                         };
 
                     RepairPartWindow repairPartWindow = new RepairPartWindow(vm, this);

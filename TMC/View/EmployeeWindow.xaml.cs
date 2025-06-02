@@ -35,13 +35,16 @@ namespace TMC.View
             try
             {
                 if (!string.IsNullOrWhiteSpace(SurnameTxt.Text) && !string.IsNullOrWhiteSpace(NameTxt.Text) && !string.IsNullOrWhiteSpace(TelephoneTxt.Text)
-                        && RoleBox.SelectedItem != null && !string.IsNullOrWhiteSpace(TelephoneTxt.Text) && !string.IsNullOrWhiteSpace(LoginTxt.Text)
-                        && Regex.IsMatch(TelephoneTxt.Text, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
+                        && RoleBox.SelectedItem != null && !string.IsNullOrWhiteSpace(TelephoneTxt.Text) && !string.IsNullOrWhiteSpace(LoginTxt.Text))
                 {
-                    ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
-                    var employee = context.Employees.FirstOrDefault(e => e.Login == LoginTxt.Text);
-                    if (employee == null || employee.Login == login) DialogResult = true;
-                    else MessageBox.Show("Пользователь с таким логином уже существует", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    if (Employees.HasValidationErrors()) MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        ServiceCenterTMCEntities context = new ServiceCenterTMCEntities();
+                        var employee = context.Employees.FirstOrDefault(e => e.Login == LoginTxt.Text);
+                        if (employee == null || employee.Login == login) DialogResult = true;
+                        else MessageBox.Show("Пользователь с таким логином уже существует", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }  
                 }
                 else MessageBox.Show("Заполните обязательные поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }

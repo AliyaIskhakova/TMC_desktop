@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows;
 using TMC.Model;
 
@@ -20,7 +22,8 @@ namespace TMC.ViewModel
                       {
                           Authorization wi = w as Authorization;
                           if (!string.IsNullOrWhiteSpace(wi.loginBox.Text)&& !string.IsNullOrWhiteSpace(wi.passwordBox.Password)) {
-                              Employees employee = context.Employees.Where(u => u.Login == wi.loginBox.Text && u.Password == wi.passwordBox.Password).FirstOrDefault();
+                              string password = GetHashString(wi.passwordBox.Password);
+                              Employees employee = context.Employees.Where(u => u.Login == wi.loginBox.Text && u.Password == password).FirstOrDefault();
                               if (employee != null)
                               {
                                   Application.Current.Properties["UserID"] = employee.IdEmployee;
@@ -69,6 +72,18 @@ namespace TMC.ViewModel
 
                   });
             }
+        }
+        private string GetHashString(string s)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(s);
+            MD5CryptoServiceProvider CSP = new MD5CryptoServiceProvider();
+            byte[] byteHash = CSP.ComputeHash(bytes);
+            string hash = "";
+            foreach (byte b in byteHash)
+            {
+                hash += string.Format("{0:x2}", b);
+            }
+            return hash;
         }
     }
 }

@@ -55,8 +55,8 @@ namespace TMC.View
         {
             try
             {
-                if (Clients.HasValidationErrors()) MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-
+                if(string.IsNullOrWhiteSpace(SurnameTxt.Text)|| string.IsNullOrWhiteSpace(NameTxt.Text)|| string.IsNullOrWhiteSpace(TelephoneTxt.Text)) MessageBox.Show("Заполните все обязательные поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                else if (Clients.HasValidationErrors()) MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 else DialogResult = true;
             }
             catch (Exception ex)

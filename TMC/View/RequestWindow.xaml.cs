@@ -78,10 +78,6 @@ namespace TMC.View
             }
         }
 
-        private void MastersBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
 
         private void ClientComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -119,18 +115,6 @@ namespace TMC.View
             }
         }
 
-        private void viezd_Checked(object sender, RoutedEventArgs e)
-        {
-            Address.Visibility = Visibility.Visible;
-        }
-
-        
-
-        private void viezd_Unchecked(object sender, RoutedEventArgs e)
-        {
-            Address.Visibility = Visibility.Collapsed;
-        }
-
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             CompanyTxt.Visibility = Visibility.Visible;
@@ -139,6 +123,16 @@ namespace TMC.View
         private void RadioButton_Unchecked(object sender, RoutedEventArgs e)
         {
             CompanyTxt.Visibility = Visibility.Collapsed;
+        }
+
+        private void TypeCheck_Checked(object sender, RoutedEventArgs e)
+        {
+            Address.Visibility = Visibility.Visible;
+        }
+
+        private void TypeCheck_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Address.Visibility = Visibility.Collapsed;
         }
     }
 }
