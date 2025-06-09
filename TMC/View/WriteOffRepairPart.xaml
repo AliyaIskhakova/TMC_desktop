@@ -10,7 +10,7 @@
         Background="#E4E9FF"
         Name="window"
         mc:Ignorable="d"
-        Title="WriteOffRepairPart" Height="250" Width="400">
+        Title="Списание ЗИП" MinHeight="250" MinWidth="400" MaxHeight="280" MaxWidth="500" Height="250" Width="400" Icon="/View/logo.ico">
     <DockPanel>
         <Border DockPanel.Dock="Top">
             <DockPanel >

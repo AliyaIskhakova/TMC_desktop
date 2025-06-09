@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -162,8 +163,8 @@ namespace TMC.ViewModel
 
             try
             {
-                using (var context = new ServiceCenterTMCEntities())
-                {
+                var context = new ServiceCenterTMCEntities();
+               
                     var startDate = StartDate.Value;
                     var endDate = EndDate.Value;
 
@@ -172,7 +173,7 @@ namespace TMC.ViewModel
                         .Select(s => new RequestStatistics
                         {
                             StatusID = s.IdStatus,
-                            Count = s.Requests.Count(r => r.Date >= startDate && r.Date <= endDate)
+                            Count = s.Requests.Count(r => DbFunctions.TruncateTime(r.Date) >= startDate && DbFunctions.TruncateTime(r.Date) <= endDate)
                         })
                         .Where(s => s.Count > 0)
                         .ToList();
@@ -180,12 +181,11 @@ namespace TMC.ViewModel
                     PieSeries = CreatePieSeries(statusStatistics);
                     LoadOrdersByDayData(startDate, endDate);
                    
-                    var requests = context.Requests
-                        .Where(r => r.Date >= startDate && r.Date <= endDate)
+                    var requests = context.Requests.Where(r => DbFunctions.TruncateTime(r.Date) >= startDate && DbFunctions.TruncateTime(r.Date) <= endDate)
                         .ToList();
 
                     ProcessEmployeeStatistics(requests);
-                }
+                
             }
             catch (Exception ex)
             {
@@ -196,18 +196,17 @@ namespace TMC.ViewModel
         private void ProcessEmployeeStatistics(List<Requests> requests)
         {
             TotalOrders = requests.Count;
-            CompletedOrders = requests.Count(r => r.StatusId == 5);
+            CompletedOrders = requests.Count(r => r.StatusId == 5 || r.StatusId == 4);
             TotalRevenue = (decimal)requests.Sum(r => r.Cost);
-
             var employeeGroups = requests
                 .Where(r => r.MasterId.HasValue)
                 .GroupBy(r => r.Employees)
                 .Select(g => new EmployeeStat
                 {
                     Employee = g.Key,
-                    CompletedOrders = g.Count(r => r.StatusId == 5),
+                    CompletedOrders = g.Count(r => r.StatusId == 5 || r.StatusId == 4),
                     TotalOrders = g.Count(),
-                    Revenue = (decimal)g.Sum(r => r.Cost),
+                    Revenue = (decimal)g.Where(r => r.Statuses.Name != "Отменена" || r.StatusId == 5 || r.StatusId == 4).Sum(r => r.Cost),
                     Services = g.SelectMany(r => r.Requests_Services)
                         .GroupBy(rs => rs.Services)
                         .Select(sg => new ServiceStat
@@ -227,7 +226,7 @@ namespace TMC.ViewModel
             {
                 new ColumnSeries
                 {
-                    Title = "Выполненные заказы",
+                    Title = "Выполненные заявки",
                     Values = new ChartValues<int>(employeeGroups.Select(e => e.CompletedOrders)),
                     DataLabels = true,
                     LabelPoint = point => $"{point.Y}",
@@ -319,7 +318,7 @@ namespace TMC.ViewModel
 
                     // Получаем данные по дням
                     var dailyData = context.Requests
-                        .Where(r => r.Date >= startDate && r.Date <= endDate)
+                        .Where(r => DbFunctions.TruncateTime(r.Date) >= startDate && DbFunctions.TruncateTime(r.Date) <= endDate)
                         .GroupBy(r => EntityFunctions.TruncateTime(r.Date))
                         .Select(g => new
                         {
@@ -353,7 +352,7 @@ namespace TMC.ViewModel
             {
                 new LineSeries
                 {
-                    Title = "Заказы",
+                    Title = "Заявки",
                     Values = new ChartValues<int>(completeData.Select(x => x.Count)),
                     PointGeometry = DefaultGeometries.Circle,
                     PointGeometrySize = 8,

@@ -7,7 +7,7 @@
         WindowStartupLocation="CenterScreen"
         x:Name="auth"
         mc:Ignorable="d"
-        Title="" Height="500" Width="900">
+        Title="" MinHeight="500" MinWidth="900" Width="950" Height="550" Icon="/View/logo.ico">
     <Window.Resources>
         <Style TargetType="TextBlock" x:Key="t1">
             <Setter Property="FontFamily" Value="Inter"/>

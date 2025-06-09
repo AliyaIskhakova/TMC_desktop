@@ -85,12 +85,9 @@ namespace TMC.ViewModel
                 var searchTextLower = SearchText.ToLowerInvariant().Trim();
                 filtered = new ObservableCollection<RequestView>(
                     filtered.Where(r =>
-                    // Поиск по полному ФИО клиента (в любом порядке)
                 ($"{r.ClientSurname} {r.ClientName} {r.ClientPatronymic}".ToLowerInvariant().Contains(searchTextLower)) ||
                 ($"{r.ClientName} {r.ClientSurname} {r.ClientPatronymic}".ToLowerInvariant().Contains(searchTextLower)) ||
                 ($"{r.ClientSurname} {r.ClientPatronymic} {r.ClientName}".ToLowerInvariant().Contains(searchTextLower))||
-
-                // Поиск по полному ФИО мастера (в любом порядке)
                 ($"{r.EmployeeSurname} {r.EmployeeName} {r.EmployeePatronymic}".ToLowerInvariant().Contains(searchTextLower))||
                 ($"{r.EmployeeName} {r.EmployeeSurname} {r.EmployeePatronymic}".ToLowerInvariant().Contains(searchTextLower)) ||
                 ($"{r.EmployeeSurname} {r.EmployeePatronymic} {r.EmployeeName}".ToLowerInvariant().Contains(searchTextLower))||
@@ -100,12 +97,10 @@ namespace TMC.ViewModel
                         (r.EmployeeSurname != null && r.EmployeeSurname.ToLowerInvariant().Contains(searchTextLower)) ||
                         (r.EmployeeName != null && r.EmployeeName.ToLowerInvariant().Contains(searchTextLower)) ||
                         (r.EmployeePatronymic != null && r.EmployeePatronymic.ToLowerInvariant().Contains(searchTextLower)) ||
-                        (r.Device != null && r.Device.ToLowerInvariant().Contains(searchTextLower)) ||
-                        (r.IMEI_SN != null && r.IMEI_SN.ToLowerInvariant().Contains(searchTextLower)) ||
+                        (r.Date != null && r.Date.ToLowerInvariant().Contains(searchTextLower)) ||
                         (r.Reason != null && r.Reason.ToLowerInvariant().Contains(searchTextLower)) ||
-                        r.IDRequest.ToString().Contains(searchTextLower)).ToList());
+                        r.IDRequest.ToString().Contains(searchTextLower) ).ToList());
             }
-
             RequestsList = filtered;
         }
         private void RefreshRequests()
@@ -133,8 +128,6 @@ namespace TMC.ViewModel
                 requestWindow.RequestCost.Text = request.Cost.ToString();
             });
         }
-
-
         public void LoadRequests()
         {
             try
@@ -183,7 +176,6 @@ namespace TMC.ViewModel
                 MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         public RelayCommand SelectRequestByStatus
         {
             get
@@ -205,10 +197,8 @@ namespace TMC.ViewModel
                   });
             }
         }
-
         public List<MastersListView> MastersList()
-        {
-            
+        {         
             var result = (from m in context.Employees.Where(e => e.RoleId == 3)
             select new MastersListView
                           {
@@ -218,10 +208,9 @@ namespace TMC.ViewModel
                               Telephone = m.Telephone,
                               OpenRequests = context.Requests.Where(r=> r.MasterId == m.IdEmployee && r.Statuses.Name!= "Готова" && r.Statuses.Name != "Завершена" && r.Statuses.Name != "Отменена").ToList().Count() 
                           }).ToList();
-            return result;
-            
+            return result;          
         }
-         public string ColorStatus(string statusName)
+        public string ColorStatus(string statusName)
         {
             try
             {
@@ -319,12 +308,12 @@ namespace TMC.ViewModel
                               RefreshRequests();
 
                           }
-                  }
+                      }
                       catch (Exception ex)
                       {
                           MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        });
+                      }
+                });
             }
         }
         public void SendEmail(Clients client, Requests requests, string status)
@@ -337,28 +326,28 @@ namespace TMC.ViewModel
                 m.Subject = "Изменение статуса заявки в сервисном центре ТехноМедиаСоюз";
 
                 string htmlBody = $@"
-        <div style='font-family: Arial; max-width: 600px; margin: 0 auto; border: 1px solid #DFE4FB; border-radius: 5px; overflow: hidden;'>
-            <div style='background-color: #0A1C6F; padding: 15px; color: white;'>
-                <h2 style='margin: 0;'>Сервисный центр ТехноМедиаСоюз</h2>
-            </div>
+                <div style='font-family: Arial; max-width: 600px; margin: 0 auto; border: 1px solid #DFE4FB; border-radius: 5px; overflow: hidden;'>
+                    <div style='background-color: #0A1C6F; padding: 15px; color: white;'>
+                        <h2 style='margin: 0;'>Сервисный центр ТехноМедиаСоюз</h2>
+                    </div>
             
-            <div style='padding: 20px; background-color: #DFE4FB;'>
-                <h3 style='color: #0E2280;'>Статус заявки №{requests.IdRequest} от {requests.Date.ToString("dd.MM.yyyy")} изменен</h3>
+                    <div style='padding: 20px; background-color: #DFE4FB;'>
+                        <h3 style='color: #0E2280;'>Статус заявки №{requests.IdRequest} от {requests.Date.ToString("dd.MM.yyyy")} изменен</h3>
                 
-                <div style='background-color: white; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #889DFB;'>
-                    <p style='font-weight: bold; color: #162774; margin: 0 0 5px 0;'>Новый статус заявки:</p>
-                    <p style='font-size: 18px; color: #0E2280; margin: 0;'>{status}</p>
-                </div>
+                        <div style='background-color: white; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #889DFB;'>
+                            <p style='font-weight: bold; color: #162774; margin: 0 0 5px 0;'>Новый статус заявки:</p>
+                            <p style='font-size: 18px; color: #0E2280; margin: 0;'>{status}</p>
+                        </div>
                 
-                <p style='color: #162774;'>Для получения подробной информации о вашей заявке вы можете обратиться в наш сервисный центр.</p>
+                        <p style='color: #162774;'>Для получения подробной информации о вашей заявке вы можете обратиться в наш сервисный центр.</p>
                 
-                <p style='color: #162774;'>Спасибо, что выбрали нас!</p>
-            </div>
+                        <p style='color: #162774;'>Спасибо, что выбрали нас!</p>
+                    </div>
             
-            <div style='background-color: #0A1C6F; padding: 10px; color: white; text-align: center; font-size: 12px;'>
-                <p style='margin: 0;'>С уважением, команда ТехноМедиаСоюз</p>
-            </div>
-        </div>";
+                    <div style='background-color: #0A1C6F; padding: 10px; color: white; text-align: center; font-size: 12px;'>
+                        <p style='margin: 0;'>С уважением, команда ТехноМедиаСоюз</p>
+                    </div>
+                </div>";
 
                 m.Body = htmlBody;
                 m.IsBodyHtml = true;
@@ -377,7 +366,7 @@ namespace TMC.ViewModel
                                 "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        // команда редактирования
+      
         public RelayCommand EditRequestCommand
         {
             get
@@ -396,7 +385,7 @@ namespace TMC.ViewModel
                           if (request == null) return;
                           Requests selectedRequest = context.Requests.Find(request.IDRequest);
                           RequestWindow requestWindow = new RequestWindow(selectedRequest, this, _clientVM);
-                          _costTimer = new System.Timers.Timer(100); // 60000 мс = 1 минута
+                          _costTimer = new System.Timers.Timer(100); 
                           _costTimer.Elapsed += (sender, e) => RefreshCost(requestWindow);
                           _costTimer.AutoReset = true;
                           _costTimer.Enabled = true;
@@ -407,11 +396,11 @@ namespace TMC.ViewModel
                           requestWindow.ClientInfo.IsEnabled = false;
                           requestWindow.ClientComboBox.Visibility = Visibility.Collapsed;
                           requestWindow.MastersBox.ItemsSource = MastersList();
-                          requestWindow.MastersBox.SelectedItem = context.Employees.Find(request.EmployeeID);
+                          requestWindow.MastersBox.SelectedItem = (requestWindow.MastersBox.ItemsSource as List<MastersListView>).FirstOrDefault(m=>m.Id==request.EmployeeID);
                           requestWindow.StatusBox.ItemsSource = status;
                           requestWindow.StatusBox.SelectedItem = context.Statuses.Find(request.StatusID);
                           string statusName = request.StatusName;
-                          if (selectedRequest.Statuses.Name == "Завершен" || selectedRequest.Statuses.Name == "Отменен")
+                          if (selectedRequest.Statuses.Name == "Завершена" || selectedRequest.Statuses.Name == "Отменена")
                           {
                               requestWindow.InfoBlock1.IsEnabled = false;
                               requestWindow.InfoBlock2.IsEnabled = false;
@@ -424,8 +413,20 @@ namespace TMC.ViewModel
                               requestWindow.MasterInfo.IsEnabled = false;
                               requestWindow.ServiceAndPartsInfo.IsEnabled = false;
                               requestWindow.PrintBtns.Visibility = Visibility.Collapsed;
+                              requestWindow.TypeCheck.IsEnabled = false;
                           }
-                     
+                          if (role == "Директор")
+                          {
+                              requestWindow.RequestInfo.IsEnabled = false;
+                              requestWindow.MasterInfo.IsEnabled = false;
+                              requestWindow.ServiceAndPartsInfo.IsEnabled = false;
+                              requestWindow.StatusBox.IsEnabled = false;
+                              requestWindow.PrintBtns.Visibility = Visibility.Collapsed;
+                              requestWindow.SaveBtn.Visibility = Visibility.Collapsed;
+                              requestWindow.TypeCheck.IsEnabled = false;
+
+                          }
+
                           List<Requests_Services> request_services = context.Requests_Services.Where(r => r.RequestId == selectedRequest.IdRequest).ToList();
                           foreach (var item in request_services)
                           {
@@ -579,7 +580,6 @@ namespace TMC.ViewModel
             {
                 return new RelayCommand((o) =>
                   {
-
                       try
                       {
                           RequestWindow requestWindow = o as RequestWindow;
@@ -714,6 +714,7 @@ namespace TMC.ViewModel
                         if (string.IsNullOrWhiteSpace(requestWindow.RequestDevice.Text) || string.IsNullOrWhiteSpace(requestWindow.RequestSN.Text))
                         {
                            MessageBox.Show("Чтобы сформировать акт приемки заполните поля устройства", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
+                            return;
                         }
                         var request = requestWindow.Requests;
                         var client = requestWindow.ClientInfo.DataContext as Clients;
@@ -721,7 +722,7 @@ namespace TMC.ViewModel
 
                         await System.Threading.Tasks.Task.Run(() =>
                         {
-                            Application wordApp = new Microsoft.Office.Interop.Word.Application();
+                            Application wordApp = new Application();
                             Document wordDoc = wordApp.Documents.Add();
 
                             wordDoc.Content.ParagraphFormat.SpaceAfter = 0;
@@ -854,8 +855,8 @@ namespace TMC.ViewModel
                                 MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
                                 await System.Threading.Tasks.Task.Run(() =>
                                 {
-                                    Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
-                                    Microsoft.Office.Interop.Word.Document wordDoc = wordApp.Documents.Add();
+                                    Application wordApp = new Application();
+                                    Document wordDoc = wordApp.Documents.Add();
 
                                     wordDoc.Content.ParagraphFormat.SpaceAfter = 0;
                                     wordDoc.Content.ParagraphFormat.SpaceBefore = 0;
@@ -882,7 +883,7 @@ namespace TMC.ViewModel
                                     workHours.Range.Font.Bold = 0;
                                     workHours.Format.LineSpacingRule = WdLineSpacing.wdLineSpaceSingle;
                                     workHours.Format.Alignment = WdParagraphAlignment.wdAlignParagraphCenter;
-                                    workHours.Range.InsertParagraphAfter();
+                                    workHours.Range.InsertParagraphAfter(); 
                                     workHours.Range.InsertParagraphAfter();
 
                                     // Заголовок
@@ -939,7 +940,6 @@ namespace TMC.ViewModel
                                         servicesTable.Cell(i + 2, 2).Range.Font.Bold = 0;
                                     }
 
-                                    servicesTable.Range.InsertParagraphAfter();
                                     servicesTable.Range.InsertParagraphAfter();
 
                                     // Таблица с необходимыми ЗИП
@@ -1018,8 +1018,8 @@ namespace TMC.ViewModel
                               MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
                               await System.Threading.Tasks.Task.Run(() =>
                               {
-                                  Microsoft.Office.Interop.Word.Application wordApp = new Microsoft.Office.Interop.Word.Application();
-                                  Microsoft.Office.Interop.Word.Document wordDoc = wordApp.Documents.Add();
+                                  Application wordApp = new Application();
+                                  Document wordDoc = wordApp.Documents.Add();
 
                                   wordDoc.Content.ParagraphFormat.SpaceAfter = 0;
                                   wordDoc.Content.ParagraphFormat.SpaceBefore = 0;

@@ -11,7 +11,7 @@
         Name="window"
         xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"      
         Background="#E4E9FF"
-        Title="RequestWindow" MinHeight="740" MinWidth="500"  >
+        Title="Заявка" MinHeight="740" MinWidth="500" Icon="/View/logo.ico"  >
     <ScrollViewer VerticalScrollBarVisibility="Hidden">
         <StackPanel>
             <DockPanel>
@@ -42,9 +42,6 @@
                                 <RadioButton Content="Физ.лицо" IsChecked="True" Margin="0"/>
                                 <RadioButton Content="Юр.лицо" Checked="RadioButton_Checked" Unchecked="RadioButton_Unchecked" IsChecked="{Binding Type}" />
                             </StackPanel>
-                            <!--<Button >
-                                <Image Width="25" Source="/Image/clients.png" />
-                            </Button>-->
                             <Button x:Name="CancelBtn" Click="CancelBtn_Click">
                                 <Image Width="25" Source="/Image/close.png" />
                             </Button>
@@ -79,13 +76,17 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                         </ComboBox>
                         <Border Padding="30 0">
                             <StackPanel x:Name="Info2">
-
-                                <TextBox Text="{Binding Surname,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  ui:TextBoxHelper.Watermark="Фамилия*" Style="{StaticResource InfoTxtBox}" />
-                                <TextBox Text="{Binding Name,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Имя*" Style="{StaticResource InfoTxtBox}"/>
-                                <TextBox Text="{Binding Patronymic,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
-                                <toolkit:MaskedTextBox Mask="+7(000)000-00-00" Text="{Binding Telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
-                                <TextBox Text="{Binding Email,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
-                                <TextBox Text="{Binding CompanyNаme,  ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox x:Name="SurnameTxt" Text="{Binding Surname,  ValidatesOnDataErrors=True}" ui:TextBoxHelper.Watermark="Фамилия*" Style="{StaticResource InfoTxtBox}" />
+                                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=SurnameTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=SurnameTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <TextBox x:Name="NameTxt" Text="{Binding Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Имя*" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=NameTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=NameTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <TextBox Text="{Binding Patronymic, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
+                                <toolkit:MaskedTextBox x:Name="TelephoneTxt" Mask="+7(000)000-00-00" Text="{Binding Telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
+                                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TelephoneTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=TelephoneTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <TextBox x:Name="EmailTxt" Text="{Binding Email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"   ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=EmailTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=EmailTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <TextBox Text="{Binding CompanyName, ValidatesOnDataErrors=True}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания*" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=CompanyTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=CompanyTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -150,7 +151,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
 
                                 <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Устройство:" />
                                 <UniformGrid Columns="2" >
-                                    <TextBox x:Name="RequestDevice" Text="{Binding Device}" ui:TextBoxHelper.Watermark="Модель" Style="{StaticResource InfoTxtBox}" Margin="0 5 10 5"/>
+                                    <TextBox x:Name="RequestDevice" Text="{Binding Device}" ui:TextBoxHelper.Watermark="" Style="{StaticResource InfoTxtBox}" Margin="0 5 10 5"/>
                                     <TextBox x:Name="RequestSN" Text="{Binding IMEI_SN}" ui:TextBoxHelper.Watermark="IMEI/SN" Style="{StaticResource InfoTxtBox}"/>
                                 </UniformGrid>
                                 <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Внешний вид устройства при приёмке::" />
@@ -159,7 +160,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                                 <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Адрес выезда:" Visibility="{Binding Visibility, ElementName=Address}"/>
                                 <TextBox  x:Name="Address" Text="{Binding Address}" Visibility="Collapsed" ui:TextBoxHelper.Watermark="Адрес" Style="{StaticResource InfoTxtBox}"/>
                                 <Label Margin="0" FontSize="19" Content="Итоговая цена:" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                                <TextBox x:Name="RequestCost" Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox x:Name="RequestCost" IsReadOnly="True" Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -178,9 +179,9 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                     </StackPanel>
                     <DataGrid x:Name="selectedServices" ItemsSource="{Binding SelectedServices}" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto" MinHeight="80" Background="White">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="Название" IsReadOnly="True" Binding="{Binding Name}"/>
                             <DataGridTextColumn Header="Кол-во" Binding="{Binding Count}"/>
-                            <DataGridTextColumn Header="Цена за ед." Binding="{Binding Cost}"/>
+                            <DataGridTextColumn Header="Цена за ед." IsReadOnly="True" Binding="{Binding Cost}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>
@@ -192,9 +193,9 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                     </StackPanel>
                     <DataGrid x:Name="selectedParts" AutoGenerateColumns="False" ItemsSource="{Binding SelectedParts}" Margin="0 0 30 0"  MinHeight="80" MaxHeight="120" Background="White">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Название" Binding="{Binding Name}" />
+                            <DataGridTextColumn Header="Название" IsReadOnly="True" Binding="{Binding Name}" />
                             <DataGridTextColumn Header="Кол-во" Binding="{Binding Count, Mode=TwoWay}"/>
-                            <DataGridTextColumn Header="Цена за ед." Binding="{Binding Cost}"/>
+                            <DataGridTextColumn Header="Цена за ед." IsReadOnly="True" Binding="{Binding Cost}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>

@@ -11,7 +11,8 @@
         mc:Ignorable="d"
         WindowStyle="None"
         Name="window"
-        Title="EmployeeWindow" Height="550" Width="450">
+        Title="Сотрудник" MinHeight="560" Height="560" MaxHeight="600" MaxWidth="559" MinWidth="450" Icon="/View/logo.ico">
+    <ScrollViewer VerticalScrollBarVisibility="Hidden">
     <DockPanel >
         <Border DockPanel.Dock="Top">
             <DockPanel >
@@ -51,9 +52,8 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                     <ui:MetroHeader Content="Логин*"/>
-                    <TextBox x:Name="LoginTxt" Text="{Binding Login}" ui:TextBoxHelper.Watermark="Логин" Style="{StaticResource InfoTxtBox}"/>
-                    <!--<ui:MetroHeader Content="Пароль*"/>
-                    <TextBox x:Name="PasswordTxt" Text="{Binding Password}" ui:TextBoxHelper.Watermark="Пароль" Style="{StaticResource InfoTxtBox}" />-->
+                        <TextBox x:Name="LoginTxt" Text="{Binding Login, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Логин" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=LoginTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=LoginTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 </StackPanel>
             </Border>
             <Button x:Name="newPassword" Style="{StaticResource MainBtn}"  Command="{Binding NewPasswordCommand}" CommandParameter="{Binding ElementName=window}" Content="Отправить новый пароль" Background="#889DFB" Margin="30 5" />
@@ -61,4 +61,5 @@
             <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Сохранить" Margin="30 5" />
         </StackPanel>
     </DockPanel>
+    </ScrollViewer>
 </Window>

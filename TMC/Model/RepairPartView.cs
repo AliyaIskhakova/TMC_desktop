@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TMC.Model
 {
@@ -17,9 +13,19 @@ namespace TMC.Model
         private int minStock;
         public int IdPart { get; set; }
         public string Name { get; set; }
-        public int Count { get { return count; } set { count = value; OnPropertyChanged(); } }
+        public int Count { get { return count; } set { count = value; OnPropertyChanged();
+
+                OnPropertyChanged(nameof(AvgSalesPerDay));
+                OnPropertyChanged(nameof(DaysOfStockLeft));
+                OnPropertyChanged(nameof(StockToolTip));
+                OnPropertyChanged(nameof(StockStatusColor));
+
+            } }
         public double Cost { get { return cost; } set { cost = value; OnPropertyChanged(); } }
-        public int MinStock { get { return minStock; } set { minStock = value; OnPropertyChanged(); } }
+        public int MinStock { get { return minStock; } set { minStock = value; OnPropertyChanged(); OnPropertyChanged(nameof(DaysOfStockLeft));
+                OnPropertyChanged(nameof(StockToolTip));
+                OnPropertyChanged(nameof(StockStatusColor));
+            } }
 
 
         // Средние продажи в день (рассчитывается отдельно)
@@ -55,19 +61,30 @@ namespace TMC.Model
             }
         }
 
-        public string StockToolTip =>
-            $"Текущий остаток: {Count} шт.\n" +
+        public string StockToolTip
+        {
+            get
+            {
+                return $"Текущий остаток: {Count} шт.\n" +
             $"Минимальный запас: {MinStock} шт.\n" +
             (AvgSalesPerDay > 0
                 ? $"Средний расход: {AvgSalesPerDay:0.0} шт./день\n" +
                   $"Остаток на: {DaysOfStockLeft:0.0} дней"
                 : "Нет данных о продажах за период");
+            }
+        }
+            
   
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+            Console.WriteLine($"PropertyChanged: {propertyName}");
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        //protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        //{
+        //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
     }
 }

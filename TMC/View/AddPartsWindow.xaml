@@ -8,18 +8,19 @@
         WindowStartupLocation="CenterScreen"
         x:Name="addParts"
         Background="#E4E9FF"
-        Title="AddPartsWindow" Height="450" Width="800">
+        Title="Добавление ЗИП к заявке" Icon="/View/logo.ico" Height="450" Width="800">
     <DockPanel>
         <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}" >Склад ЗИП</Label>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <TextBox x:Name="SearchServices" Style="{StaticResource SearchBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            <Button Style="{StaticResource MainBtn}" Command="{Binding AddSelectedPartsCommand}" CommandParameter="{Binding ElementName=addParts}" >Добавить к заявке</Button>
+            <Button Style="{StaticResource MainBtn}" Command="{Binding AddSelectedPartsCommand}" CommandParameter="{Binding ElementName=addParts}" Margin="0">Добавить к заявке</Button>
         </StackPanel>
         <DataGrid x:Name="RepairPartsDG"  SelectionMode="Extended" ItemsSource="{Binding RepairPartsListVm}" Margin="10,20,10,10" Style="{StaticResource MainDataGrid}" >
             <DataGrid.Resources>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
             </DataGrid.Resources>
             <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding IdPart}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Кол-во на складе" Binding="{Binding Count}"/>
                 <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>

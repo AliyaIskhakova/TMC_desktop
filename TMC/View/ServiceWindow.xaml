@@ -11,7 +11,7 @@
    Background="#E4E9FF"
    Name="window"
    mc:Ignorable="d"
-   Title="ClientWindow" MinHeight="200" MinWidth="450" MaxHeight="300" MaxWidth="600">
+   Title="Услуга" MinHeight="240" MinWidth="450" MaxHeight="300" MaxWidth="600" Icon="/View/logo.ico">
 
     <DockPanel >
         <Border DockPanel.Dock="Top">

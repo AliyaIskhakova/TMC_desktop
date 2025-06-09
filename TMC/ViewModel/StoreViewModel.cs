@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using TMC.Model;
 using TMC.View;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace TMC.ViewModel
 {
@@ -21,7 +20,7 @@ namespace TMC.ViewModel
         string _searchText;
         ObservableCollection<RepairParts> _filteredParts;
         public ObservableCollection<RepairPartView> _partsVm;
-        private Dictionary<int, double> _avgSalesData;
+        public Dictionary<int, double> _avgSalesData;
 
         public ObservableCollection<RepairPartView> RepairPartsListVm
         {
@@ -60,6 +59,7 @@ namespace TMC.ViewModel
                               Cost = item.Cost,
                               MinStock = item.MinStock
                           }).ToList();
+            _avgSalesData = CalculateAvgSales();
             RepairPartsListVm = new ObservableCollection<RepairPartView>(
                 result.Select(p =>
                 {
@@ -69,14 +69,15 @@ namespace TMC.ViewModel
             );
         }
 
-        private Dictionary<int, double> CalculateAvgSales()
+        public Dictionary<int, double> CalculateAvgSales()
         {
+            context = new ServiceCenterTMCEntities();
             var tenDaysAgo = DateTime.Now.AddDays(-14);
             var today = DateTime.Now;
 
             int totalDays = Enumerable.Range(0, (today - tenDaysAgo).Days)
                 .Select(d => tenDaysAgo.AddDays(d))
-                .Count(d => d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday);
+                .Count();
 
             totalDays = Math.Max(totalDays, 1);
 
@@ -226,18 +227,18 @@ namespace TMC.ViewModel
                 {
                     try
                     {
-
-                    var dataGrid = selectedItem as DataGrid;
+                        context = new ServiceCenterTMCEntities();
+                        var dataGrid = selectedItem as DataGrid;
                         var partVM = dataGrid.SelectedItem as RepairPartView;
                         RepairParts part = context.RepairParts.Find(partVM.IdPart);
                         if (part == null) return;
                         RepairParts vm = new RepairParts
                         {
                             IdPart = part.IdPart,
-                            Name = part.Name,
-                            Cost = part.Cost,
-                            Count = part.Count,
-                            MinStock = part.MinStock
+                            Name = partVM.Name,
+                            Cost = partVM.Cost,
+                            Count = partVM.Count,
+                            MinStock = partVM.MinStock
                         };
 
                     RepairPartWindow repairPartWindow = new RepairPartWindow(vm, this);

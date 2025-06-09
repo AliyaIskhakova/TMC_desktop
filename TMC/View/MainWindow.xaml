@@ -9,7 +9,7 @@
         xmlns:ui="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="Сервисный центр &quot;ТехноМедиаСоюз&quot;" MinHeight="550" MinWidth="1050" WindowState="Maximized" Icon="/View/Y_MSHrGBV5U.jpg">
+        Title="Сервисный центр &quot;ТехноМедиаСоюз&quot;" MinHeight="550" MinWidth="1060" WindowState="Maximized" Icon="/View/logo.ico">
     <Window.Resources>
 
         <Style TargetType="Button" x:Key="MenuBtn" BasedOn="{StaticResource {x:Type Button}}">

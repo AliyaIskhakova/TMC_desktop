@@ -123,7 +123,7 @@ namespace TMC.Model
 
                         if (!string.IsNullOrWhiteSpace(Login))
                         {
-                            if (!Login.Contains(" "))
+                            if (Login.Contains(" "))
                             {
                                 error = "Неверный формат логина";
                             }
@@ -135,7 +135,7 @@ namespace TMC.Model
         }
         public bool HasValidationErrors()
         {
-            return (!string.IsNullOrEmpty(this[nameof(Telephone)]) || !string.IsNullOrEmpty(this[nameof(Email)]));
+            return (!string.IsNullOrEmpty(this[nameof(Telephone)]) || !string.IsNullOrEmpty(this[nameof(Email)]) || !string.IsNullOrEmpty(this[nameof(Login)]));
         }
         public string Error
         {

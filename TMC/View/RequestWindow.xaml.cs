@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iText.IO.Font;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using TMC.Model;
@@ -47,10 +48,20 @@ namespace TMC.View
                 if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() 
                     && int.TryParse(RequestCost.Text, out int cost) && cost >= 0)
                 {
-                    if ((RequestRepairParts.DataContext as RequestViewModel).CheckSelectedParts()==true)
+                    if (ComplitionDate.SelectedDate != null)
+                    {
+                        if (ComplitionDate.SelectedDate < Requests.Date)
+                        {
+                            MessageBox.Show("Некорректная дата готовности!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                        
+                    }
+                    if ((RequestRepairParts.DataContext as RequestViewModel).CheckSelectedParts() == true)
                     {
                         DialogResult = true;
                     }
+
                 }
                 else MessageBox.Show("Заполните обязательные поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }

@@ -11,7 +11,7 @@
         Background="#E4E9FF"
         Name="window"
         mc:Ignorable="d"
-        Title="ClientWindow" Height="430" Width="300" MaxHeight="600" MaxWidth="450" MinHeight="400" MinWidth="400" >
+        Title="Клиент" Height="430" Width="300" MaxHeight="600" MaxWidth="450" MinHeight="400" MinWidth="400" Icon="/View/logo.ico" >
     <ScrollViewer VerticalScrollBarVisibility="Hidden">
     <DockPanel>
         <Border DockPanel.Dock="Top">
