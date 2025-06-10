@@ -376,15 +376,14 @@
                 <StackPanel>
                     <Label DockPanel.Dock="Top" Style="{StaticResource WindowTitle}">Отчет</Label>
 
-                    <!-- Date Range Selector -->
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
                         <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">За период от</Label>
                         <DatePicker x:Name="StartDate" SelectedDate="{Binding StartDate, Mode=TwoWay}" 
                            ui:ControlsHelper.CornerRadius="5" Margin="0 5" BorderBrush="Gray" 
                            BorderThickness="1.5" Background="White" 
+                           FontSize="14"
                            ui:DatePickerHelper.DropDownButtonFontSize="14" 
-                           FirstDayOfWeek="Monday" Text="Дата готовности" 
-                           ui:TextBoxHelper.Watermark="Дата готовности" Width="150">
+                           FirstDayOfWeek="Monday" Width="150">
                             <DatePicker.Resources>
                                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                             </DatePicker.Resources>
@@ -393,9 +392,9 @@
                         <DatePicker x:Name="EndDate" SelectedDate="{Binding EndDate, Mode=TwoWay}" 
                            ui:ControlsHelper.CornerRadius="5" Margin="0 5" BorderBrush="Gray" 
                            BorderThickness="1.5" Background="White" 
+                           FontSize="14"
                            ui:DatePickerHelper.DropDownButtonFontSize="14" 
-                           FirstDayOfWeek="Monday" Text="Дата готовности" 
-                           ui:TextBoxHelper.Watermark="Дата готовности" Width="150">
+                           FirstDayOfWeek="Monday" Width="150">
                             <DatePicker.Resources>
                                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                             </DatePicker.Resources>
@@ -403,14 +402,12 @@
                         <Button x:Name="Search" Command="{Binding LoadDataCommand}" Margin="10,0,0,0" Width="60">ОК</Button>
                     </StackPanel>
 
-                    <!-- Statistics Content -->
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Summary Cards -->
                         <WrapPanel Grid.Row="0" Margin="20">
                             <Border Margin="5">
                                 <StackPanel>
@@ -429,36 +426,14 @@
                             </Border>
                         </WrapPanel>
 
-                        <!-- Charts -->
                         <UniformGrid Columns="2" Grid.Row="1" Margin="10">
-                                                  <!-- Orders by Status -->
-                                <Border Grid.Column="0" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
-                                    <StackPanel>
-                                        <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заявки по статусам</Label>
-                                        <lvc:PieChart VerticalAlignment="Center" Height="350" Series="{Binding PieSeries}"/>
-                                    </StackPanel>
-                                </Border>
-                            <!-- Orders by Day -->
-                            <!-- Orders by Day --><!--
-                            <Border Grid.Column="0" CornerRadius="10" Margin="10" BorderThickness="2" BorderBrush="DarkSlateBlue" Grid.Row="1">
+                            <Border Grid.Column="0" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
                                 <StackPanel>
-                                    <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заказы по дням</Label>
-                                    <TextBlock Text="{Binding DaysCountText}" HorizontalAlignment="Center" FontStyle="Italic" Margin="0 0 0 10"/>
-                                    <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding OrdersByDaySeries}">
-                                        <lvc:CartesianChart.AxisX>
-                                            <lvc:Axis Labels="{Binding DayLabels}" 
-                          LabelsRotation="-45"
-                          FontSize="10"
-                          Separator="{x:Static lvc:DefaultAxes.CleanSeparator}">
-                                            </lvc:Axis>
-                                        </lvc:CartesianChart.AxisX>
-                                        <lvc:CartesianChart.AxisY>
-                                            <lvc:Axis Title="Количество заказов" MinValue="0"/>
-                                        </lvc:CartesianChart.AxisY>
-                                    </lvc:CartesianChart>
+                                    <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заявки по статусам</Label>
+                                    <lvc:PieChart VerticalAlignment="Center" Height="350" Series="{Binding PieSeries}"/>
                                 </StackPanel>
-                            </Border>-->
-                            <!-- Orders by Day -->
+                            </Border>
+                        
                             <Border Grid.Column="0" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
                                 <StackPanel>
                                     <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заявки по дням</Label>
@@ -483,7 +458,6 @@
                                     </lvc:CartesianChart>
                                 </StackPanel>
                             </Border>
-                            <!-- Orders by Employee -->
                             <Border Grid.Column="1" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
                                 <StackPanel>
                                     <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Заявки по сотрудникам</Label>
@@ -501,31 +475,26 @@
                                 </StackPanel>
                             </Border>
 
-                            <!-- Second Row of Charts -->
-                            
-
-                                <!-- Revenue by Employee -->
                             <Border Grid.Column="0" CornerRadius="5" Margin="10" BorderThickness="1" BorderBrush="Gray">
-                                    <StackPanel>
-                                        <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Выручка по сотрудникам</Label>
-                                        <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding EmployeeRevenueSeries}">
-                                            <lvc:CartesianChart.AxisX>
-                                                <lvc:Axis Labels="{Binding EmployeeFullNames}" 
+                                <StackPanel>
+                                    <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Выручка по сотрудникам</Label>
+                                    <lvc:CartesianChart VerticalAlignment="Center" Height="350" Series="{Binding EmployeeRevenueSeries}">
+                                        <lvc:CartesianChart.AxisX>
+                                            <lvc:Axis Labels="{Binding EmployeeFullNames}" 
                                                   LabelsRotation="-45"
                                                   FontSize="12"
                                                   Separator="{x:Static lvc:DefaultAxes.CleanSeparator}"/>
-                                            </lvc:CartesianChart.AxisX>
-                                            <lvc:CartesianChart.AxisY>
-                                                <lvc:Axis Title="Сумма (руб)" LabelFormatter="{Binding CurrencyFormatter}"/>
-                                            </lvc:CartesianChart.AxisY>
-                                        </lvc:CartesianChart>
-                                    </StackPanel>
-                                </Border>
+                                        </lvc:CartesianChart.AxisX>
+                                        <lvc:CartesianChart.AxisY>
+                                            <lvc:Axis Title="Сумма (руб)" LabelFormatter="{Binding CurrencyFormatter}"/>
+                                        </lvc:CartesianChart.AxisY>
+                                    </lvc:CartesianChart>
+                                </StackPanel>
+                            </Border>
 
-                            
+
                         </UniformGrid>
                     </Grid>
-                    <!-- Employee Details -->
                     <Border CornerRadius="5" Margin="20, 10" BorderThickness="1" BorderBrush="Gray">
                         <StackPanel>
                             <Label Style="{StaticResource WindowTitle}" Margin="20 0 0 0">Детализация по сотрудникам</Label>

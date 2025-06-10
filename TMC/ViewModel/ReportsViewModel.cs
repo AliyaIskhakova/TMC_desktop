@@ -195,9 +195,23 @@ namespace TMC.ViewModel
 
         private void ProcessEmployeeStatistics(List<Requests> requests)
         {
+            var context = new ServiceCenterTMCEntities();
             TotalOrders = requests.Count;
             CompletedOrders = requests.Count(r => r.StatusId == 5 || r.StatusId == 4);
-            TotalRevenue = (decimal)requests.Sum(r => r.Cost);
+            var requestServices = context.Requests_Services.ToList();
+            var services = context.Services.ToList();
+            TotalRevenue = (decimal)requests
+            .Where(r => r.StatusId == 5 || r.StatusId == 4)
+            .SelectMany(r => requestServices
+                .Where(rs => rs.RequestId == r.IdRequest)
+                .Select(rs => new { Request = r, RequestService = rs }))
+            .GroupBy(x => x.Request.IdRequest)
+            .Select(g => new
+            {
+                RequestId = g.Key,
+                Revenue = g.Sum(x => x.RequestService.Count * services.First(s => s.IdService == x.RequestService.ServiceId).Cost)
+            })
+            .Sum(x => x.Revenue); 
             var employeeGroups = requests
                 .Where(r => r.MasterId.HasValue)
                 .GroupBy(r => r.Employees)
@@ -206,7 +220,7 @@ namespace TMC.ViewModel
                     Employee = g.Key,
                     CompletedOrders = g.Count(r => r.StatusId == 5 || r.StatusId == 4),
                     TotalOrders = g.Count(),
-                    Revenue = (decimal)g.Where(r => r.Statuses.Name != "Отменена" || r.StatusId == 5 || r.StatusId == 4).Sum(r => r.Cost),
+                    Revenue = (decimal)g.Where(r => r.StatusId == 5 || r.StatusId == 4).Sum(r => r.Cost),
                     Services = g.SelectMany(r => r.Requests_Services)
                         .GroupBy(rs => rs.Services)
                         .Select(sg => new ServiceStat
@@ -246,65 +260,6 @@ namespace TMC.ViewModel
                 }
             };
         }
-
-
-        //private void LoadOrdersByDayData(DateTime startDate, DateTime endDate)
-        //{
-        //    using (var context = new ServiceCenterTMCEntities())
-        //    {
-        //        // Рассчитываем реальное количество дней
-        //        int totalDays = (endDate - startDate).Days + 1;
-        //        DaysCountText = $"{totalDays} дней";
-
-        //        // Получаем данные по дням
-        //        var dailyData = context.Requests
-        //            .Where(r => r.Date >= startDate && r.Date <= endDate)
-        //            .GroupBy(r => EntityFunctions.TruncateTime(r.Date))
-        //            .Select(g => new
-        //            {
-        //                Date = g.Key,
-        //                Count = g.Count()
-        //            })
-        //            .OrderBy(x => x.Date)
-        //            .ToList();
-
-        //        // Заполняем пропущенные дни нулями
-        //        var allDates = Enumerable.Range(0, totalDays)
-        //            .Select(offset => startDate.AddDays(offset).Date)
-        //            .ToList();
-
-        //        var completeData = allDates
-        //            .GroupJoin(dailyData,
-        //                date => date,
-        //                data => data.Date,
-        //                (date, data) => new
-        //                {
-        //                    Date = date,
-        //                    Count = data.Select(x => x.Count).FirstOrDefault()
-        //                })
-        //            .OrderBy(x => x.Date)
-        //            .ToList();
-
-        //        // Подготавливаем данные для графика
-        //        DayLabels = completeData.Select(x => x.Date.ToString("dd.MM.yyyy")).ToList();
-
-        //        OrdersByDaySeries = new SeriesCollection
-        //    {
-        //        new ColumnSeries
-        //        {
-        //            Title = "Заказы",
-        //            Values = new ChartValues<int>(completeData.Select(x => x.Count)),
-        //            Fill = Brushes.DodgerBlue,
-        //            DataLabels = true,
-        //            LabelPoint = point => point.Y > 0 ? point.Y.ToString() : ""
-        //        }
-        //    };
-
-        //        OnPropertyChanged(nameof(DaysCountText));
-        //        OnPropertyChanged(nameof(DayLabels));
-        //        OnPropertyChanged(nameof(OrdersByDaySeries));
-        //    }
-        //}
 
         private void LoadOrdersByDayData(DateTime startDate, DateTime endDate)
         {

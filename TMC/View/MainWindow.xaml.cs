@@ -32,6 +32,7 @@ namespace TMC
                 ServicesWindow.DataContext = servicesVM;
                 EmployeesWindow.DataContext = employeesVM;
                 ResultsWindow.DataContext = reportsVM;
+                EndDate.DisplayDateEnd = DateTime.Now;
             }
             catch (Exception ex)
             {

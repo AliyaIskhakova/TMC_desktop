@@ -462,10 +462,16 @@ namespace TMC.ViewModel
                               var selectedStatus = requestWindow.StatusBox.SelectedItem as Statuses;
                               selectedRequest.StatusId = selectedStatus.IdStatus;
 
-                              //ОТПРАВКА УВЕДОМЛЕНИЯ КЛИЕНТУ
-                              if(statusName != selectedStatus.Name && selectedRequest.Clients.Email!=null)
+                              //Отправка уведомления клиенту
+                              if(statusName != selectedStatus.Name )
                               {
-                                  SendEmail(selectedRequest.Clients, selectedRequest, selectedStatus.Name);
+                                  if (selectedRequest.Clients.Email != null)
+                                  {
+                                      SendEmail(selectedRequest.Clients, selectedRequest, selectedStatus.Name);
+                                  }
+                                  else MessageBox.Show($"У клиента не указана почта. Свяжитесь с клиентом по номеру телефона {selectedRequest.Clients.Telephone}",
+                                "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
+
                               }
                               if (selectedStatus.Name == "Готова") selectedRequest.CompletionDate = DateTime.Now;
                               var selectedMaster = requestWindow.MastersBox.SelectedItem as MastersListView;
