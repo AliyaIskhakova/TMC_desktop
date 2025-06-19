@@ -279,7 +279,6 @@
     <Compile Include="ViewModel\ClientsViewModel.cs" />
     <Compile Include="ViewModel\EmployeesViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
-    <Compile Include="ViewModel\RepairPartViewModel.cs" />
     <Compile Include="ViewModel\ReportsViewModel.cs" />
     <Compile Include="ViewModel\RequestViewModel.cs" />
     <Compile Include="ViewModel\ServicesViewModel.cs" />
@@ -440,7 +439,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\Y_MSHrGBV5U.jpg" />
     <Resource Include="Image\report.png" />
   </ItemGroup>
   <ItemGroup>

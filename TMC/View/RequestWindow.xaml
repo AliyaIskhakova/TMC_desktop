@@ -83,7 +83,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                                 <TextBox Text="{Binding Patronymic, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
                                 <toolkit:MaskedTextBox x:Name="TelephoneTxt" Mask="+7(000)000-00-00" Text="{Binding Telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
                                 <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TelephoneTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=TelephoneTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                                <TextBox x:Name="EmailTxt" Text="{Binding Email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"   ui:TextBoxHelper.Watermark="Почта" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox x:Name="EmailTxt" Text="{Binding Email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"   ui:TextBoxHelper.Watermark="Почта*" Style="{StaticResource InfoTxtBox}"/>
                                 <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=EmailTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=EmailTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 <TextBox Text="{Binding CompanyName, ValidatesOnDataErrors=True}" Visibility="Collapsed" x:Name="CompanyTxt" ui:TextBoxHelper.Watermark="Компания*" Style="{StaticResource InfoTxtBox}"/>
                                 <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=CompanyTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=CompanyTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -145,7 +145,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                                 </StackPanel>
 
                                 <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Причина обращения:" />
-                                <TextBox x:Name="RequestReason" Text="{Binding Reason}" ui:TextBoxHelper.Watermark="Причина обращения*" Style="{StaticResource InfoTxtBox}" />
+                                <TextBox x:Name="RequestReason" Text="{Binding Reason}" ui:TextBoxHelper.Watermark="Причина обращения*" MaxLength="200" Style="{StaticResource InfoTxtBox}" />
                                 <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Выявленная неисправность:" />
                                 <TextBox x:Name="RequestDetectedMulfunction" Text="{Binding  DetectedMulfunction}" ui:TextBoxHelper.Watermark="Выявленные неисправности" Style="{StaticResource InfoTxtBox}"/>
 

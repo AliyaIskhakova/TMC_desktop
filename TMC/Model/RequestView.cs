@@ -19,18 +19,11 @@
         private string _clientName;
         private string _clientPatronymic;
         private string _clientTelephone;
-        //private string _clientEmail;
-        //private bool _clientType;
-        //private string _clientCompanyName;
         private string _completionDate;
         private string _reason;
         private string _date;
-        //private int _deviceID;
         private string _device;
-        //private double _cost;
         private string _imeiSN;
-        //private string _model;
-        //private string _notes;
         private string _detectedMulfunction;
 
         public int IDRequest
@@ -183,36 +176,6 @@
             }
         }
 
-        //public string ClientEmail
-        //{
-        //    get { return _clientEmail; }
-        //    set
-        //    {
-        //        _clientEmail = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
-        //public bool ClientType
-        //{
-        //    get { return _clientType; }
-        //    set
-        //    {
-        //        _clientType = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
-        //public string ClientCompanyName
-        //{
-        //    get { return _clientCompanyName; }
-        //    set
-        //    {
-        //        _clientCompanyName = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
         public string Client => $"{ClientSurname} {ClientName} {ClientPatronymic} \n {ClientTelephone}";
 
         public string CompletionDate
@@ -245,16 +208,6 @@
             }
         }
 
-        //public int? DeviceID
-        //{
-        //    get { return _deviceID; }
-        //    set
-        //    {
-        //        _deviceID = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
         public string Device
         {
             get { return _device; }
@@ -265,16 +218,6 @@
             }
         }
 
-        //public double Cost
-        //{
-        //    get { return _cost; }
-        //    set
-        //    {
-        //        _cost = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
         public string IMEI_SN
         {
             get { return _imeiSN; }
@@ -284,26 +227,6 @@
                 OnPropertyChanged();
             }
         }
-
-        //public string Model
-        //{
-        //    get { return _model; }
-        //    set
-        //    {
-        //        _model = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
-        //public string Notes
-        //{
-        //    get { return _notes; }
-        //    set
-        //    {
-        //        _notes = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
 
         public string DetectedMulfunction
         {

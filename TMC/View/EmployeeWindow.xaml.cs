@@ -6,9 +6,6 @@ using TMC.ViewModel;
 
 namespace TMC.View
 {
-    /// <summary>
-    /// Логика взаимодействия для EmployeeWindow.xaml
-    /// </summary>
     public partial class EmployeeWindow : Window
     {
         public Employees Employees { get; private set; }

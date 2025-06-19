@@ -3,9 +3,7 @@ using System.Windows;
 
 namespace TMC.View
 {
-    /// <summary>
-    /// Логика взаимодействия для WriteOffRepairPart.xaml
-    /// </summary>
+    
     public partial class WriteOffRepairPart : Window
     {
         int _countPart;

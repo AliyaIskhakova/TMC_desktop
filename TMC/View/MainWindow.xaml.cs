@@ -7,9 +7,7 @@ using TMC.ViewModel;
 
 namespace TMC
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
+   
     public partial class MainWindow : Window
     {
         
@@ -33,6 +31,9 @@ namespace TMC
                 EmployeesWindow.DataContext = employeesVM;
                 ResultsWindow.DataContext = reportsVM;
                 EndDate.DisplayDateEnd = DateTime.Now;
+                EndDate.DisplayDateStart = DateTime.Parse("02.01.2014");
+                StartDate.DisplayDateStart = DateTime.Parse("01.01.2014");
+                StartDate.DisplayDateEnd = DateTime.Now.AddDays(-1);
             }
             catch (Exception ex)
             {
@@ -183,7 +184,6 @@ namespace TMC
                 if (row != null)
                 {
                     var selectedItem = (sender as DataGrid).SelectedItem;
-                    //var viewModel = new RequestViewModel();
                     requestVM.EditRequestCommand.Execute(selectedItem);
                 }
             }

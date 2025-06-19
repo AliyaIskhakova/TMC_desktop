@@ -254,7 +254,7 @@ namespace TMC.ViewModel
                           RequestWindow requestWindow = new RequestWindow(new Requests(), this, _clientVM);
                           
                           requestWindow.MastersBox.ItemsSource = MastersList();
-                          requestWindow.StatusBox.ItemsSource = context.Statuses.Where(s => s.Name != "Завершен" && s.Name != "Отменен").ToList();
+                          requestWindow.StatusBox.ItemsSource = context.Statuses.ToList();
                           requestWindow.EndDocuument.Visibility = Visibility.Collapsed;
                           _costTimer = new System.Timers.Timer(100);
                           _costTimer.Elapsed += (sender, e) => RefreshCost(requestWindow);
@@ -379,8 +379,6 @@ namespace TMC.ViewModel
                           SelectedParts.Clear();
                           string role = App.Current.Properties["Role"] as string;
                           int id = (int)App.Current.Properties["UserID"];
-                          List<Statuses> status = new List<Statuses>();
-
                           RequestView request = selectedItem as RequestView;
                           if (request == null) return;
                           Requests selectedRequest = context.Requests.Find(request.IDRequest);
@@ -389,15 +387,19 @@ namespace TMC.ViewModel
                           _costTimer.Elapsed += (sender, e) => RefreshCost(requestWindow);
                           _costTimer.AutoReset = true;
                           _costTimer.Enabled = true;
-                          if (role == "Мастер" && request.StatusName != "Завершен" && request.StatusName != "Отменен") status = context.Statuses.Where(s => s.Name != "Завершен" && s.Name != "Отменен").ToList();
-                          else status = context.Statuses.ToList();
+                          var statuses = context.Statuses.ToList();
+                          if (role == "Мастер" && request.StatusName == "Диагностика") statuses = statuses.Where(s => s.Name != "Завершена" && s.Name != "Отменена" && s.Name!="Новая").ToList();
+                          else if (role == "Мастер" && request.StatusName != "Завершена" && request.StatusName != "Отменена" && request.StatusName != "Диагностика") statuses = statuses.Where(s => s.Name != "Завершена" && s.Name != "Отменена" && s.Name != "Диагностика").ToList();
+                          else if (role == "Мастер" && request.StatusName != "Завершена" && request.StatusName != "Отменена" && request.StatusName != "Диагностика" && request.StatusName != "Новая") statuses = statuses.Where(s => s.Name != "Завершена" && s.Name != "Отменена" && s.Name != "Новая" && s.Name != "Диагностика").ToList();
+                          if (request.StatusName != "Новая") statuses = statuses.Where(s => s.Name != "Новая").ToList();
+
                           requestWindow.RequestDate.Visibility = Visibility.Visible;
                           requestWindow.ClientInfo.DataContext = context.Clients.Find(request.ClientID);
                           requestWindow.ClientInfo.IsEnabled = false;
                           requestWindow.ClientComboBox.Visibility = Visibility.Collapsed;
                           requestWindow.MastersBox.ItemsSource = MastersList();
                           requestWindow.MastersBox.SelectedItem = (requestWindow.MastersBox.ItemsSource as List<MastersListView>).FirstOrDefault(m=>m.Id==request.EmployeeID);
-                          requestWindow.StatusBox.ItemsSource = status;
+                          requestWindow.StatusBox.ItemsSource = statuses;
                           requestWindow.StatusBox.SelectedItem = context.Statuses.Find(request.StatusID);
                           string statusName = request.StatusName;
                           if (selectedRequest.Statuses.Name == "Завершена" || selectedRequest.Statuses.Name == "Отменена")
@@ -474,6 +476,7 @@ namespace TMC.ViewModel
 
                               }
                               if (selectedStatus.Name == "Готова") selectedRequest.CompletionDate = DateTime.Now;
+                              if (selectedStatus.Name == "Отменена") CancelRequest(request_parts);
                               var selectedMaster = requestWindow.MastersBox.SelectedItem as MastersListView;
                               if (selectedMaster != null) selectedRequest.MasterId = selectedMaster.Id;
                               selectedRequest.Type = (bool)requestWindow.TypeCheck.IsChecked;
@@ -528,7 +531,14 @@ namespace TMC.ViewModel
                   });
             }
         }
-    
+        private void CancelRequest(List<Request_RepairParts> request_parts)
+        {
+            foreach (var item in SelectedParts)
+            {
+                RepairParts part = context.RepairParts.Find(item.IDPart);
+                part.Count += request_parts.Where(p => p.RepairPartId == item.IDPart).First().Count;
+            }
+        }
         private ObservableCollection<SelectedServicesView> _selectedServices = new ObservableCollection<SelectedServicesView>();
         public ObservableCollection<SelectedServicesView> SelectedServices
         {
@@ -1213,11 +1223,12 @@ namespace TMC.ViewModel
         {
             try
             {
+                var db = new ServiceCenterTMCEntities();
                 bool result = true;
                 int addCount = 0;
                 foreach (var part in SelectedParts)
                 {
-                    RepairParts selectedPart = context.RepairParts.Find(part.IDPart);
+                    RepairParts selectedPart = db.RepairParts.Find(part.IDPart);
                     addCount = part.Count;
                     var editPart = _editSelectedParts.Where(p=> p.IdPart == part.IDPart).FirstOrDefault();
                     

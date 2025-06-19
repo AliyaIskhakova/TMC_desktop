@@ -49,12 +49,10 @@ namespace TMC.Model
         {
             get
             {
-                if (Count <= 0) return "#FF4444"; // Красный - нет в наличии
+                if (Count == 0) return "#FF4444"; // Красный - нет в наличии
                 if (Count < MinStock) return "#FF4444"; // Красный - ниже минимального
                 if (AvgSalesPerDay <= 0) return "Transparent"; // Нет данных о спросе
-
                 double daysLeft = DaysOfStockLeft;
-
                 if (daysLeft < 3) return "#FFA500"; // Оранжевый - меньше 3 дней
                 if (daysLeft < 7) return "#FFE417"; // Желтый - меньше недели
                 return "Transparent"; // Достаточный запас

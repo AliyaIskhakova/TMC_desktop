@@ -51,6 +51,7 @@
                 <Setter Property="FontSize" Value="14"/>
                 <Setter Property="BorderThickness" Value="1.5"/>
                 <Setter Property="Margin" Value="0 5"/>
+                <Setter Property="MaxLength" Value="100"/>
                 <Setter Property="Validation.ErrorTemplate">
                     <Setter.Value>
                         <ControlTemplate>
@@ -97,6 +98,7 @@
                 <Setter Property="ui:ControlsHelper.CornerRadius" Value="5"/>
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="BorderThickness" Value="1.5"/>
+                <Setter Property="MaxLength" Value="100"/>
                 <Setter Property="Margin" Value="0 5"/>
             </Style>
 

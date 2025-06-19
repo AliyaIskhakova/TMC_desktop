@@ -197,11 +197,11 @@ namespace TMC.ViewModel
         {
             var context = new ServiceCenterTMCEntities();
             TotalOrders = requests.Count;
-            CompletedOrders = requests.Count(r => r.StatusId == 5 || r.StatusId == 4);
+            CompletedOrders = requests.Count(r => r.StatusId == 6 || r.StatusId == 5);
             var requestServices = context.Requests_Services.ToList();
             var services = context.Services.ToList();
             TotalRevenue = (decimal)requests
-            .Where(r => r.StatusId == 5 || r.StatusId == 4)
+            .Where(r => r.StatusId == 6 || r.StatusId == 5)
             .SelectMany(r => requestServices
                 .Where(rs => rs.RequestId == r.IdRequest)
                 .Select(rs => new { Request = r, RequestService = rs }))
@@ -218,10 +218,10 @@ namespace TMC.ViewModel
                 .Select(g => new EmployeeStat
                 {
                     Employee = g.Key,
-                    CompletedOrders = g.Count(r => r.StatusId == 5 || r.StatusId == 4),
+                    CompletedOrders = g.Count(r => r.StatusId == 6 || r.StatusId == 5),
                     TotalOrders = g.Count(),
-                    Revenue = (decimal)g.Where(r => r.StatusId == 5 || r.StatusId == 4).Sum(r => r.Cost),
-                    Services = g.SelectMany(r => r.Requests_Services)
+                    Revenue = (decimal)g.Where(r => r.StatusId == 6 || r.StatusId == 5).Sum(r => r.Cost),
+                    Services = g.Where(r => r.StatusId == 6 || r.StatusId == 5).SelectMany(r => r.Requests_Services)
                         .GroupBy(rs => rs.Services)
                         .Select(sg => new ServiceStat
                         {
@@ -267,8 +267,7 @@ namespace TMC.ViewModel
             {
                 using (var context = new ServiceCenterTMCEntities())
                 {
-                    //Рассчитываем реальное количество дней
-                            int totalDays = (endDate - startDate).Days + 1;
+                    int totalDays = (endDate - startDate).Days + 1;
                     DaysCountText = $"{totalDays} дней";
 
                     // Получаем данные по дням

@@ -157,8 +157,14 @@ namespace TMC.ViewModel
                         Employees employee = selectedItem as Employees;
                         if (employee == null) {
                             MessageBox.Show("Выберите сотрудника для удаления", "Удаление сотрудника", MessageBoxButton.OK, MessageBoxImage.Information);
-                        return;
-                            }
+                            return;
+                        }
+                        int id = (int)App.Current.Properties["UserID"];
+                        if(employee.IdEmployee == id)
+                        {
+                            MessageBox.Show("Вы не можете удалить свою учётную запись. Обратитесь к другому администратору.", "Удаление сотрудника", MessageBoxButton.OK, MessageBoxImage.Information);
+                            return;
+                        }
                         var result = MessageBox.Show($"Вы действительно хотите удалить сотрудника: {employee.Surname} {employee.Name} {employee.Patronymic}?", "Удаление сотрудника", MessageBoxButton.YesNo, MessageBoxImage.Question ) ;
                         if (result == MessageBoxResult.No) return;
                         context.Employees.Remove(employee);

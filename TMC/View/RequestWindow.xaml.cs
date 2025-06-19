@@ -7,9 +7,6 @@ using Window = System.Windows.Window;
 
 namespace TMC.View
 {
-    /// <summary>
-    /// Логика взаимодействия для RequestWindow.xaml
-    /// </summary>
     public partial class RequestWindow : Window
     {
         public Requests Requests { get; private set; }
@@ -45,7 +42,8 @@ namespace TMC.View
             try
             {
                 if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() 
-                    && int.TryParse(RequestCost.Text, out int cost) && cost >= 0)
+                    && int.TryParse(RequestCost.Text, out int cost) && cost >= 0 && !string.IsNullOrWhiteSpace(SurnameTxt.Text) && 
+                        !string.IsNullOrWhiteSpace(NameTxt.Text) && !string.IsNullOrWhiteSpace(TelephoneTxt.Text) && !string.IsNullOrWhiteSpace(EmailTxt.Text))
                 {
                     if (ComplitionDate.SelectedDate != null)
                     {
@@ -70,13 +68,14 @@ namespace TMC.View
             }
         }
 
-        private void StatusBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void 
+            Box_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
                 var selected = sender as ComboBox;
                 string status = selected.SelectionBoxItemTemplate.ToString();
-                if (status == "Готов")
+                if (status == "Готова")
                 {
                     EndDocuument.IsEnabled = true;
                 }

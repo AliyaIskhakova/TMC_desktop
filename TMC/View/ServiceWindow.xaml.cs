@@ -4,14 +4,10 @@ using TMC.Model;
 
 namespace TMC.View
 {
-    /// <summary>
-    /// Логика взаимодействия для ServiceWindow.xaml
-    /// </summary>
     public partial class ServiceWindow : Window
     {
         public Services Services { get; private set; }
 
-      
 
         public ServiceWindow(Services services)
         {
@@ -31,7 +27,7 @@ namespace TMC.View
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(ServiceName.Text) && double.TryParse(ServiceCost.Text, out double cost) && cost >= 0) DialogResult = true;
+                if (!string.IsNullOrWhiteSpace(ServiceName.Text) && double.TryParse(ServiceCost.Text, out double cost) && cost >= 0 && TypeBox.SelectedItem!=null) DialogResult = true;
                 else MessageBox.Show("Проверьте корректность данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)

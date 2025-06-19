@@ -11,7 +11,7 @@
    Background="#E4E9FF"
    Name="window"
    mc:Ignorable="d"
-   Title="Услуга" MinHeight="240" MinWidth="450" MaxHeight="300" MaxWidth="600" Icon="/View/logo.ico">
+   Title="Услуга" MinHeight="285" MinWidth="450" MaxHeight="300" MaxWidth="600" Icon="/View/logo.ico">
 
     <DockPanel >
         <Border DockPanel.Dock="Top">
@@ -29,7 +29,7 @@
                     <ui:MetroHeader Content="Наименование услуги*"/>
                     <TextBox x:Name="ServiceName" Text="{Binding Name}" ui:TextBoxHelper.Watermark="Название" Style="{StaticResource InfoTxtBox}"/>
                     <ui:MetroHeader Content="Тип услуги*"/>
-                    <ComboBox x:Name="TypeBox" ui:ControlsHelper.CornerRadius="5" Background="White" Margin="0 5" BorderBrush="Gray" BorderThickness="1.5">
+                    <ComboBox x:Name="TypeBox" Style="{StaticResource MainComboBox}" >
                         <ComboBox.Resources>
                             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                         </ComboBox.Resources>
