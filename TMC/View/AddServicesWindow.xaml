@@ -23,13 +23,6 @@
                 <DataGridTextColumn Header="№" Binding="{Binding IdService}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Цена" Binding="{Binding Cost}"/>
-                <!--<DataGridTemplateColumn Header="Количество">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBox x:Name="Count">1</TextBox>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>-->
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

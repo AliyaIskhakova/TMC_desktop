@@ -207,7 +207,6 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                 <Button x:Name="EndDocuument" Style="{StaticResource MainBtn}" Command="{Binding PrintComplitedWorkActCommand}" CommandParameter="{Binding ElementName=window}" Content="Акт выполнения работ" Margin="0 10" />
             </StackPanel>
             <Button Name="SaveBtn" Style="{StaticResource MainBtn}" Click="Accept_Click"  Content="Coхранить"/>
-            <!--Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=window}"-->
 
         </StackPanel>
     </ScrollViewer>

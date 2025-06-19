@@ -65,15 +65,8 @@
             <Setter Property="BorderBrush" Value="#FFD64040"/>
         </Style>
         <Style TargetType="Border" x:Key="BtnBorder">
-            <!--<Setter Property="Background" Value="{TemplateBinding Background}"/>-->
             <Setter Property="Padding" Value="0 5"/>
             <Setter Property="CornerRadius" Value="10 0 0 10"/>
-            <Style.Triggers>
-                <!--<Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#B4C3FF"/>
-                </Trigger>-->
-                
-            </Style.Triggers>
         </Style>
     </Window.Resources>
     <Grid>
@@ -298,7 +291,6 @@
                         <DataGridTextColumn Header="Имя" Binding="{Binding Name}" />
                         <DataGridTextColumn Header="Отчество" Binding="{Binding Patronymic}" />
                         <DataGridTextColumn Header="Телефон" Binding="{Binding Telephone}"/>
-                        <!--<DataGridTextColumn Header="Тип" Binding="{Binding Type}"/>-->
                         <DataGridTemplateColumn Header="Тип">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

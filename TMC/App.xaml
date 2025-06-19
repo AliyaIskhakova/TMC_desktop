@@ -6,12 +6,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <!-- Theme setting -->
-
-                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}" x:Key="MainComboBox">
@@ -55,7 +51,6 @@
                 <Setter Property="Validation.ErrorTemplate">
                     <Setter.Value>
                         <ControlTemplate>
-                            <!-- Пустой шаблон, чтобы не отображать встроенные ошибки -->
                             <AdornedElementPlaceholder />
                         </ControlTemplate>
                     </Setter.Value>
@@ -64,10 +59,6 @@
                     <Trigger Property="Validation.HasError" Value="True">
                         <Setter Property="Foreground" Value="Red" />
                         <Setter Property="BorderBrush" Value="Red"/>
-                        <!--<Setter Property="ToolTip.Placement" Value="Bottom"/>
-                        <Setter Property="ToolTip.Foreground" Value="Red"/>-->
-                        <!--<Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>-->
-                        
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -131,7 +122,6 @@
             <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
                 <Setter Property="FontSize" Value="15"/>
                 <Setter Property="Width" Value="Auto"/>
-                <!--<Setter Property="Background" Value="#EEF1FF"/>-->
                 <Setter Property="BorderBrush" Value="#EEF1FF"/>
                 <Setter Property="BorderThickness" Value=" 0 2"/>
             </Style>

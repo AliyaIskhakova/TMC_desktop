@@ -7,12 +7,10 @@
         xmlns:ui="http://metro.mahapps.com/winfx/xaml/controls"
             WindowStyle="None"
                 WindowStartupLocation="CenterScreen"
-
     Background="#E4E9FF"
     Name="window"
     mc:Ignorable="d"
     Title="ЗИП" MinHeight="330" MinWidth="450" MaxHeight="400" MaxWidth="600">
-    
     <DockPanel >
         <Border DockPanel.Dock="Top">
             <DockPanel >
