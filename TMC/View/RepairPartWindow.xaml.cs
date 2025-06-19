@@ -5,7 +5,7 @@ using TMC.ViewModel;
 
 namespace TMC.View
 {
-   
+
     public partial class RepairPartWindow : Window
     {
         public RepairParts RepairParts { get; private set; }

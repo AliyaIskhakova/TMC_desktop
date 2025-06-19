@@ -108,15 +108,6 @@ private string surname { get; set; }
                 string error = String.Empty;
                 switch (columnName)
                 {
-
-                    //case nameof(Surname):
-                    //    if (string.IsNullOrWhiteSpace(Surname))
-                    //        error = "Поле не может быть пустым";
-                    //    break;
-                    //case nameof(Name):
-                    //    if (string.IsNullOrWhiteSpace(Name))
-                    //        error = "Поле не может быть пустым";
-                    //    break;
                     case nameof(Telephone):
                         if (!Regex.IsMatch(Telephone, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
                             error = "Неверный формат номера телефона";
