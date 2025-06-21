@@ -42,7 +42,7 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                     <ui:MetroHeader Content="Цена за ед*"/>
-                    <TextBox x:Name="ServiceCost" Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox x:Name="ServiceCost" Text="{Binding Cost, StringFormat=N2, ConverterCulture=ru-RU, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}" MaxLength="9"/>
                 </StackPanel>
             </Border>
             <Button Style="{StaticResource MainBtn}" Click="Accept_Click" Content="Сохранить" Margin="30 5" />

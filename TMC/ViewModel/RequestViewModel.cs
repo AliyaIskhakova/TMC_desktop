@@ -275,7 +275,7 @@ namespace TMC.ViewModel
                               newRequest.Cost = (int)requestWindow.Requests.Cost;
                               var selectedMaster = requestWindow.MastersBox.SelectedItem as MastersListView;
                               if (selectedMaster != null) newRequest.MasterId = selectedMaster.Id;
-                              if (selectedStatus.Name == "Готова") newRequest.CompletionDate = DateTime.Now;
+                              if (selectedStatus.Name == "Готова" || selectedStatus.Name == "Завершена") newRequest.CompletionDate = DateTime.Now;
                               context.Requests.Add(newRequest);
                               context.SaveChanges();
                               foreach (var service in SelectedServices)
@@ -392,7 +392,7 @@ namespace TMC.ViewModel
                           else if (role == "Мастер" && request.StatusName != "Завершена" && request.StatusName != "Отменена" && request.StatusName != "Диагностика") statuses = statuses.Where(s => s.Name != "Завершена" && s.Name != "Отменена" && s.Name != "Диагностика").ToList();
                           else if (role == "Мастер" && request.StatusName != "Завершена" && request.StatusName != "Отменена" && request.StatusName != "Диагностика" && request.StatusName != "Новая") statuses = statuses.Where(s => s.Name != "Завершена" && s.Name != "Отменена" && s.Name != "Новая" && s.Name != "Диагностика").ToList();
                           if (request.StatusName != "Новая") statuses = statuses.Where(s => s.Name != "Новая").ToList();
-
+                          if(request.StatusName == "Готова") statuses = statuses.Where(s => s.Name != "Отменена").ToList();
                           requestWindow.RequestDate.Visibility = Visibility.Visible;
                           requestWindow.ClientInfo.DataContext = context.Clients.Find(request.ClientID);
                           requestWindow.ClientInfo.IsEnabled = false;
@@ -476,6 +476,7 @@ namespace TMC.ViewModel
 
                               }
                               if (selectedStatus.Name == "Готова") selectedRequest.CompletionDate = DateTime.Now;
+                              if (selectedStatus.Name == "Завершена" && statusName!="Готова") selectedRequest.CompletionDate = DateTime.Now;
                               if (selectedStatus.Name == "Отменена") CancelRequest(request_parts);
                               var selectedMaster = requestWindow.MastersBox.SelectedItem as MastersListView;
                               if (selectedMaster != null) selectedRequest.MasterId = selectedMaster.Id;
@@ -722,7 +723,7 @@ namespace TMC.ViewModel
                     {
                         RequestWindow requestWindow = o as RequestWindow;
                         if (!(!string.IsNullOrWhiteSpace(requestWindow.RequestReason.Text) && !(requestWindow.ClientInfo.DataContext as Clients).HasValidationErrors()
-                        && int.TryParse(requestWindow.RequestCost.Text, out int cost) && cost >= 0))
+                        && double.TryParse(requestWindow.RequestCost.Text, out double cost) && cost >= 0))
                         {
                             MessageBox.Show("Чтобы сформировать акт приемки заполните обязательные поля корректными данными!", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
                             return;
@@ -733,6 +734,8 @@ namespace TMC.ViewModel
                             return;
                         }
                         var request = requestWindow.Requests;
+                        context = new ServiceCenterTMCEntities();
+                        if (request.IdRequest == 0) request.IdRequest = context.Requests.Max(r=>r.IdRequest) + 1;
                         var client = requestWindow.ClientInfo.DataContext as Clients;
                         MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -864,6 +867,9 @@ namespace TMC.ViewModel
                         var request = requestWindow.Requests;
                         var client = requestWindow.ClientInfo.DataContext as Clients;
                         var status = requestWindow.StatusBox.SelectedItem as Statuses;
+                        context = new ServiceCenterTMCEntities();
+                        if (request.IdRequest == 0) request.IdRequest = context.Requests.Max(r => r.IdRequest) + 1;
+
                         if (status.Name == "Диагностика")
                         {
                             if (!string.IsNullOrWhiteSpace(requestWindow.RequestDetectedMulfunction.Text))
@@ -1029,6 +1035,8 @@ namespace TMC.ViewModel
                           var request = requestWindow.Requests;
                           var client = requestWindow.ClientInfo.DataContext as Clients;
                           var status = requestWindow.StatusBox.SelectedItem as Statuses;
+                          context = new ServiceCenterTMCEntities();
+                          if (request.IdRequest == 0) request.IdRequest = context.Requests.Max(r => r.IdRequest) + 1;
                           if (status.Name == "Готова" || status.Name == "Завершена")
                           {
                               MessageBox.Show("Ожидайте, документ формируется", "Формирование документа", MessageBoxButton.OK, MessageBoxImage.Information);

@@ -24,7 +24,7 @@
             <Border Padding="30 0">
                 <StackPanel>
                     <ui:MetroHeader Content="Количество ЗИП *"/>
-                    <TextBox x:Name="PartCount" Text="{Binding Count}" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox x:Name="PartCount" Text="{Binding Count}" MaxLength="3" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
                     <ui:MetroHeader Content="Комментарий*"/>
                     <TextBox x:Name="WriteOffReason" Text="{Binding Reson}" Style="{StaticResource InfoTxtBox}"/>
                 </StackPanel>

@@ -29,13 +29,14 @@
                 <StackPanel>
                     <ui:MetroHeader Content="Фамилия*"/>
                     <TextBox x:Name="SurnameTxt" Text="{Binding Surname,  ValidatesOnDataErrors=True}" ui:TextBoxHelper.Watermark="Фамилия*" Style="{StaticResource InfoTxtBox}" />
-                    <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=SurnameTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=SurnameTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=SurnameTxt, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=SurnameTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <ui:MetroHeader Content="Имя*"/>
                     <TextBox x:Name="NameTxt" Text="{Binding Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Имя*" Style="{StaticResource InfoTxtBox}"/>
                     <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=NameTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=NameTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <ui:MetroHeader Content="Отчество"/>
-                    <TextBox Text="{Binding Patronymic, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
-                    <ui:MetroHeader Content="Телефон*"/>
+                    <TextBox x:Name="PatronymicTxt" Text="{Binding Patronymic, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Отчество" Style="{StaticResource InfoTxtBox}"/>
+                        <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=PatronymicTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=PatronymicTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <ui:MetroHeader Content="Телефон*"/>
                     <toolkit:MaskedTextBox x:Name="TelephoneTxt" Mask="+7(000)000-00-00" Text="{Binding Telephone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Телефон*" Style="{StaticResource InfoTxtBox}" />
                     <TextBlock Text="{Binding (Validation.Errors)[0].ErrorContent, ElementName=TelephoneTxt}" Style="{StaticResource ErrorBlock}" Visibility="{Binding (Validation.HasError), ElementName=TelephoneTxt, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <ui:MetroHeader Content="Почта*"/>

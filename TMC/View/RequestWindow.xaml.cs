@@ -17,7 +17,7 @@ namespace TMC.View
             {
                 InitializeComponent();
                 ComplitionDate.DisplayDateStart = DateTime.Now;
-                ComplitionDate.DisplayDateEnd = DateTime.Now.AddMonths(6);
+                ComplitionDate.DisplayDateEnd = DateTime.Now.AddMonths(3);
                 Requests = request;
                 DataContext = Requests;
                 RequestServices.DataContext = vm;
@@ -42,12 +42,12 @@ namespace TMC.View
             try
             {
                 if (!string.IsNullOrWhiteSpace(RequestReason.Text) && !(ClientInfo.DataContext as Clients).HasValidationErrors() 
-                    && int.TryParse(RequestCost.Text, out int cost) && cost >= 0 && !string.IsNullOrWhiteSpace(SurnameTxt.Text) && 
+                    && double.TryParse(RequestCost.Text, out double cost) && cost >= 0 && !string.IsNullOrWhiteSpace(SurnameTxt.Text) && 
                         !string.IsNullOrWhiteSpace(NameTxt.Text) && !string.IsNullOrWhiteSpace(TelephoneTxt.Text) && !string.IsNullOrWhiteSpace(EmailTxt.Text))
                 {
                     if (ComplitionDate.SelectedDate != null)
                     {
-                        if (ComplitionDate.SelectedDate < Requests.Date)
+                        if (ComplitionDate.SelectedDate < Requests.Date || ComplitionDate.SelectedDate > DateTime.Now.AddMonths(3))
                         {
                             MessageBox.Show("Некорректная дата готовности!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
@@ -60,7 +60,7 @@ namespace TMC.View
                     }
 
                 }
-                else MessageBox.Show("Заполните обязательные поля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                else MessageBox.Show("Заполните обязательные поля корректными данными!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
             {
@@ -68,18 +68,21 @@ namespace TMC.View
             }
         }
 
-        private void 
-            Box_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void StatusBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
-                var selected = sender as ComboBox;
-                string status = selected.SelectionBoxItemTemplate.ToString();
-                if (status == "Готова")
+                string status = (StatusBox.SelectedItem as Statuses).Name;
+                if (status == "Готова" || status == "Завершена")
                 {
+                    EndDocuument.Visibility = Visibility.Visible;
                     EndDocuument.IsEnabled = true;
                 }
-                else EndDocuument.IsEnabled = false;
+                else
+                {
+                    EndDocuument.Visibility = Visibility.Collapsed;
+                    EndDocuument.IsEnabled = false;
+                }
             }
             catch (Exception ex)
             {
@@ -143,5 +146,6 @@ namespace TMC.View
         {
             Address.Visibility = Visibility.Collapsed;
         }
+
     }
 }

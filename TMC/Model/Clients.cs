@@ -108,6 +108,36 @@ private string surname { get; set; }
                 string error = String.Empty;
                 switch (columnName)
                 {
+                    case nameof(Surname):
+
+                        if (!string.IsNullOrWhiteSpace(Surname))
+                        {
+                            if (!Regex.IsMatch(Surname, @"^[A-Za-zА-Яа-яЁё]+(?:[ \-'][A-Za-zА-Яа-яЁё]+)*$"))
+                            {
+                                error = "Введена некорретная фамилия";
+                            }
+                        }
+                        break;
+                    case nameof(Name):
+
+                        if (!string.IsNullOrWhiteSpace(Name))
+                        {
+                            if (!Regex.IsMatch(Name, @"^[A-Za-zА-Яа-яЁё]+(?:[ \-'][A-Za-zА-Яа-яЁё]+)*$"))
+                            {
+                                error = "Введено некорретное имя";
+                            }
+                        }
+                        break;
+                    case nameof(Patronymic):
+
+                        if (!string.IsNullOrWhiteSpace(Patronymic))
+                        {
+                            if (!Regex.IsMatch(Patronymic, @"^[A-Za-zА-Яа-яЁё]+$"))
+                            {
+                                error = "Введено некорретное отчество";
+                            }
+                        }
+                        break;
                     case nameof(Telephone):
                         if (!Regex.IsMatch(Telephone, @"\+7\(\d{3}\)\d{3}-\d{2}-\d{2}"))
                             error = "Неверный формат номера телефона";
@@ -139,7 +169,8 @@ private string surname { get; set; }
         public bool HasValidationErrors()
         {
             return !string.IsNullOrEmpty(this[nameof(Surname)]) || !string.IsNullOrEmpty(this[nameof(Name)])
-                || !string.IsNullOrEmpty(this[nameof(Telephone)]) || !string.IsNullOrEmpty(this[nameof(Email)])
+                || !string.IsNullOrEmpty(this[nameof(Telephone)]) || !string.IsNullOrEmpty(this[nameof(Email)]) || !string.IsNullOrEmpty(this[nameof(Surname)])
+                || !string.IsNullOrEmpty(this[nameof(Name)]) || !string.IsNullOrEmpty(this[nameof(Patronymic)])
                 || !string.IsNullOrEmpty(this[nameof(CompanyName)]);
         }
         public string Error

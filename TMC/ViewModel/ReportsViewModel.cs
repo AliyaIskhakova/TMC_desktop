@@ -220,7 +220,7 @@ namespace TMC.ViewModel
                     Employee = g.Key,
                     CompletedOrders = g.Count(r => r.StatusId == 6 || r.StatusId == 5),
                     TotalOrders = g.Count(),
-                    Revenue = (decimal)g.Where(r => r.StatusId == 6 || r.StatusId == 5).Sum(r => r.Cost),
+                    Revenue = (decimal)g.Where(r => r.StatusId == 5 || r.StatusId == 6).Sum(r => r.Cost),
                     Services = g.Where(r => r.StatusId == 6 || r.StatusId == 5).SelectMany(r => r.Requests_Services)
                         .GroupBy(rs => rs.Services)
                         .Select(sg => new ServiceStat
@@ -230,7 +230,6 @@ namespace TMC.ViewModel
                             Cost = (decimal)sg.Sum(x => x.Count * sg.Key.Cost)
                         }).ToList()
                 })
-                .OrderByDescending(e => e.Revenue)
                 .ToList();
 
             EmployeeStats = new ObservableCollection<EmployeeStat>(employeeGroups);

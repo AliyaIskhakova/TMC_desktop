@@ -114,7 +114,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                             <Label Margin="0" FontSize="19" Content="Дата готовности" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                            <DatePicker x:Name="ComplitionDate" SelectedDate="{Binding CompletionDate}"   ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности" >
+                            <DatePicker x:Name="ComplitionDate" SelectedDate="{Binding CompletionDate}" FontSize="14"  ui:ControlsHelper.CornerRadius="5"  Margin="0 5" BorderBrush="Gray" BorderThickness="1.5" Background="White" ui:DatePickerHelper.DropDownButtonFontSize="14" FirstDayOfWeek="Monday" Text="Дата готовности" ui:TextBoxHelper.Watermark="Дата готовности" >
                                 <DatePicker.Resources>
                                     <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                                 </DatePicker.Resources>
@@ -128,7 +128,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                     </Border>
                     <Border Padding="0 0 30 0">
                         <StackPanel>
-                            <ComboBox Name="StatusBox" SelectedIndex="0" Style="{StaticResource MainComboBox}" ui:TextBoxHelper.Watermark="Статус заявки"  >
+                            <ComboBox Name="StatusBox" SelectedIndex="0" Style="{StaticResource MainComboBox}" ui:TextBoxHelper.Watermark="Статус заявки" SelectionChanged="StatusBox_SelectionChanged" >
                                 <ComboBox.Resources>
                                     <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
                                 </ComboBox.Resources>
@@ -160,7 +160,7 @@ Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"      ItemsSourc
                                 <ui:MetroHeader VerticalAlignment="Center" VerticalContentAlignment="Center" Content="Адрес выезда:" Visibility="{Binding Visibility, ElementName=Address}"/>
                                 <TextBox  x:Name="Address" Text="{Binding Address}" Visibility="Collapsed" ui:TextBoxHelper.Watermark="Адрес" Style="{StaticResource InfoTxtBox}"/>
                                 <Label Margin="0" FontSize="19" Content="Итоговая цена:" VerticalAlignment="Center" Style="{StaticResource WindowTitle}"/>
-                                <TextBox x:Name="RequestCost" IsReadOnly="True" Text="{Binding Cost}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
+                                <TextBox x:Name="RequestCost" IsReadOnly="True" Text="{Binding Cost, StringFormat=N2, ConverterCulture=ru-RU, UpdateSourceTrigger=PropertyChanged}" ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
                             </StackPanel>
                         </StackPanel>
                     </Border>

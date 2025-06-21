@@ -123,9 +123,39 @@ namespace TMC.Model
 
                         if (!string.IsNullOrWhiteSpace(Login))
                         {
-                            if (Login.Contains(" "))
+                            if (!Regex.IsMatch(Login, @"^[a-zA-Z][a-zA-Z0-9_\.]+$"))
                             {
                                 error = "Неверный формат логина";
+                            }
+                        }
+                        break;
+                    case nameof(Surname):
+
+                        if (!string.IsNullOrWhiteSpace(Surname))
+                        {
+                            if (!Regex.IsMatch(Surname, @"^[A-Za-zА-Яа-яЁё]+(?:[ \-'][A-Za-zА-Яа-яЁё]+)*$"))
+                            {
+                                error = "Введена некорретная фамилия";
+                            }
+                        }
+                        break;
+                    case nameof(Name):
+
+                        if (!string.IsNullOrWhiteSpace(Name))
+                        {
+                            if (!Regex.IsMatch(Name, @"^[A-Za-zА-Яа-яЁё]+(?:[ \-'][A-Za-zА-Яа-яЁё]+)*$"))
+                            {
+                                error = "Введено некорретное имя";
+                            }
+                        }
+                        break;
+                    case nameof(Patronymic):
+
+                        if (!string.IsNullOrWhiteSpace(Patronymic))
+                        {
+                            if (!Regex.IsMatch(Patronymic, @"^[A-Za-zА-Яа-яЁё]+$"))
+                            {
+                                error = "Введено некорретное отчество";
                             }
                         }
                         break;
@@ -135,7 +165,9 @@ namespace TMC.Model
         }
         public bool HasValidationErrors()
         {
-            return (!string.IsNullOrEmpty(this[nameof(Telephone)]) || !string.IsNullOrEmpty(this[nameof(Email)]) || !string.IsNullOrEmpty(this[nameof(Login)]));
+            return (!string.IsNullOrEmpty(this[nameof(Telephone)]) || !string.IsNullOrEmpty(this[nameof(Email)]) 
+                || !string.IsNullOrEmpty(this[nameof(Login)]) || !string.IsNullOrEmpty(this[nameof(Surname)]) 
+                || !string.IsNullOrEmpty(this[nameof(Name)]) || !string.IsNullOrEmpty(this[nameof(Patronymic)]));
         }
         public string Error
         {

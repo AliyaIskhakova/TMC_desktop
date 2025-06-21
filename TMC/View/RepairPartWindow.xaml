@@ -26,11 +26,11 @@
                     <ui:MetroHeader Content="Наименование ЗИП*"/>
                     <TextBox x:Name="PartName" Text="{Binding Name}" ui:TextBoxHelper.Watermark="Название" Style="{StaticResource InfoTxtBox}"/>
                     <ui:MetroHeader Content="Количество ЗИП на складе*"/>
-                    <TextBox x:Name="PartCount" Text="{Binding Count}" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox x:Name="PartCount" Text="{Binding Count}" MaxLength="3" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
                     <ui:MetroHeader Content="Минимальный остаток*"/>
-                    <TextBox x:Name="PartMinStock" Text="{Binding MinStock}" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox x:Name="PartMinStock" Text="{Binding MinStock}" MaxLength="3" ui:TextBoxHelper.Watermark="Количество" Style="{StaticResource InfoTxtBox}"/>
                     <ui:MetroHeader Content="Цена за ед.*"/>
-                    <TextBox x:Name="PartCost" Text="{Binding Cost}"  ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
+                    <TextBox x:Name="PartCost" Text="{Binding Cost, StringFormat=N2, ConverterCulture=ru-RU, UpdateSourceTrigger=PropertyChanged}" MaxLength="10"  ui:TextBoxHelper.Watermark="Цена" Style="{StaticResource InfoTxtBox}"/>
                 </StackPanel>
             </Border>
             <Button x:Name="WriteOffBtn" Style="{StaticResource MainBtn}" Command="{Binding WriteOffCommand}" CommandParameter="{Binding ElementName=window}" Content="Списать ЗИП" Background="#889DFB" Margin="30 5" />
